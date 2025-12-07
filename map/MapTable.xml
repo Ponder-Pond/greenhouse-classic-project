@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <MapTable>
 	<Area name="kmr" nickname="Goomba Region">
 		<Map name="kmr_00" nickname="Forest Clearing" flags="1"/>
@@ -130,7 +130,7 @@
 		<Map name="trd_01" nickname="Left Tower" flags="103"/>
 		<Map name="trd_02" nickname="Left Stairway" flags="103"/>
 		<Map name="trd_03" nickname="Central Hall" flags="103"/>
-		<Map name="trd_04" nickname="Right Starway" flags="103"/>
+		<Map name="trd_04" nickname="Right Stairway" flags="103"/>
 		<Map name="trd_05" nickname="Right Tower" flags="103"/>
 		<Map name="trd_06" nickname="Jail" flags="103"/>
 		<Map name="trd_07" nickname="Dungeon Trap" flags="103"/>
@@ -244,10 +244,10 @@
 		<Map name="mim_02" nickname="Stump Eyes" flags="102"/>
 		<Map name="mim_03" nickname="Flowers (Oaklie)" flags="102"/>
 		<Map name="mim_04" nickname="Tree Face (Bub-ulb)" flags="102"/>
-		<Map name="mim_05" nickname="Mushrooms (HP Plus)" flags="102"/>
-		<Map name="mim_06" nickname="Bee Hive (Path Splits)" flags="102"/>
-		<Map name="mim_07" nickname="Flowers Vanish" flags="102"/>
-		<Map name="mim_08" nickname="Laughing Rock" flags="102"/>
+		<Map name="mim_05" nickname="Mushrooms (Path Splits)" flags="102"/>
+		<Map name="mim_06" nickname="Flowers Vanish" flags="102"/>
+		<Map name="mim_07" nickname="Laughing Rock" flags="102"/>
+		<Map name="mim_08" nickname="Bee Hive (HP Plus)" flags="102"/>
 		<Map name="mim_09" nickname="Flowers Appear (FP Plus)" flags="102"/>
 		<Map name="mim_10" nickname="Exit to Toad Town"/>
 		<Map name="mim_11" nickname="Outside Boo's Mansion" flags="102"/>
@@ -480,7 +480,7 @@
 		<Map name="kpa_08" nickname="Castle Key Timing Puzzle" flags="102"/>
 		<Map name="kpa_09" nickname="Ultra Shroom Timing Puzzle" flags="102"/>
 		<Map name="kpa_10" nickname="Outside Lower Jail (No Lava)" flags="103"/>
-		<Map name="kpa_11" nickname="Outisde Lower Jail (Lava)" flags="103"/>
+		<Map name="kpa_11" nickname="Outside Lower Jail (Lava)" flags="103"/>
 		<Map name="kpa_12" nickname="Lava Channel 1" flags="103"/>
 		<Map name="kpa_13" nickname="Lava Channel 2" flags="103"/>
 		<Map name="kpa_14" nickname="Lava Channel 3" flags="103"/>
@@ -568,6 +568,9 @@
 		<Map name="tst_13" nickname="Partners and Shockwave"/>
 		<Map name="tst_20" nickname="Pipes Gallery"/>
 	</Area>
+	<Area name="gnt">
+		<Stage name="gnt_bt00"/>
+	</Area>
 	<Resource name="mac_tex" compressed="false"/>
 	<Resource name="tik_tex" compressed="false"/>
 	<Resource name="kgr_tex" compressed="false"/>
@@ -623,4 +626,6 @@
 	<Resource name="party_akari" compressed="true"/>
 	<Resource name="party_opuku" compressed="true"/>
 	<Resource name="party_pokopi" compressed="true"/>
+	<Resource name="gnt_tex" compressed="false"/>
+	<Resource name="gnt_bg" compressed="true"/>
 </MapTable>

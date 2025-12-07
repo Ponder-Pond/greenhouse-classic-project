@@ -1,0 +1,269 @@
+% King Watinga Parts
+#define .Part:KingWatinga 1
+
+% King Watinga Actor Variables
+#define .AVar:PhaseKingWatinga 0`
+#define .AVal:PhaseOneKingWatinga 1`
+#define .AVal:PhaseTwoKingWatinga 2`
+#define .AVar:TurnCountKingWatinga 1`
+#define .AVal:TurnOneKingWatinga 1`
+#define .AVal:TurnTwoKingWatinga 2`
+#define .AVal:TurnThreeKingWatinga 3`
+#define .AVal:TurnFourKingWatinga 4`
+#define .AVal:TurnFiveKingWatinga 5`
+
+% King Watinga Stats
+#define .HP:KingWatinga 40`b
+#define .Damage:SmallFlySbot 2`
+#define .Damage:EnergySbot 4`
+
+#new:Actor $KingWatinga
+{
+% stats
+[Index]        D8b
+[Level]        0`b
+[MaxHP]        .HP:KingWatinga
+[Coins]         0`b
+[Flags]       00000200
+[StatusTable] $StatusTable_KingWatinga
+% ai
+[PartsCount]   1`s
+[PartsTable] $PartsTable_KingWatinga
+[Script]      $Script_Init_KingWatinga
+% move effectiveness
+[Escape]        0`b % no escape
+[Item]          0`b
+[AirLift]       0`b
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b
+[PowerBounce]   8`b
+[SpinSmash]     4`b % weight (0-4)
+% ui positions
+[Size]        50`b 40`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b 20`b % dx dy (usually top left)
+[StatusIcon]   10`b 20`b % dx dy (usually top right)
+}
+
+#new:StatusTable $StatusTable_KingWatinga
+{
+.Status:Normal    0`
+.Status:Default   0`
+.Status:Sleep     0`
+.Status:Poison    0`
+.Status:Frozen    0`
+.Status:Dizzy     0`
+.Status:Fear      0`
+.Status:Static    0`
+.Status:Paralyze  0`
+.Status:Shrink    0`
+.Status:Stop      0`
+.Status:SleepTurnMod      0`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod      0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod   0`
+.Status:ShrinkTurnMod     0`
+.Status:StopTurnMod       0`
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_KingWatinga
+{
+.Status:Normal    .Anim:KingWatinga_Idle
+.Status:Stone     .Anim:KingWatinga_Still
+.Status:Sleep     .Anim:KingWatinga_Still
+.Status:Poison    .Anim:KingWatinga_Idle
+.Status:Stop      .Anim:KingWatinga_Still
+.Status:Static    .Anim:KingWatinga_Idle
+.Status:Paralyze  .Anim:KingWatinga_Still
+.Status:Dizzy     .Anim:KingWatinga_Still
+.Status:End
+}
+
+#new:DefenseTable $DefenseTable_KingWatinga
+{
+.Element:Normal 0`
+.Element:End
+}
+
+#new:PartsTable $PartsTable_KingWatinga % ActorPartBlueprint struct in decomp
+{
+    /% s32 flags %/                     00800000
+    /% s8 index %/                      ~Byte:.Part:KingWatinga
+    /% Vec3b posOffset %/               0`b 0`b 0`b
+    /% Vec2b targetOffset %/            0`b 65`b % For cursor when selecting to attack in battle
+    /% s16 opacity %/                   00FFs
+    /% s32* IdleAnimations %/           $IdleAnimations_KingWatinga
+    /% s32* defenseTable %/             $DefenseTable_KingWatinga
+    /% s32 eventFlags %/                00000000
+    /% s32 elementImmunityFlags %/      00000000
+    /% Vec2b projectileTargetOffset %/  0`b 0`b
+    /% s8 unk_1E %/                     00b
+    /% s8 unk_1F %/                     00b
+    /% s32 overrideNameMsg %/           00000000
+}
+
+#new:Script $Script_Init_KingWatinga
+{
+	Call  BindTakeTurn	( .Actor:Self $Script_TakeTurn_KingWatinga )
+	Call  BindIdle	( .Actor:Self $Script_Idle_KingWatinga )
+	Call  BindHandleEvent  ( .Actor:Self $Script_HandleEvent_KingWatinga )
+	Return
+	End
+}
+
+
+#new:Script $Script_Idle_KingWatinga
+{
+    Return
+    End
+}
+
+#new:Script $Script_HandleEvent_KingWatinga
+{
+	Call     UseIdleAnimation 	( .Actor:Self .False )
+	Call     EnableIdleScript 	( .Actor:Self .False )
+	Call     GetLastEvent 	( .Actor:Self *Var0 )
+	Switch  *Var0
+		CaseOR  ==  .Event:HitCombo
+		CaseOR  ==  .Event:Hit
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoNormalHit
+		EndCaseGroup
+		Case  ==  .Event:BurnHit
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoImmune
+		Case  ==  .Event:BurnDeath
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			SetConst  *Var2  .Anim:KingWatinga_Hurt  % Change to Death Animation
+			ExecWait DoBurnHit
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt  % Change to Death Animation
+			ExecWait DoDeath
+			Return
+		Case  ==  .Event:ShockHit
+			Call     PlaySoundAtActor 	( .Actor:Self 00000759 )
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoShockHit
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait 8029BD70
+		Case  ==  .Event:ShockDeath
+			Call     PlaySoundAtActor 	( .Actor:Self 00000759 )
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoShockHit
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoDeath
+			Return
+		CaseOR  ==  00000017
+		CaseOR  ==  .Event:Immune
+		CaseOR  ==  .Event:AirLiftFailed
+		EndCaseGroup
+		Case  ==  .Event:Death
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoNormalHit
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Hurt
+			ExecWait DoDeath
+			Return
+		Case  ==  .Event:RecoverStatus
+			SetConst  *Var0  .Part:KingWatinga
+			SetConst  *Var1  .Anim:KingWatinga_Idle
+			ExecWait DoRecover
+		Default
+	EndSwitch
+	Call     EnableIdleScript 	( .Actor:Self .True )
+	Call     UseIdleAnimation 	( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_KingWatinga_Death {
+    Call 8027D32C ( .Actor:Self ) % HideHealthBar
+	Call UseIdleAnimation 	( .Actor:Self .False )
+	Call EnableIdleScript 	( .Actor:Self .False )
+    Set *Var2 0`
+    Call SetAnimation ( .Actor:Self *Var0 *Var1 )
+    Wait 10`
+    Loop 24`
+        Call SetActorYaw ( .Actor:Self *Var2 )
+        Add *Var2 30`
+        Wait 1`
+    EndLoop
+    Call SetActorYaw ( .Actor:Self 0` )
+    Call GetActorPos ( .Actor:Self *Var2 *Var3 *Var4 )
+    Call PlayEffect ( ~FX:BigSmokePuff *Var2 *Var3 *Var4 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+    Call PlaySoundAtActor ( .Actor:Self .Sound:Death )
+    Call DropStarPoints ( .Actor:Self )
+    Set *Var3 0`
+    Loop 12`
+        Call SetActorRotation ( .Actor:Self *Var3 0` 0` )
+        Add *Var3 8`
+        Wait 1`
+    EndLoop
+    Call SetPartFlagBits ( .Actor:Self .Part:KingWatinga 00000001 .True )
+    % Call SetActorFlagBits ( .Actor:Self ACTOR_FLAG_NO_SHADOW .True )
+    Wait 30`
+    Call  RemoveActor ( .Actor:Self )
+    Return
+    End
+};
+
+#new:Script $Script_TakeTurn_KingWatinga
+{
+    Call  EnableIdleScript 	( .Actor:Self .False )
+    Call  UseIdleAnimation 	( .Actor:Self .False )
+    Label CheckPhase
+    Call GetActorHP ( .Actor:Self *Var3 )
+    If *Var3 < 21`
+        Goto SecondPhase
+    Else
+        Goto FirstPhase
+    EndIf
+	Label FirstPhase
+	Call RandInt (100` *Var1) % Get Summon to do
+	Switch *Var1
+		Case < 40` % 40% Chance
+			Set *Var0 0` % Fly Summon
+		Case < 70` % 30% Chance
+			Set *Var0 1` % Big Fly Summon
+		Case < 90` % 20% Chance
+			Set *Var0 2` % Fly Parent Summon
+		Case < 100` % 10% Chance
+			Set *Var0 3` % Fly Bomb  Summon
+	EndSwitch
+	Label FirstPhaseAttacks
+	Set  *Var0 0` % Always use the same attack, testing purposes.
+	% Which Attack?
+	Switch *Var0
+		Case == 0`
+			% ExecWait $Summon_Fly
+			Goto EndTurn
+		Case == 1`
+			% ExecWait $Summon_BigFly
+			Goto EndTurn
+		Case == 2`
+			% ExecWait $Summon_FlyParent
+			Goto EndTurn
+		Case == 3`
+			% ExecWait $Summon_FlyBomb
+			Goto EndTurn
+	EndSwitch
+
+	Label SecondPhase
+
+	Label EndTurn
+	Call  EnableIdleScript 	( .Actor:Self .True )
+	Call  UseIdleAnimation 	( .Actor:Self .True )
+	Return
+	End
+}

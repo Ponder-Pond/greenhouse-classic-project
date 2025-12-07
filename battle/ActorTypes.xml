@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- You can define up to 255 actor types (0-FE). Read the docs for more information. -->
 <ActorTypes>
 	<ActorType desc="RedGoomba" id="00" name="00290081" tattle="00000000" sfxWalk="20DD,20DD" sfxFly="20DD,20DD" sfxJump="3E2" sfxHurt="10F" sfxIncrement="30,30"/>
@@ -213,4 +213,9 @@
 	<ActorType desc="SlotMachineStart" id="D1" name="00290076" tattle="001C0093" sfxIncrement="30,30"/>
 	<ActorType desc="SlotMachineStart" id="D2" name="00290076" tattle="001C0093" sfxIncrement="30,30"/>
 	<ActorType desc="SlotMachineStart" id="D3" name="00290076" tattle="001C0093" sfxIncrement="30,30"/>
+	<ActorType desc="Fly" id="D4" name="00290083" tattle="001C0074" sfxIncrement="30,30"/>
+	<ActorType desc="SuperFly" id="D5" name="00290084" tattle="001C0074" sfxIncrement="30,30"/>
+	<ActorType desc="ParentFly" id="D6" name="00290085" tattle="001C0074" sfxIncrement="30,30"/>
+	<ActorType desc="BombFly" id="D7" name="00290086" tattle="001C0074" sfxIncrement="30,30"/>
+	<ActorType desc="KingWatinga" id="D8" name="00290087" tattle="001C0074" sfxIncrement="30,30"/>
 </ActorTypes>

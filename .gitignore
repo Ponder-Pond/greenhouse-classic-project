@@ -1,14 +1,29 @@
-# Build artifacts
-mod.cfg
+# build/editor artifacts
 temp
 build
 cache
 /out
-
-# Editor files
 /logs
 /editor
 
-# Original game data
+# original game data
 src
 raw
+/audio/**/*.*
+!/audio/**/*.xml
+/image/**/*.*
+!/image/**/*.xml
+
+mod.cfg
+# modified game data (for multimedia which doesn't use src/patch directories)
+# (put overrides here, e.g. `!/sprite/npc/src/80` if you've changed bowser)
+!/map/build
+!/image/bg/gnt_bg.png
+!/image/texture/gnt_tex/*
+!/image/texture/gnt_tex.txa
+!/image/texture/gnt_tex.json
+# !/sprite/npc/src/4E/*
+# !/sprite/npc/src/2B/*
+# !/sprite/npc/src/3B/*
+# !/sprite/npc/src/0A/*
+map/build/index.bin

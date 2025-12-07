@@ -37,3 +37,33 @@ false	% reversed
 0095010E = DustyBoo-CarryingWalk
 0095010F = DustyBoo-CarryingRun
 00950110 = DustyBoo-CarryingShake
+
+% Small Fly Animations
+00EA0000 = SmallFly_Idle
+00EA0001 = SmallFly_IdleGroup
+
+% Fly Animations
+00EA0002 = Fly_Idle
+
+% Super Fly Animations
+00EA0003 = SuperFly_Idle
+00EA0004 = SuperFly_Attack
+
+% Fly Parent Animations
+00EA0005 = FlyParent_Idle
+00EA0006 = FlyParent_Attack
+
+% Bomb Fly Animations
+00EA0007 = BombFly_Idle
+00EA0008 = BombFly_Attack
+
+% King Watinga Animations
+00EB0000 = KingWatinga_Still
+00EB0001 = KingWatinga_Idle
+00EB0002 = KingWatinga_Talk
+00EB0003 = KingWatinga_Laugh
+00EB0004 = KingWatinga_ShotPrepare
+00EB0005 = KingWatinga_ShotEnd
+00EB0006 = KingWatinga_LaunchStart
+00EB0007 = KingWatinga_LaunchEnd
+00EB0008 = KingWatinga_Hurt

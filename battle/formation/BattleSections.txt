@@ -45,4 +45,4 @@ empty
 80231000 : 2C Area OMO2_4
 80231000 : 2D Area OMO2_5
 80231000 : 2E Area OMO2_6
-empty
+80218000 : 2F Area GNT

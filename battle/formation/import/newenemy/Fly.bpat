@@ -1,0 +1,290 @@
+% Fly Parts
+#define .Part:Fly 1
+
+% Fly Actor Variables
+#define .AVar:TurnCountFly 0`
+#define .AVal:TurnZeroFly 0`
+#define .AVal:TurnOneFly 1`
+
+% Fly Stats
+#define .HP:Fly 2`b
+#define .Damage:Charge 1`
+
+#new:Actor $Fly {
+% stats
+[Index]         D4b
+[Level]         6`b
+[MaxHP]         .HP:Fly
+[Coins]         1`b
+[Flags]       00000200
+[StatusTable] $StatusTable_Fly
+% ai
+[PartsCount]    1`s
+[PartsTable]  $PartsTable_Fly
+[Script]      $Script_Init_Fly
+% move effectiveness
+[Escape]       90`b
+[Item]        100`b
+[AirLift]     100`b
+[Hurricane]   100`b % Bow's "Spook" as well
+[UpAndAway]    95`b
+[PowerBounce] 100`b
+[SpinSmash]     0`b % weight (0-4)
+% ui positions
+[Size]         36`b  26`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b  20`b % dx dy
+[StatusIcon]   10`b  20`b % dx dy
+}
+
+#new:DefenseTable $DefenseTable_Fly {
+.Element:Normal 0`
+.Element:End
+}
+
+
+#new:StatusTable $StatusTable_Fly {
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep     100`
+.Status:Poison    100`
+.Status:Frozen    100`
+.Status:Dizzy     100`
+.Status:Fear      100`
+.Status:Static    100`
+.Status:Paralyze  100`
+.Status:Shrink    100`
+.Status:Stop      100`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod      0`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod      0`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod   0`
+.Status:ShrinkTurnMod     0`
+.Status:StopTurnMod       0`
+.Status:End
+}
+
+#new:PartsTable $PartsTable_Fly % ActorPartBlueprint struct in decomp
+{
+    /% s32 flags %/                     00800000
+    /% s8 index %/                      ~Byte:.Part:Fly
+    /% Vec3b posOffset %/               0`b 0`b 0`b
+    /% Vec2b targetOffset %/            0`b 10`b % For cursor when selecting to attack in battle
+    /% s16 opacity %/                   00FFs
+    /% s32* IdleAnimations %/           $IdleAnimations_Fly
+    /% s32* defenseTable %/             $DefenseTable_Fly
+    /% s32 eventFlags %/                00000000
+    /% s32 elementImmunityFlags %/      00000000
+    /% Vec2b projectileTargetOffset %/  0`b 0`b
+    /% s8 unk_1E %/                     00b
+    /% s8 unk_1F %/                     00b
+    /% s32 overrideNameMsg %/           00000000
+}
+
+#new:IdleAnimations $IdleAnimations_Fly {
+.Status:Normal    .Anim:Fly_Idle
+.Status:Stone     .Anim:Fly_Idle
+.Status:Sleep     .Anim:Fly_Idle
+.Status:Poison    .Anim:Fly_Idle
+.Status:Stop      .Anim:Fly_Idle
+.Status:Static    .Anim:Fly_Idle
+.Status:Paralyze  .Anim:Fly_Idle
+.Status:Dizzy     .Anim:Fly_Idle
+.Status:Fear      .Anim:Fly_Idle
+.Status:End
+}
+
+#new:Script $Script_Init_Fly {
+	Call  BindTakeTurn      ( .Actor:Self $Script_TakeTurn_Fly )
+	Call  BindIdle  ( .Actor:Self $Script_Idle_Fly )
+	Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_Fly )
+    Call  SetActorVar  ( .Actor:Self .AVar:TurnCountFly .AVal:TurnZeroFly )
+	Return
+	End
+}
+
+#new:Script $Script_Idle_Fly {
+	Return
+	End
+}
+
+#new:Script $Script_ReturnHome_Fly {
+	Call  ResetAllActorSounds   ( .Actor:Self )
+	Call  SetGoalToHome ( .Actor:Self )
+	% Call  SetActorSpeed ( .Actor:Self *Fixed[7.0] )
+	Call  FlyToGoal     ( .Actor:Self  15`  0` .Easing:Linear )
+	Call  SetAnimation  ( .Actor:Self .Part:Fly .Anim:Fly_Idle )
+	Return
+	End
+}
+
+#new:Script $Script_HandleEvent_Fly {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self .False )
+	Call  GetLastEvent      ( .Actor:Self *Var0 )
+	Switch  *Var0
+		CaseOR  ==  .Event:HitCombo % 9
+		CaseOR  ==  .Event:Hit % A
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Hurt
+			ExecWait  DoNormalHit
+		EndCaseGroup
+		Case  ==  .Event:BurnHit % E
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % BurnHurt
+			SetConst  *Var2  .Anim:Fly_Idle % BurnStill
+			ExecWait  DoBurnHit
+		Case  ==  .Event:BurnDeath % 24
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % BurnHurt
+			SetConst  *Var2  .Anim:Fly_Idle % BurnStill
+			ExecWait  DoBurnHit
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % BurnStill
+			ExecWait  DoDeath
+			Return
+		Case  ==  .Event:ShockHit % 2F
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Hurt?
+			ExecWait  DoShockHit
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Hurt
+			ExecWait  DoJumpBack
+			Call  SetAnimation  ( .Actor:Self .Part:Fly .Anim:Fly_Idle ) % Jump???
+			ExecWait  $Script_ReturnHome_Fly
+		Case  ==  .Event:ShockDeath % 26
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Hurt?
+			ExecWait  DoShockHit
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Death
+			ExecWait  DoDeath
+			Return
+		Case  ==  .Event:StarBeam % 13
+		CaseOR  ==  00000017 % 17
+		CaseOR  ==  .Event:Immune % 19
+		CaseOR  ==  .Event:AirLiftFailed % 1F
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle
+			ExecWait  DoImmune
+		EndCaseGroup
+		Case  ==  .Event:Death % 20
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Hurt
+			ExecWait  DoNormalHit
+			Wait  10`
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle % Death
+			ExecWait  DoDeath
+			Return
+		% Case  ==  .Event:BeginFirstStrike % 38
+		% 	Call  SetActorPos       ( .Actor:Self  20`  0`  0` )
+		% 	Call  HPBarToCurrent    ( .Actor:Self )
+		% Case  ==  .Event:EndFirstStrike % 35
+		% 	Call  SetAnimation  ( .Actor:Self 00000002 00280004 )
+		% 	ExecWait  $Script_ReturnHome_Fly
+		% 	Call  HPBarToHome   ( .Actor:Self )
+		Case  ==  .Event:RecoverStatus % 31
+			SetConst  *Var0  .Part:Fly
+			SetConst  *Var1  .Anim:Fly_Idle
+			ExecWait  DoRecover
+		% Case  ==  .Event:ScareAway % 39
+		% 	Call  SetActorFlagBits  ( .Actor:Self 00000200 .False )
+		% 	SetConst  *Var0  .Part:Fly
+		% 	SetConst  *Var1  00280004
+		% 	SetConst  *Var2  00280006
+		% 	ExecWait  DoScareAway
+		% 	Return
+		% Case  ==  .Event:BeginAirLift % 3A
+		% 	SetConst  *Var0  .Part:Fly
+		% 	SetConst  *Var1  00280004
+		% 	ExecWait  DoAirLift
+		% Case  ==  .Event:BlowAway % 16
+		% 	SetConst  *Var0  .Part:Fly
+		% 	SetConst  *Var1  .Anim:Fly_Idle
+		% 	ExecWait  DoBlowAway
+		% 	Return
+		Default
+	EndSwitch
+	Call  EnableIdleScript  ( .Actor:Self .True )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_TakeTurn_Fly {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self .False )
+    Call  GetActorVar  ( .Actor:Self .AVar:TurnCountFly *Var0 )
+    Switch(*Var0)
+    Case == .AVal:TurnZeroFly
+        Call  SetActorVar  ( .Actor:Self .AVar:TurnCountFly .AVal:TurnOneFly )
+    Case == .AVal:TurnOneFly
+        ExecWait $Script_Attack_Charge
+    EndSwitch
+
+	Call  EnableIdleScript  ( .Actor:Self .True )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_Attack_Charge {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self .False )
+	Call  SetTargetActor    ( .Actor:Self .Actor:Player )
+	Call  SetTargetActor    ( .Actor:Self .Actor:Player )
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  UseBattleCamPreset    ( 0000003F )
+	Call  BattleCamTargetActor  ( .Actor:Self )
+	Call  8024ECF8  ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
+	Call  SetAnimation      ( .Actor:Self .Part:Fly .Anim:Fly_Idle )
+	Call  8024E664  ( 00000013 ) % UseBattleCamPresetImmediately
+	Call  EnemyTestTarget   ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
+	Switch  *Var0
+		CaseOR  ==  .HitResult:Miss % 6
+		CaseOR  ==  .HitResult:Lucky % 5
+			Set   *VarA  *Var0
+			Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+			Set   *Var3  *Var1
+			Call  GetActorPos   ( .Actor:Player *Var0 *Var1 *Var2 )
+			Set   *Var1  *Var3
+			Sub   *Var0  90`
+			Call  SetGoalPos    ( .Actor:Self *Var0 *Var1 *Var2 )
+			Call  FlyToGoal  ( .Actor:Self 30` 0` .Easing:Linear )
+			If  *VarA  ==  .HitResult:Lucky % 5
+				Call  EnemyTestTarget   ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
+			EndIf
+			Call  UseBattleCamPreset    ( 00000002 )
+			Call  YieldTurn ( )
+			Call  8027D32C  ( .Actor:Self ) % HideHealthBar
+			Call  UseIdleAnimation  ( .Actor:Self .False )
+			Call  RemoveActor       ( .Actor:Self )
+			Return
+		EndCaseGroup
+	EndSwitch
+	% Call  GetActorPos       ( .Actor:Self *Var0 *Var1 *Var2 )
+	% Set   *Var3  *Var1
+	Call  GetActorPos       ( .Actor:Player *Var0 *Var1 *Var2 )
+	% Set   *Var1  *Var3
+	Add  *Var0 10`
+    Add  *Var1 10`
+	Call  SetActorJumpGravity   ( .Actor:Self *Fixed[0.01] )
+	Call  SetGoalPos        ( .Actor:Self *Var0 *Var1 *Var2 )
+	Call  FlyToGoal  ( .Actor:Self 15` 0` .Easing:Linear )
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Wait  2`
+	Call  EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .Damage:Charge 00000020 )
+	Call  UseBattleCamPreset    ( 00000002 )
+	Call  YieldTurn ( )
+	SetConst  *Var0  .Part:Fly
+	SetConst  *Var1  .Anim:Fly_Idle
+	Set   *Var2  FFFFCFC7
+	ExecWait  DoDeath
+    Return
+    End
+}
