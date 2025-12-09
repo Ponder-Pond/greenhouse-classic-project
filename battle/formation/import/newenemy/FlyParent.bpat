@@ -1,29 +1,30 @@
-% Super Fly Parts
-#define .SuperFlyPart:Main 1
-#define .SuperFlyPart:Shot 2
+% Fly Parent Parts
+#define .FlyParentPart:Main 1
+#define .FlyParentPart:Shot 2
 
-% Super Fly Actor Variables
-#define .SuperFlyActorVar:TurnCount 0`
-% #define .SuperFlyActorValue:TurnZero 0`
-#define .SuperFlyActorValue:TurnOne 1`
-#define .SuperFlyActorValue:TurnTwo 2`
+% Fly Parent Actor Variables
+#define .FlyParentActorVar:TurnCount 0`
+% #define .FlyParentActorValue:TurnZero 0`
+#define .FlyParentActorValue:TurnOne 1`
+#define .FlyParentActorValue:TurnTwo 2`
+#define .FlyParentActorValue:TurnThree 3`
 
-% Super Fly Stats
-#define .HP:SuperFly 4`b
-#define .SuperFlyDamage:QuadShot 2`
+% Fly Parent Stats
+#define .HP:FlyParent 8`b
+#define .FlyParentDamage:QuadShot 3`
 
-#new:Actor $SuperFly {
+#new:Actor $FlyParent {
 % stats
-[Index]			D5b
+[Index]			D6b
 [Level]			0`b
-[MaxHP]			.HP:SuperFly
+[MaxHP]			.HP:FlyParent
 [Coins]			0`b
 [Flags]			00000200
-[StatusTable]	$StatusTable_SuperFly
+[StatusTable]	$StatusTable_FlyParent
 % ai
 [PartsCount]	2`s
-[PartsTable]	$PartsTable_SuperFly
-[Script]		$Script_Init_SuperFly
+[PartsTable]	$PartsTable_FlyParent
+[Script]		$Script_Init_FlyParent
 % move effectiveness
 [Escape]		90`b
 [Item]			100`b
@@ -39,13 +40,13 @@
 [StatusIcon]	10`b 20`b % dx dy
 }
 
-#new:DefenseTable $DefenseTable_SuperFly {
+#new:DefenseTable $DefenseTable_FlyParent {
 .Element:Normal 0`
 .Element:End
 }
 
 
-#new:StatusTable $StatusTable_SuperFly {
+#new:StatusTable $StatusTable_FlyParent {
 .Status:Normal 				0`
 .Status:Default 			0`
 .Status:Sleep				100`
@@ -70,15 +71,15 @@
 .Status:End
 }
 
-#new:PartsTable $PartsTable_SuperFly % ActorPartBlueprint struct in decomp
+#new:PartsTable $PartsTable_FlyParent % ActorPartBlueprint struct in decomp
 {
 	/% s32 flags %/						00800000
-	/% s8 index %/						~Byte:.SuperFlyPart:Main
+	/% s8 index %/						~Byte:.FlyParentPart:Main
 	/% Vec3b posOffset %/				0`b 0`b 0`b
 	/% Vec2b targetOffset %/			-2`b 15`b % For cursor when selecting to attack in battle
 	/% s16 opacity %/					00FFs
-	/% s32* IdleAnimations %/			$IdleAnimations_SuperFly
-	/% s32* defenseTable %/				$DefenseTable_SuperFly
+	/% s32* IdleAnimations %/			$IdleAnimations_FlyParent
+	/% s32* defenseTable %/				$DefenseTable_FlyParent
 	/% s32 eventFlags %/				00000000
 	/% s32 elementImmunityFlags %/		00000000
 	/% Vec2b projectileTargetOffset %/	0`b 0`b
@@ -88,12 +89,12 @@
 
     /% Shot %/
 	/% s32 flags %/						00120001
-	/% s8 index %/						~Byte:.SuperFlyPart:Shot
+	/% s8 index %/						~Byte:.FlyParentPart:Shot
 	/% Vec3b posOffset %/				0`b 0`b 0`b
 	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
 	/% s16 opacity %/					00FFs
-	/% s32* IdleAnimations %/			$IdleAnimations_SuperFly %? No Shot Animation yet.
-	/% s32* defenseTable %/				$DefenseTable_SuperFly
+	/% s32* IdleAnimations %/			$IdleAnimations_FlyParent %? No Shot Animation yet.
+	/% s32* defenseTable %/				$DefenseTable_FlyParent
 	/% s32 eventFlags %/				00000000
 	/% s32 elementImmunityFlags %/		00000000
 	/% Vec2b projectileTargetOffset %/	0`b 0`b
@@ -102,109 +103,109 @@
 	/% s32 overrideNameMsg %/			00000000
 }
 
-#new:IdleAnimations $IdleAnimations_SuperFly {
-.Status:Normal	    .Anim:SuperFly_Idle
-.Status:Stone	    .Anim:SuperFly_Idle
-.Status:Sleep	    .Anim:SuperFly_Idle
-.Status:Poison	    .Anim:SuperFly_Idle
-.Status:Stop	    .Anim:SuperFly_Idle
-.Status:Static	    .Anim:SuperFly_Idle
-.Status:Paralyze	.Anim:SuperFly_Idle
-.Status:Dizzy	    .Anim:SuperFly_Idle
-.Status:Fear	    .Anim:SuperFly_Idle
+#new:IdleAnimations $IdleAnimations_FlyParent {
+.Status:Normal	    .Anim:FlyParent_Idle
+.Status:Stone	    .Anim:FlyParent_Idle
+.Status:Sleep	    .Anim:FlyParent_Idle
+.Status:Poison	    .Anim:FlyParent_Idle
+.Status:Stop	    .Anim:FlyParent_Idle
+.Status:Static	    .Anim:FlyParent_Idle
+.Status:Paralyze	.Anim:FlyParent_Idle
+.Status:Dizzy	    .Anim:FlyParent_Idle
+.Status:Fear	    .Anim:FlyParent_Idle
 .Status:End
 }
 
-#new:IdleAnimations $IdleAnimations_Attack_SuperFly {
-.Status:Normal		.Anim:SuperFly_Attack
+#new:IdleAnimations $IdleAnimations_Attack_FlyParent {
+.Status:Normal		.Anim:FlyParent_Attack
 .Status:End
 }
 
-#new:Script $Script_Init_SuperFly {
-	Call BindIdle ( .Actor:Self $Script_Idle_SuperFly )
-	Call BindHandleEvent ( .Actor:Self $Script_HandleEvent_SuperFly )
-	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_SuperFly )
-	Call SetActorVar ( .Actor:Self .SuperFlyActorVar:TurnCount .SuperFlyActorValue:TurnOne )
+#new:Script $Script_Init_FlyParent {
+	Call BindIdle ( .Actor:Self $Script_Idle_FlyParent )
+	Call BindHandleEvent ( .Actor:Self $Script_HandleEvent_FlyParent )
+	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_FlyParent )
+	Call SetActorVar ( .Actor:Self .FlyParentActorVar:TurnCount .FlyParentActorValue:TurnOne )
 	Return
 	End
 }
 
-#new:Script $Script_Idle_SuperFly {
+#new:Script $Script_Idle_FlyParent {
 	Return
 	End
 }
 
-#new:Script $Script_ReturnHome_SuperFly {
+#new:Script $Script_ReturnHome_FlyParent {
 	Call ResetAllActorSounds ( .Actor:Self )
 	Call SetGoalToHome ( .Actor:Self )
 	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
-	Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Idle )
+	Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Idle )
 	Return
 	End
 }
 
-#new:Script $Script_HandleEvent_SuperFly {
+#new:Script $Script_HandleEvent_FlyParent {
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call GetLastEvent ( .Actor:Self *Var0 )
 	Switch *Var0
 		CaseOR == .Event:HitCombo % 9
 		CaseOR == .Event:Hit % A
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Hurt
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Hurt
 			ExecWait DoNormalHit
 		EndCaseGroup
 		Case == .Event:BurnHit % E
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % BurnHurt
-			SetConst *Var2 .Anim:SuperFly_Idle % BurnStill
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % BurnHurt
+			SetConst *Var2 .Anim:FlyParent_Idle % BurnStill
 			ExecWait DoBurnHit
 		Case == .Event:BurnDeath % 24
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % BurnHurt
-			SetConst *Var2 .Anim:SuperFly_Idle % BurnStill
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % BurnHurt
+			SetConst *Var2 .Anim:FlyParent_Idle % BurnStill
 			ExecWait DoBurnHit
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % BurnStill
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % BurnStill
 			ExecWait DoDeath
 			Return
 		Case == .Event:ShockHit % 2F
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Hurt?
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Hurt?
 			ExecWait DoShockHit
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Hurt
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Hurt
 			ExecWait DoJumpBack
-			Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Idle ) % Jump???
-			ExecWait $Script_ReturnHome_SuperFly
+			Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Idle ) % Jump???
+			ExecWait $Script_ReturnHome_FlyParent
 		Case == .Event:ShockDeath % 26
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Hurt?
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Hurt?
 			ExecWait DoShockHit
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Death
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Death
 			ExecWait DoDeath
 			Return
 		Case == .Event:StarBeam % 13
 		CaseOR == 00000017 % 17
 		CaseOR == .Event:Immune % 19
 		CaseOR == .Event:AirLiftFailed % 1F
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle
 			ExecWait DoImmune
 		EndCaseGroup
 		Case == .Event:Death % 20
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Hurt
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Hurt
 			ExecWait DoNormalHit
 			Wait 10`
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle % Death
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle % Death
 			ExecWait DoDeath
 			Return
 		Case == .Event:RecoverStatus % 31
-			SetConst *Var0 .SuperFlyPart:Main
-			SetConst *Var1 .Anim:SuperFly_Idle
+			SetConst *Var0 .FlyParentPart:Main
+			SetConst *Var1 .Anim:FlyParent_Idle
 			ExecWait DoRecover
 		Default
 	EndSwitch
@@ -214,12 +215,12 @@
 	End
 }
 
-#new:Script $Script_TakeTurn_SuperFly {
+#new:Script $Script_TakeTurn_FlyParent {
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
-	Call GetActorVar ( .Actor:Self .SuperFlyActorVar:TurnCount *Var0 )
+	Call GetActorVar ( .Actor:Self .FlyParentActorVar:TurnCount *Var0 )
 	Switch(*Var0)
-	Case == .SuperFlyActorValue:TurnOne
+	Case == .FlyParentActorValue:TurnOne
         Call GetStatusFlags ( .Actor:Self *Var0 )
         If *Var0 & ~Flags:StatusFlags:Sleep|Frozen|Fear|Paralyze|Dizzy|Stone|Stop % 35D000
             Return
@@ -231,16 +232,14 @@
 		Call SetBattleCamOffsetZ ( 35` )
 		Call MoveBattleCamOver ( 40` )
 		Call PlaySoundAtActor ( .Actor:Self .Sound:PowerUp )
-		Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack )
-        Call SetIdleAnimations ( .Actor:Self .SuperFlyPart:Main $IdleAnimations_Attack_SuperFly )
+		Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Attack )
+        Call SetIdleAnimations ( .Actor:Self .FlyParentPart:Main $IdleAnimations_Attack_FlyParent )
 		Wait 30`
-		Call SetActorVar ( .Actor:Self .SuperFlyActorVar:TurnCount .SuperFlyActorValue:TurnTwo )
-	Case == .SuperFlyActorValue:TurnTwo
-        Call GetStatusFlags ( .Actor:Self *Var0 )
-        If *Var0 & ~Flags:StatusFlags:Sleep|Frozen|Fear|Paralyze|Dizzy|Stone|Stop % 35D000
-            Return
-        EndIf
-		ExecWait $Script_Attack_QuadShot_SuperFly
+		Call SetActorVar ( .Actor:Self .FlyParentActorVar:TurnCount .FlyParentActorValue:TurnTwo )
+	Case == .FlyParentActorValue:TurnTwo
+		ExecWait $Script_Attack_QuadShot_FlyParent
+    Case == .FlyParentActorValue:TurnThree
+        ExecWait $Script_Attack_SmallFlyPoison_FlyParent
 	EndSwitch
 
 	Call EnableIdleScript ( .Actor:Self .True )
@@ -249,9 +248,9 @@
 	End
 }
 
-%%%%% & WIP Scripts & %%%%%
+%%%%% & Unfinished/WIP Scripts & %%%%%
 
-#new:Script $Script_Attack_QuadShot_SuperFly {
+#new:Script $Script_Attack_QuadShot_FlyParent {
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
@@ -260,7 +259,7 @@
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
-	Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack )
+	Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Attack )
 	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
 	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
 	Switch *Var0
@@ -278,9 +277,8 @@
 			EndIf
 			Call UseBattleCamPreset ( 00000002 )
 			Call YieldTurn ( )
-			Call 8027D32C ( .Actor:Self ) % HideHealthBar
-			Call UseIdleAnimation ( .Actor:Self .False )
-			Call RemoveActor ( .Actor:Self )
+            Call EnableIdleScript ( .Actor:Self .True )
+            Call UseIdleAnimation ( .Actor:Self .True )
 			Return
 		EndCaseGroup
 	EndSwitch
@@ -292,13 +290,20 @@
 	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
 	Call SetGoalToTarget ( .Actor:Self )
 	Wait 2`
-	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .SuperFlyDamage:QuadShot 00000020 )
+	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .FlyParentDamage:QuadShot 00000020 )
 	Call UseBattleCamPreset ( 00000002 )
 	Call YieldTurn ( )
-	SetConst *Var0 .SuperFlyPart:Main
-	SetConst *Var1 .Anim:SuperFly_Attack
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	SetConst *Var0 .FlyParentPart:Main
+	SetConst *Var1 .Anim:FlyParent_Attack
 	Set *Var2 FFFFCFC7
 	ExecWait DoDeath
 	Return
 	End
+}
+
+#new:Script $Script_Attack_SmallFlyPoison_FlyParent {
+    Return
+    End
 }

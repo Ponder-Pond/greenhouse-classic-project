@@ -1,19 +1,28 @@
 #import newenemy/Fly.bpat
+#import newenemy/SuperFly.bpat
+#import newenemy/FlyParent.bpat
+#import newenemy/BombFly.bpat
+#import newenemy/KingWatinga.bpat
 
 #new:FormationTable $FormationTable_GNT
 {
     00000000 00000001 $Formation_00 $Stage_GnatAttack 00000000 % King Watinga, Battle 0
     00000000 00000001 $Formation_01 $Stage_GnatAttack 00000000 % Fly, Battle 1
     00000000 00000001 $Formation_02 $Stage_GnatAttack 00000000 % Super Fly, Battle 2
-    00000000 00000001 $Formation_03 $Stage_GnatAttack 00000000 % Parent Fly, Battle 3
+    00000000 00000001 $Formation_03 $Stage_GnatAttack 00000000 % Fly Parent, Battle 3
     00000000 00000001 $Formation_04 $Stage_GnatAttack 00000000 % Bomb Fly, Battle 4
 	00000000 00000000 00000000 00000000 00000000
 }
 
+#new:Vector3D $Vector3D_KingWatinga
+{
+	100` 40` 0`
+}
+
 #new:Formation $Formation_00
 {
-	/% Enemy Name %/ $Fly
-    /% IDX %/ 5`
+	/% Enemy Name %/ $KingWatinga
+    /% Vector3D %/ $Vector3D_KingWatinga
     /% Priority %/ 10`
     00000000
     00000000
@@ -34,7 +43,7 @@
 
 #new:Formation $Formation_02
 {
-	/% Enemy Name %/ $Fly
+	/% Enemy Name %/ $SuperFly
     /% IDX %/ 5`
     /% Priority %/ 10`
     00000000
@@ -45,7 +54,7 @@
 
 #new:Formation $Formation_03
 {
-	/% Enemy Name %/ $Fly
+	/% Enemy Name %/ $FlyParent
     /% IDX %/ 5`
     /% Priority %/ 10`
     00000000
@@ -56,7 +65,7 @@
 
 #new:Formation $Formation_04
 {
-	/% Enemy Name %/ $Fly
+	/% Enemy Name %/ $BombFly
     /% IDX %/ 5`
     /% Priority %/ 10`
     00000000
