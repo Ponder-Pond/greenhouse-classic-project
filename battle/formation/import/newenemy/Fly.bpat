@@ -116,7 +116,7 @@
 	Call ResetAllActorSounds ( .Actor:Self )
 	Call SetGoalToHome ( .Actor:Self )
 	Call SetAnimation ( .Actor:Self .FlyPart:Main .Anim:Fly_Idle )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
 	Return
 	End
 }
@@ -213,13 +213,11 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
-	Call SetTargetActor ( .Actor:Self .Actor:Player )
 	Call SetGoalToTarget ( .Actor:Self )
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetAnimation ( .Actor:Self .FlyPart:Main .Anim:Fly_Idle )
-	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
 	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
 	Switch *Var0
 		CaseOR == .HitResult:Miss % 6
@@ -230,7 +228,7 @@
 			Add *Var1 10`
 			Add *Var2 2`
 			Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:Linear )
+			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
 			If *VarA == .HitResult:Lucky % 5
 				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 			EndIf
@@ -247,7 +245,7 @@
 	Add *Var1 10`
 	Add *Var2 2`
 	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
 	Call SetGoalToTarget ( .Actor:Self )
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .FlyDamage:Charge 00000020 )

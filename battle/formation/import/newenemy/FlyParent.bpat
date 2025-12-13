@@ -138,7 +138,7 @@
 #new:Script $Script_ReturnHome_FlyParent {
 	Call ResetAllActorSounds ( .Actor:Self )
 	Call SetGoalToHome ( .Actor:Self )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
 	Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Idle )
 	Return
 	End
@@ -230,11 +230,15 @@
 		Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 		Call SetBattleCamZoom ( 250` )
 		Call SetBattleCamOffsetZ ( 35` )
-		Call MoveBattleCamOver ( 40` )
+		Call MoveBattleCamOver ( 20` )
+		Wait 20`
 		Call PlaySoundAtActor ( .Actor:Self .Sound:PowerUp )
 		Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Attack )
         Call SetIdleAnimations ( .Actor:Self .FlyParentPart:Main $IdleAnimations_Attack_FlyParent )
 		Wait 30`
+		Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+		Call MoveBattleCamOver ( 20` )
+		Wait 20`
 		Call SetActorVar ( .Actor:Self .FlyParentActorVar:TurnCount .FlyParentActorValue:TurnTwo )
 	Case == .FlyParentActorValue:TurnTwo
 		ExecWait $Script_Attack_QuadShot_FlyParent
@@ -254,13 +258,11 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
-	Call SetTargetActor ( .Actor:Self .Actor:Player )
 	Call SetGoalToTarget ( .Actor:Self )
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Attack )
-	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
 	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
 	Switch *Var0
 		CaseOR == .HitResult:Miss % 6
@@ -271,7 +273,7 @@
 			Add *Var1 10`
 			Add *Var2 2`
 			Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:Linear )
+			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
 			If *VarA == .HitResult:Lucky % 5
 				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 			EndIf
@@ -287,7 +289,7 @@
 	Add *Var1 10`
 	Add *Var2 2`
 	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
 	Call SetGoalToTarget ( .Actor:Self )
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .FlyParentDamage:QuadShot 00000020 )

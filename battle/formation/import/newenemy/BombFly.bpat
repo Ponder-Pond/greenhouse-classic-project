@@ -126,7 +126,7 @@
 #new:Script $Script_ReturnHome_BombFly {
 	Call ResetAllActorSounds ( .Actor:Self )
 	Call SetGoalToHome ( .Actor:Self )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Idle )
 	Return
 	End
@@ -376,13 +376,17 @@
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetBattleCamZoom ( 250` )
 	Call SetBattleCamOffsetZ ( 35` )
-	Call MoveBattleCamOver ( 40` )
+	Call MoveBattleCamOver ( 20` )
+	Wait 20`
 	Call PlaySoundAtActor ( .Actor:Self .Sound:PowerUp )
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Attack )
 	Call SetIdleAnimations ( .Actor:Self .BombFlyPart:Main $IdleAnimations_Ignited_BombFly )
 	Call BindHandleEvent ( .Actor:Self $Script_HandleEvent_Ignited_BombFly )
 	Call SetPartEventBits ( .Actor:Self .BombFlyPart:Main 00008000 .True )
 	Wait 30`
+	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+	Call MoveBattleCamOver ( 20` )
+	Wait 20`
 	Return
 	End
 }
@@ -438,13 +442,11 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
-	Call SetTargetActor ( .Actor:Self .Actor:Player )
 	Call SetGoalToTarget ( .Actor:Self )
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Attack )
-	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
 	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
 	Switch *Var0
 		CaseOR == .HitResult:Miss % 6
@@ -455,7 +457,7 @@
 			Add *Var1 10`
 			Add *Var2 2`
 			Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:Linear )
+			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
 			Call UseBattleCamPreset ( 00000002 )
 			ExecWait $Script_Explode_BombFly
 			Wait 10`
@@ -475,7 +477,7 @@
 	Add *Var1 10`
 	Add *Var2 2`
 	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
 	Call SetGoalToTarget ( .Actor:Self )
 	Set *VarA 1`
 	ExecWait $Script_Explode_BombFly
