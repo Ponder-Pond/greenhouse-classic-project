@@ -1,0 +1,4867 @@
+% Automatically dumped from section 17
+
+#new:Actor $17_LavaPiranha {
+% stats
+[Index]        B3b 
+[Level]        45`b 
+[MaxHP]        40`b 
+[Coins]         0`b 
+[Flags]       00000000 
+[StatusTable] $StatusTable_8021D148_17 
+% ai
+[PartsCount]    2`s 
+[PartsTable]  $PartsTable_8021D1F4_17 
+[Script]      $Script_Init_8021D264_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  70`b 
+[SpinSmash]     4`b % weight (0-4)
+% ui positions
+[Size]         50`b  50`b % width height
+[HealthBar]    20`b -10`b % dx dy
+[StatusTurn]    5`b  45`b % dx dy
+[StatusIcon]   30`b  47`b % dx dy
+}
+
+#new:Function $Function_80218000_17 {
+	ADDIU     SP, SP, FFE0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	COPY      S0, V0
+	COPY      A0, S0
+	JAL       ~Func:start_rumble
+	COPY      A1, V0
+	LW        RA, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:Function $Function_80218058_17 {
+	ADDIU     SP, SP, FE60
+	SW        S3, 194 (SP)
+	COPY      S3, A0
+	SW        S1, 18C (SP)
+	ADDIU     S1, SP, 10
+	COPY      A0, S1
+	LI        A1, 1
+	SW        RA, 198 (SP)
+	SW        S2, 190 (SP)
+	SW        S0, 188 (SP)
+	LW        V1, 90 (S3)
+	CLEAR     S2
+	SW        S3, 17C (SP)
+	SLLV      V0, V1, A1
+	ADDU      V0, V0, V1
+	SW        V0, 178 (SP)
+	LW        V1, 90 (S3)
+	ADDIU     V0, SP, 178
+	SW        R0, 184 (SP)
+	SW        V0, 1C (SP)
+	JAL       ~Func:LoadPath
+	SW        V1, 180 (SP)
+	COPY      S0, S3
+	.o5C
+	COPY      A0, S1
+	JAL       ~Func:GetNextPathPos
+	LI        A1, 1
+	COPY      A0, S1
+	LI        A1, *Var1
+	JAL       ~Func:get_float_variable
+	RESERVED
+	COPY      A0, S1
+	LI        A1, *Var2
+	JAL       ~Func:get_float_variable
+	SWC1      F0, 98 (S0)
+	COPY      A0, S1
+	LI        A1, *Var3
+	JAL       ~Func:get_float_variable
+	SWC1      F0, 9C (S0)
+	SWC1      F0, A0 (S0)
+	ADDIU     S0, S0, C
+	LW        V0, 84 (S1)
+	BNE       V0, R0, .o5C
+	ADDIU     S2, S2, 1
+	SW        S2, 1DC (S3)
+	LW        RA, 198 (SP)
+	LW        S3, 194 (SP)
+	LW        S2, 190 (SP)
+	LW        S1, 18C (SP)
+	LW        S0, 188 (SP)
+	JR        RA
+	ADDIU     SP, SP, 1A0
+}
+
+#new:Function $Function_8021812C_17 {
+	ADDIU     SP, SP, FFD8
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 24 (SP)
+	SW        S4, 20 (SP)
+	SW        S3, 1C (SP)
+	SW        S2, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S3, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S2, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S4, V0
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	COPY      S0, V0
+	MTC1      V0, F2
+	NOP
+	CVT.S.W   F2, F2
+	LI        V0, 2
+	LA        V1, $End[0]
+	SLL       A0, S3, 4
+	SUBU      A0, A0, S3
+	SLL       A0, A0, 5
+	ADDU      A0, A0, V1
+	SLL       V1, S2, 1
+	ADDU      V1, V1, S2
+	SLLV      V1, V1, V0
+	ADDU      A0, A0, V1
+	MTC1      S4, F0
+	NOP
+	CVT.S.W   F0, F0
+	SWC1      F0, 0 (A0)
+	MTC1      S0, F0
+	NOP
+	CVT.S.W   F0, F0
+	SWC1      F0, 4 (A0)
+	SWC1      F2, 8 (A0)
+	LW        RA, 24 (SP)
+	LW        S4, 20 (SP)
+	LW        S3, 1C (SP)
+	LW        S2, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	JR        RA
+	ADDIU     SP, SP, 28
+}
+
+#new:Function $Function_80218224_17 {
+	ADDIU     SP, SP, FFD8
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 20 (SP)
+	SW        S3, 1C (SP)
+	SW        S2, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S3, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S2, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	MTC1      V0, F0
+	NOP
+	CVT.S.W   F0, F0
+	LI        V0, 2
+	LA        A0, $End[0]
+	SLL       V1, S3, 4
+	SUBU      V1, V1, S3
+	SLL       V1, V1, 5
+	ADDU      V1, V1, A0
+	SLLV      S2, S2, V0
+	ADDU      V1, V1, S2
+	SWC1      F0, 6C (V1)
+	LW        RA, 20 (SP)
+	LW        S3, 1C (SP)
+	LW        S2, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	JR        RA
+	ADDIU     SP, SP, 28
+}
+
+#new:Function $Function_802182E4_17 {
+	ADDIU     SP, SP, FFE0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        RA, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:Function $Function_8021835C_17 {
+	ADDIU     SP, SP, FF78
+	LAW       V1, $End[780]
+	LI        V0, FFFF
+	SW        RA, 54 (SP)
+	SW        S8, 50 (SP)
+	SW        S7, 4C (SP)
+	SW        S6, 48 (SP)
+	SW        S5, 44 (SP)
+	SW        S4, 40 (SP)
+	SW        S3, 3C (SP)
+	SW        S2, 38 (SP)
+	SW        S1, 34 (SP)
+	SW        S0, 30 (SP)
+	SDC1      F30, 80 (SP)
+	SDC1      F28, 78 (SP)
+	SDC1      F26, 70 (SP)
+	SDC1      F24, 68 (SP)
+	SDC1      F22, 60 (SP)
+	BEQ       V1, V0, .o50C
+	SDC1      F20, 58 (SP)
+	BNE       V1, R0, .o1BC
+	CLEAR     A3
+	LA        S0, $End[0]
+	LIF       F28, 90.0
+	LIF       F26, 180.0
+	LIF       F20, 360.0
+	LIF       F22, -180.0
+	.o84
+	LI        V0, 1
+	BEQ       A3, V0, .oD0
+	SLTI      V0, A3, 2
+	BEQL      V0, R0, .oA8
+	LI        V0, 2
+	BEQ       A3, R0, .oC0
+	NOP
+	BEQ       R0, R0, .o50C
+	NOP
+	.oA8
+	BEQ       A3, V0, .oD8
+	LI        V0, 3
+	BEQ       A3, V0, .oDC
+	LI        S4, 5
+	BEQ       R0, R0, .o50C
+	NOP
+	.oC0
+	LIF       F24, 10.0
+	BEQ       R0, R0, .oE4
+	LI        S4, 9
+	.oD0
+	BEQ       R0, R0, .oDC
+	LI        S4, 7
+	.oD8
+	LI        S4, 7
+	.oDC
+	LIF       F24, 8.0
+	.oE4
+	CLEAR     S1
+	SW        S4, 90 (S0)
+	BLEZ      S4, .o18C
+	SWC1      F24, 94 (S0)
+	ADDIU     A1, S4, FFFF
+	COPY      V1, S0
+	LI        A0, 4
+	LIF       F9, 1.75
+	MTC1      R0, F8
+	LAD       F6, $ConstDouble_8022AC40_17
+	.o114
+	BNE       S1, A1, .o128
+	ADDU      V0, S0, A0
+	LWC1      F0, 6C (V1)
+	BEQ       R0, R0, .o174
+	ADD.S     F0, F0, F28
+	.o128
+	LWC1      F0, 6C (V1)
+	LWC1      F4, 6C (V0)
+	SUB.S     F2, F4, F0
+	C.LT.S    F26, F2
+	NOP
+	BC1F      .o14C
+	NOP
+	BEQ       R0, R0, .o15C
+	ADD.S     F0, F0, F20
+	.o14C
+	C.LT.S    F2, F22
+	NOP
+	BC1TL     .o15C
+	ADD.S     F4, F4, F20
+	.o15C
+	ADD.S     F0, F0, F4
+	CVT.D.S   F0, F0
+	MUL.D     F0, F0, F8
+	NOP
+	ADD.D     F0, F0, F6
+	CVT.S.D   F0, F0
+	.o174
+	SWC1      F0, 6C (V1)
+	ADDIU     V1, V1, 4
+	ADDIU     S1, S1, 1
+	SLT       V0, S1, S4
+	BNE       V0, R0, .o114
+	ADDIU     A0, A0, 4
+	.o18C
+	COPY      A0, S0
+	JAL       $Function_80218058_17
+	SW        A3, 28 (SP)
+	LW        A3, 28 (SP)
+	ADDIU     A3, A3, 1
+	SLTI      V0, A3, 4
+	BNE       V0, R0, .o84
+	ADDIU     S0, S0, 1E0
+	LI        V0, 1
+	SAW       V0, $End[780]
+	CLEAR     A3
+	.o1BC
+	LA        V0, 8009A66C
+	COPY      T0, V0
+	LI        T1, 01004008
+	SW        T1, 18 (SP)
+	LI        T1, 06020004
+	LA        S5, $End[0]
+	SW        T1, 1C (SP)
+	LW        V1, 0 (T0)
+	LUI       V0, E700
+	COPY      A0, V1
+	ADDIU     V1, V1, 8
+	SW        V1, 0 (T0)
+	SW        V0, 0 (A0)
+	ADDIU     V0, V1, 8
+	SW        R0, 4 (A0)
+	SW        V0, 0 (T0)
+	LUI       V0, DE00
+	SW        V0, 0 (V1)
+	LA        V0, $DisplayList_8021CF40_17
+	SW        V0, 4 (V1)
+	.o220
+	CLEAR     S1
+	LUI       V0, DE01
+	LWC1      F24, 94 (S5)
+	LW        A0, 0 (T0)
+	LW        S4, 90 (S5)
+	ADDIU     T1, A0, 8
+	SW        T1, 10 (SP)
+	LW        A2, 1DC (S5)
+	COPY      S3, T1
+	SW        V0, 0 (A0)
+	SLL       V1, A2, 5
+	ADDIU     V0, V1, 8
+	ADDU      V0, A0, V0
+	ADDU      V1, T1, V1
+	SW        V0, 4 (A0)
+	BLEZ      A2, .o480
+	SW        V1, 0 (T0)
+	ADDIU     V0, S4, FFFF
+	SLL       V0, V0, 2
+	ADDU      V0, S5, V0
+	SW        V0, 14 (SP)
+	COPY      A1, S1
+	COPY      S8, S1
+	COPY      S7, S1
+	COPY      S6, S1
+	COPY      S2, S5
+	ADDIU     S0, A0, 16
+	.o28C
+	MTC1      S1, F2
+	NOP
+	CVT.S.W   F2, F2
+	MTC1      S4, F0
+	NOP
+	CVT.S.W   F0, F0
+	MUL.S     F2, F2, F0
+	NOP
+	MTC1      A2, F0
+	NOP
+	CVT.S.W   F0, F0
+	LWC1      F26, 98 (S2)
+	LWC1      F28, 9C (S2)
+	LWC1      F30, A0 (S2)
+	DIV.S     F2, F2, F0
+	TRUNC.W.S F10, F2
+	MFC1      A0, F10
+	NOP
+	MTC1      A0, F0
+	NOP
+	CVT.S.W   F0, F0
+	ADDIU     V1, A0, 1
+	SLT       V0, V1, S4
+	BNE       V0, R0, .o300
+	SUB.S     F6, F2, F0
+	LW        T1, 14 (SP)
+	LWC1      F22, 6C (T1)
+	BEQ       R0, R0, .o38C
+	MOV.S     F12, F22
+	.o300
+	SLL       V0, V1, 2
+	ADDU      V0, S5, V0
+	LWC1      F4, 6C (V0)
+	SLL       V0, A0, 2
+	ADDU      V0, S5, V0
+	LWC1      F12, 6C (V0)
+	SUB.S     F2, F4, F12
+	LIF       F0, 180.0
+	NOP
+	C.LT.S    F0, F2
+	NOP
+	BC1F      .o34C
+	NOP
+	LIF       F10, 360.0
+	NOP
+	SUB.S     F4, F4, F10
+	SUB.S     F2, F4, F12
+	.o34C
+	LIF       F0, -180.0
+	NOP
+	C.LT.S    F2, F0
+	NOP
+	BC1FL     .o37C
+	SUB.S     F0, F4, F12
+	LIF       F10, 360.0
+	NOP
+	ADD.S     F4, F4, F10
+	SUB.S     F0, F4, F12
+	.o37C
+	MUL.S     F0, F0, F6
+	NOP
+	ADD.S     F22, F0, F12
+	MOV.S     F12, F22
+	.o38C
+	SW        A1, 20 (SP)
+	SW        A2, 24 (SP)
+	SW        A3, 28 (SP)
+	JAL       ~Func:sin_deg
+	SW        T0, 2C (SP)
+	MUL.S     F20, F0, F24
+	NOP
+	JAL       ~Func:cos_deg
+	MOV.S     F12, F22
+	NEG.S     F0, F0
+	MUL.S     F0, F0, F24
+	NOP
+	ADD.S     F4, F26, F20
+	ADD.S     F2, F28, F0
+	SUB.S     F20, F26, F20
+	ADDIU     S2, S2, C
+	ADDIU     S1, S1, 1
+	SUB.S     F0, F28, F0
+	TRUNC.W.S F10, F4
+	MFC1      V0, F10
+	NOP
+	SH        V0, 0 (S3)
+	TRUNC.W.S F10, F2
+	MFC1      V0, F10
+	TRUNC.W.S F10, F30
+	MFC1      V1, F10
+	ADDIU     S3, S3, 10
+	SH        V0, FFF4 (S0)
+	SH        V1, FFF6 (S0)
+	SH        S6, FFFA (S0)
+	SH        R0, FFFC (S0)
+	SB        S7, FFFE (S0)
+	SB        S8, FFFF (S0)
+	LW        A1, 20 (SP)
+	TRUNC.W.S F10, F20
+	MFC1      V0, F10
+	SB        A1, 0 (S0)
+	ADDIU     S0, S0, 10
+	SH        V0, 0 (S3)
+	TRUNC.W.S F10, F0
+	MFC1      V0, F10
+	NOP
+	SH        V0, FFF4 (S0)
+	LI        V0, 400
+	SH        V1, FFF6 (S0)
+	SH        S6, FFFA (S0)
+	SH        V0, FFFC (S0)
+	SB        S7, FFFE (S0)
+	SB        S8, FFFF (S0)
+	SB        A1, 0 (S0)
+	ADDIU     S0, S0, 10
+	ADDIU     S3, S3, 10
+	ADDIU     A1, A1, 1E
+	ADDIU     S8, S8, 78
+	ADDIU     S7, S7, 32
+	LW        A2, 24 (SP)
+	LW        A3, 28 (SP)
+	LW        T0, 2C (SP)
+	SLT       V0, S1, A2
+	BNE       V0, R0, .o28C
+	ADDIU     S6, S6, 140
+	.o480
+	ADDIU     A1, A2, FFFF
+	BLEZ      A1, .o4D8
+	CLEAR     S1
+	LI        A2, 00020406
+	LW        A0, 10 (SP)
+	.o498
+	LW        V1, 0 (T0)
+	ADDIU     S1, S1, 1
+	COPY      V0, V1
+	ADDIU     V1, V1, 8
+	SW        A0, 4 (V0)
+	SW        V1, 0 (T0)
+	LW        T1, 18 (SP)
+	ADDIU     A0, A0, 20
+	SW        T1, 0 (V0)
+	ADDIU     V0, V1, 8
+	SW        V0, 0 (T0)
+	LW        T1, 1C (SP)
+	SLT       V0, S1, A1
+	SW        A2, 4 (V1)
+	BNE       V0, R0, .o498
+	SW        T1, 0 (V1)
+	.o4D8
+	ADDIU     A3, A3, 1
+	SLTI      V0, A3, 4
+	BNE       V0, R0, .o220
+	ADDIU     S5, S5, 1E0
+	LA        V1, 8009A66C
+	LW        V0, 0 (V1)
+	COPY      A0, V0
+	ADDIU     V0, V0, 8
+	SW        V0, 0 (V1)
+	LUI       V0, E700
+	SW        V0, 0 (A0)
+	SW        R0, 4 (A0)
+	.o50C
+	LW        RA, 54 (SP)
+	LW        S8, 50 (SP)
+	LW        S7, 4C (SP)
+	LW        S6, 48 (SP)
+	LW        S5, 44 (SP)
+	LW        S4, 40 (SP)
+	LW        S3, 3C (SP)
+	LW        S2, 38 (SP)
+	LW        S1, 34 (SP)
+	LW        S0, 30 (SP)
+	LDC1      F30, 80 (SP)
+	LDC1      F28, 78 (SP)
+	LDC1      F26, 70 (SP)
+	LDC1      F24, 68 (SP)
+	LDC1      F22, 60 (SP)
+	LDC1      F20, 58 (SP)
+	JR        RA
+	ADDIU     SP, SP, 88
+}
+
+#new:Function $Function_802188B0_17 {
+	ADDIU     SP, SP, FFD8
+	LA        V0, $Function_8021835C_17
+	SW        V0, 1C (SP)
+	LI        V0, A
+	SW        V0, 14 (SP)
+	LI        V0, 1
+	ADDIU     A0, SP, 10
+	SW        RA, 20 (SP)
+	SW        R0, 18 (SP)
+	JAL       ~Func:queue_render_task
+	SW        V0, 10 (SP)
+	LW        RA, 20 (SP)
+	JR        RA
+	ADDIU     SP, SP, 28
+}
+
+#new:Function $Function_802188EC_17 {
+	SAW       R0, $End[780]
+	JR        RA
+	LI        V0, 2
+}
+
+#new:Function $Function_802188FC_17 {
+	ADDIU     SP, SP, FFE8
+	LI        V0, FFFF
+	LA        A1, $Function_802188B0_17
+	SW        RA, 10 (SP)
+	SAW       V0, $End[780]
+	JAL       ~Func:create_generic_entity_world
+	CLEAR     A0
+	LW        RA, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 18
+}
+
+#new:Function $Function_80218930_17 {
+	ADDIU     SP, SP, FFC0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 28 (SP)
+	SW        S5, 24 (SP)
+	SW        S4, 20 (SP)
+	SW        S3, 1C (SP)
+	SW        S2, 18 (SP)
+	SW        S0, 10 (SP)
+	SDC1      F22, 38 (SP)
+	SDC1      F20, 30 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	LW        S4, C (V0)
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S5, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S2, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	MTC1      V0, F22
+	NOP
+	CVT.S.W   F22, F22
+	JAL       ~Func:get_variable
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	COPY      A0, S1
+	JAL       ~Func:get_variable
+	COPY      S3, V0
+	COPY      A0, S1
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	COPY      S1, V0
+	MOV.S     F12, F22
+	JAL       ~Func:cos_deg
+	COPY      S0, V0
+	MTC1      S3, F20
+	NOP
+	CVT.S.W   F20, F20
+	MUL.S     F0, F0, F20
+	NOP
+	MTC1      S5, F2
+	NOP
+	CVT.S.W   F2, F2
+	SUB.S     F2, F2, F0
+	MOV.S     F12, F22
+	JAL       ~Func:sin_deg
+	SWC1      F2, 4 (S4)
+	MUL.S     F0, F0, F20
+	NOP
+	LIF       F2, 0.009938965
+	MTC1      S0, F4
+	NOP
+	CVT.S.W   F4, F4
+	MUL.S     F4, F4, F2
+	NOP
+	ADDU      S2, S2, S1
+	MTC1      S2, F2
+	NOP
+	CVT.S.W   F2, F2
+	SUB.S     F2, F2, F0
+	SWC1      F4, 10 (S4)
+	SWC1      F2, 8 (S4)
+	LW        RA, 28 (SP)
+	LW        S5, 24 (SP)
+	LW        S4, 20 (SP)
+	LW        S3, 1C (SP)
+	LW        S2, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LDC1      F22, 38 (SP)
+	LDC1      F20, 30 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 40
+}
+
+#new:Function $Function_80218A98_17 {
+	ADDIU     SP, SP, FFE0
+	LA        V1, $???_80222B68_17
+	SW        RA, 18 (SP)
+	LW        V0, 0 (V1)
+	ADDIU     A0, V0, 1
+	BEQ       A1, R0, .o4C
+	SW        A0, 0 (V1)
+	JAL       ~Func:sfx_play_sound
+	LI        A0, D4
+	LI        V0, 8
+	SW        V0, 10 (SP)
+	CLEAR     A0
+	LI        A1, 8B
+	COPY      A2, A0
+	JAL       ~Func:bgm_set_song
+	LI        A3, 1F4
+	BEQ       R0, R0, .o94
+	CLEAR     V0
+	.o4C
+	LI        V0, 50
+	BEQ       A0, V0, .o68
+	LI        V0, 154
+	BEQ       A0, V0, .o78
+	LI        V0, 8
+	BEQ       R0, R0, .o94
+	CLEAR     V0
+	.o68
+	JAL       ~Func:bgm_init_music_players
+	NOP
+	BEQ       R0, R0, .o94
+	CLEAR     V0
+	.o78
+	SW        V0, 10 (SP)
+	CLEAR     A0
+	LI        A1, D
+	LI        A2, 1
+	JAL       ~Func:bgm_set_song
+	LI        A3, 1F4
+	LI        V0, 2
+	.o94
+	LW        RA, 18 (SP)
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:Function $Function_80218B38_17 {
+	ADDIU     SP, SP, FFE0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	SLL       V0, V0, 2
+	LW        A1, 0 (S0)
+	LTW       A2, V0 ($IntTable_80222D48_17)
+	JAL       ~Func:set_variable
+	COPY      A0, S1
+	LW        RA, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:Function $Function_80218B90_17 {
+	ADDIU     SP, SP, FFE0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	SLL       V0, V0, 2
+	LW        A1, 0 (S0)
+	LTW       A2, V0 ($IntTable_80222E20_17)
+	JAL       ~Func:set_variable
+	COPY      A0, S1
+	LW        RA, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:Function $Function_80218BE8_17 {
+	ADDIU     SP, SP, FFC0
+	SW        S2, 18 (SP)
+	COPY      S2, A0
+	SW        RA, 28 (SP)
+	SW        S5, 24 (SP)
+	SW        S4, 20 (SP)
+	SW        S3, 1C (SP)
+	SW        S1, 14 (SP)
+	SW        S0, 10 (SP)
+	SDC1      F22, 38 (SP)
+	SDC1      F20, 30 (SP)
+	LW        S0, C (S2)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	COPY      S5, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	JAL       ~Func:get_variable
+	COPY      A0, S2
+	COPY      S4, V0
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	JAL       ~Func:get_variable
+	COPY      A0, S2
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	MTC1      V0, F22
+	NOP
+	CVT.S.W   F22, F22
+	JAL       ~Func:get_variable
+	COPY      A0, S2
+	COPY      A0, S2
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	COPY      S3, V0
+	MOV.S     F12, F22
+	JAL       ~Func:cos_deg
+	COPY      S1, V0
+	MTC1      S3, F20
+	NOP
+	CVT.S.W   F20, F20
+	MUL.S     F0, F0, F20
+	NOP
+	MTC1      S5, F2
+	NOP
+	CVT.S.W   F2, F2
+	SUB.S     F2, F2, F0
+	ADDIU     S0, S0, 4
+	TRUNC.W.S F4, F2
+	MFC1      S5, F4
+	JAL       ~Func:sin_deg
+	MOV.S     F12, F22
+	MUL.S     F0, F0, F20
+	NOP
+	LW        A1, 0 (S0)
+	ADDIU     S0, S0, 4
+	ADDU      S1, S4, S1
+	MTC1      S1, F2
+	NOP
+	CVT.S.W   F2, F2
+	SUB.S     F2, F2, F0
+	COPY      A0, S2
+	TRUNC.W.S F4, F2
+	MFC1      S4, F4
+	JAL       ~Func:set_variable
+	COPY      A2, S5
+	COPY      A0, S2
+	LW        A1, 0 (S0)
+	JAL       ~Func:set_variable
+	COPY      A2, S4
+	LW        RA, 28 (SP)
+	LW        S5, 24 (SP)
+	LW        S4, 20 (SP)
+	LW        S3, 1C (SP)
+	LW        S2, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LDC1      F22, 38 (SP)
+	LDC1      F20, 30 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 40
+}
+
+#new:Function $Function_80218DF0_17 {
+	ADDIU     SP, SP, FFE0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	LW        A1, 0 (S0)
+	LW        S0, C (V0)
+	JAL       ~Func:get_float_variable
+	COPY      A0, S1
+	SWC1      F0, 2C (S0)
+	SWC1      F0, 30 (S0)
+	LW        RA, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A120_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@ModelID    00000058 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A14C_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   1.367840 0.000000 -0.049440
+@Next       $AnimatedModelNode_8021A120_17 
+@ModelID    00000057 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A178_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A14C_17 
+@ModelID    00000056 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A1A4_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A178_17 
+@ModelID    00000055 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A1D0_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A1A4_17 
+@ModelID    00000054 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A1FC_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A1D0_17 
+@ModelID    00000053 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A228_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A1FC_17 
+@ModelID    00000052 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A254_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A228_17 
+@ModelID    00000051 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A280_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A254_17 
+@ModelID    00000050 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A2AC_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A280_17 
+@ModelID    0000004F 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A2D8_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Next       $AnimatedModelNode_8021A2AC_17 
+@ModelID    0000004E 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021A304_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Child      $AnimatedModelNode_8021A2D8_17 
+}
+
+#new:AnimatedModelTree $AnimatedModelTree_8021A330_17 {
+$AnimatedModelNode_8021A304_17 $AnimatedModelNode_8021A2D8_17 $AnimatedModelNode_8021A2AC_17 $AnimatedModelNode_8021A280_17 $AnimatedModelNode_8021A254_17 $AnimatedModelNode_8021A228_17 $AnimatedModelNode_8021A1FC_17 $AnimatedModelNode_8021A1D0_17 
+$AnimatedModelNode_8021A1A4_17 $AnimatedModelNode_8021A178_17 $AnimatedModelNode_8021A14C_17 $AnimatedModelNode_8021A120_17 00000000 
+}
+
+#new:ModelAnimation $ModelAnimation_8021A364_17 {
+	SetRotation ( 0001s 0.0 0.0 0.0 )
+	SetPosition ( 0001s    0`s    0`s    0`s )
+	SetScale    ( 0001s 1.0 1.0 1.0 )
+	SetRotation ( 0002s 0.0 0.0 0.0 )
+	SetPosition ( 0002s    0`s    0`s    0`s )
+	SetScale    ( 0002s 1.0 1.0 1.0 )
+	SetRotation ( 0003s 0.0 0.0 0.0 )
+	SetPosition ( 0003s    0`s    0`s    0`s )
+	SetScale    ( 0003s 1.0 1.0 1.0 )
+	SetRotation ( 0004s 0.0 0.0 0.0 )
+	SetPosition ( 0004s    0`s    0`s    0`s )
+	SetScale    ( 0004s 1.0 1.0 1.0 )
+	SetRotation ( 0005s 0.0 0.0 0.0 )
+	SetPosition ( 0005s    0`s    0`s    0`s )
+	SetScale    ( 0005s 1.0 1.0 1.0 )
+	SetRotation ( 0006s 0.0 0.0 0.0 )
+	SetPosition ( 0006s    0`s    0`s    0`s )
+	SetScale    ( 0006s 1.0 1.0 1.0 )
+	SetRotation ( 0007s 0.0 0.0 0.0 )
+	SetPosition ( 0007s    0`s    0`s    0`s )
+	SetScale    ( 0007s 1.0 1.0 1.0 )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s    0`s    0`s    0`s )
+	SetScale    ( 0008s 1.0 1.0 1.0 )
+	SetRotation ( 0009s 0.0 0.0 0.0 )
+	SetPosition ( 0009s    0`s    0`s    0`s )
+	SetScale    ( 0009s 1.0 1.0 1.0 )
+	SetRotation ( 000As 0.0 0.0 0.0 )
+	SetPosition ( 000As    0`s    0`s    0`s )
+	SetScale    ( 000As 1.0 1.0 1.0 )
+	SetRotation ( 000Bs 1.37 0.0 -0.05 )
+	SetPosition ( 000Bs    0`s    0`s    0`s )
+	SetScale    ( 000Bs 1.0 1.0 1.0 )
+	SetRotation ( 000Cs 0.0 0.0 0.0 )
+	SetPosition ( 000Cs    0`s    0`s    0`s )
+	SetScale    ( 000Cs 1.0 1.0 1.0 )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -13.765 -0.705 -5.855 )
+	SetPosition ( 0002s    1`s   32`s   -4`s )
+	SetRotation ( 0003s -14.7 -1.65 -12.745 )
+	SetPosition ( 0003s    5`s   44`s   -6`s )
+	SetRotation ( 0004s -3.525 -0.195 -6.355 )
+	SetPosition ( 0004s    2`s   27`s   -1`s )
+	SetRotation ( 0005s 0.85 0.2 -26.46 )
+	SetPosition ( 0005s   19`s   80`s    0`s )
+	SetRotation ( 0006s 7.655 3.335 -47.095 )
+	SetPosition ( 0006s   53`s  121`s    9`s )
+	SetRotation ( 0007s 17.75 3.71 -23.43 )
+	SetPosition ( 0007s   18`s   66`s   14`s )
+	SetRotation ( 0008s 86.99 12.745 -13.43 )
+	SetPosition ( 0008s   10`s   39`s   43`s )
+	SetRotation ( 0009s 8.045 -0.285 4.015 )
+	SetPosition ( 0009s    0`s    6`s    1`s )
+	SetRotation ( 000As 2.775 -0.495 20.25 )
+	SetPosition ( 000As    1`s   -7`s    0`s )
+	SetRotation ( 000Bs 1.72 -0.27 9.94 )
+	SetPosition ( 000Bs   -1`s    1`s    0`s )
+	SetRotation ( 000Cs -4.86 0.14 3.325 )
+	SetPosition ( 000Cs    0`s    9`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -27.395 -2.78 -11.375 )
+	SetPosition ( 0002s    5`s   62`s  -13`s )
+	SetRotation ( 0003s -28.735 -6.42 -24.705 )
+	SetPosition ( 0003s   18`s   84`s  -20`s )
+	SetRotation ( 0004s -7.005 -0.775 -12.68 )
+	SetPosition ( 0004s    6`s   54`s   -3`s )
+	SetRotation ( 0005s 1.525 0.76 -52.91 )
+	SetPosition ( 0005s   68`s  145`s    2`s )
+	SetRotation ( 0006s -169.555 168.795 85.96 )
+	SetPosition ( 0006s  171`s  164`s   31`s )
+	SetRotation ( 0007s 32.885 13.97 -45.095 )
+	SetPosition ( 0007s   56`s  114`s   43`s )
+	SetRotation ( 0008s 0.0 153.82 -180.0 )
+	SetPosition ( 0008s   17`s    8`s   76`s )
+	SetRotation ( 0009s 16.05 -1.125 7.945 )
+	SetPosition ( 0009s   -1`s   13`s    3`s )
+	SetRotation ( 000As 5.21 -1.92 40.46 )
+	SetPosition ( 000As    8`s  -13`s   -1`s )
+	SetRotation ( 000Bs 2.025 -0.595 19.925 )
+	SetPosition ( 000Bs   -2`s    3`s    0`s )
+	SetRotation ( 000Cs -9.7 0.565 6.635 )
+	SetPosition ( 000Cs    0`s   17`s   -1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -40.815 -6.09 -16.27 )
+	SetPosition ( 0002s   11`s   88`s  -27`s )
+	SetRotation ( 0003s -41.725 -13.855 -35.365 )
+	SetPosition ( 0003s   36`s  116`s  -42`s )
+	SetRotation ( 0004s -10.4 -1.745 -18.965 )
+	SetPosition ( 0004s   13`s   79`s   -7`s )
+	SetRotation ( 0005s 1.875 1.555 -79.355 )
+	SetPosition ( 0005s  137`s  182`s    4`s )
+	SetRotation ( 0006s -173.635 161.44 37.595 )
+	SetPosition ( 0006s  275`s  107`s   50`s )
+	SetRotation ( 0007s 44.01 28.87 -64.995 )
+	SetPosition ( 0007s  106`s  131`s   81`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s    9`s  -12`s   41`s )
+	SetRotation ( 0009s 23.98 -2.495 11.725 )
+	SetPosition ( 0009s   -2`s   20`s    4`s )
+	SetRotation ( 000As 7.005 -4.1 60.63 )
+	SetPosition ( 000As   19`s  -16`s   -2`s )
+	SetRotation ( 000Bs 2.265 -0.975 29.915 )
+	SetPosition ( 000Bs   -1`s    5`s    0`s )
+	SetRotation ( 000Cs -14.505 1.26 9.89 )
+	SetPosition ( 000Cs   -1`s   25`s   -1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -54.035 -10.43 -20.295 )
+	SetPosition ( 0002s   19`s  110`s  -45`s )
+	SetRotation ( 0003s -53.68 -23.385 -44.48 )
+	SetPosition ( 0003s   59`s  137`s  -68`s )
+	SetRotation ( 0004s -13.675 -3.07 -25.19 )
+	SetPosition ( 0004s   21`s  103`s  -11`s )
+	SetRotation ( 0005s -178.17 177.575 74.185 )
+	SetPosition ( 0005s  211`s  185`s    7`s )
+	SetRotation ( 0006s 177.735 159.635 -12.605 )
+	SetPosition ( 0006s  297`s   -6`s   54`s )
+	SetRotation ( 0007s 49.84 46.41 -85.405 )
+	SetPosition ( 0007s  154`s  111`s  118`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s    3`s   35`s   16`s )
+	SetRotation ( 0009s 31.82 -4.38 15.285 )
+	SetPosition ( 0009s   -2`s   26`s    4`s )
+	SetRotation ( 000As 7.945 -6.765 80.8 )
+	SetPosition ( 000As   34`s  -13`s   -4`s )
+	SetRotation ( 000Bs 2.44 -1.385 39.9 )
+	SetPosition ( 000Bs    1`s    7`s    0`s )
+	SetRotation ( 000Cs -19.275 2.225 13.085 )
+	SetPosition ( 000Cs   -1`s   33`s   -2`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -67.165 -15.565 -23.265 )
+	SetPosition ( 0002s   28`s  126`s  -65`s )
+	SetRotation ( 0003s -64.925 -34.445 -51.965 )
+	SetPosition ( 0003s   82`s  146`s  -95`s )
+	SetRotation ( 0004s -16.795 -4.745 -31.335 )
+	SetPosition ( 0004s   31`s  125`s  -17`s )
+	SetRotation ( 0005s -178.59 176.81 47.71 )
+	SetPosition ( 0005s  274`s  157`s    9`s )
+	SetRotation ( 0006s 170.76 164.7 -62.055 )
+	SetPosition ( 0006s  223`s  -97`s   40`s )
+	SetRotation ( 0007s -135.47 115.71 66.17 )
+	SetPosition ( 0007s  189`s   63`s  145`s )
+	SetRotation ( 0008s 86.99 12.745 -13.43 )
+	SetPosition ( 0008s   13`s   72`s   59`s )
+	SetRotation ( 0009s 39.555 -6.725 18.57 )
+	SetPosition ( 0009s   -2`s   31`s    4`s )
+	SetRotation ( 000As 7.895 -9.585 101.07 )
+	SetPosition ( 000As   51`s   -4`s   -7`s )
+	SetRotation ( 000Bs 2.535 -1.82 49.89 )
+	SetPosition ( 000Bs    4`s   10`s   -1`s )
+	SetRotation ( 000Cs -23.98 3.46 16.18 )
+	SetPosition ( 000Cs   -1`s   40`s   -2`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -80.42 -21.23 -25.0 )
+	SetPosition ( 0002s   37`s  136`s  -87`s )
+	SetRotation ( 0003s -76.13 -46.57 -57.585 )
+	SetPosition ( 0003s  104`s  143`s -120`s )
+	SetRotation ( 0004s -19.725 -6.74 -37.4 )
+	SetPosition ( 0004s   42`s  144`s  -23`s )
+	SetRotation ( 0005s -179.315 176.315 21.205 )
+	SetPosition ( 0005s  314`s  104`s   10`s )
+	SetRotation ( 0006s -9.87 6.985 70.51 )
+	SetPosition ( 0006s  102`s -100`s   18`s )
+	SetRotation ( 0007s 180.0 105.05 0.0 )
+	SetPosition ( 0007s  204`s    0`s  156`s )
+	SetRotation ( 0008s 0.0 153.82 -180.0 )
+	SetPosition ( 0008s   21`s   39`s   92`s )
+	SetRotation ( 0009s 47.195 -9.49 21.52 )
+	SetPosition ( 0009s   -2`s   36`s    4`s )
+	SetRotation ( 000As 6.855 -12.215 121.53 )
+	SetPosition ( 000As   66`s    9`s   -9`s )
+	SetRotation ( 000Bs 2.555 -2.265 59.875 )
+	SetPosition ( 000Bs    9`s   13`s   -1`s )
+	SetRotation ( 000Cs -28.625 4.935 19.175 )
+	SetPosition ( 000Cs   -2`s   46`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -94.095 -27.12 -25.305 )
+	SetPosition ( 0002s   46`s  140`s -107`s )
+	SetRotation ( 0003s -88.76 -59.315 -60.385 )
+	SetPosition ( 0003s  122`s  129`s -141`s )
+	SetRotation ( 0004s -22.44 -9.025 -43.39 )
+	SetPosition ( 0004s   55`s  160`s  -30`s )
+	SetRotation ( 0005s 179.825 176.195 -5.305 )
+	SetPosition ( 0005s  323`s   40`s   10`s )
+	SetRotation ( 0006s -4.17 0.87 23.59 )
+	SetPosition ( 0006s   15`s   -8`s    2`s )
+	SetPosition ( 0007s  204`s    1`s  156`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   13`s   16`s   58`s )
+	SetRotation ( 0009s 54.75 -12.615 24.1 )
+	SetPosition ( 0009s   -1`s   40`s    3`s )
+	SetRotation ( 000As 4.92 -14.315 142.235 )
+	SetPosition ( 000As   78`s   29`s  -11`s )
+	SetRotation ( 000Bs 2.5 -2.705 69.87 )
+	SetPosition ( 000Bs   14`s   17`s   -1`s )
+	SetRotation ( 000Cs -33.195 6.645 22.05 )
+	SetPosition ( 000Cs   -2`s   52`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -108.56 -32.9 -23.97 )
+	SetPosition ( 0002s   54`s  137`s -127`s )
+	SetRotation ( 0003s 72.27 -107.965 124.085 )
+	SetPosition ( 0003s  134`s  108`s -155`s )
+	SetRotation ( 0004s -24.915 -11.575 -49.305 )
+	SetPosition ( 0004s   69`s  174`s  -38`s )
+	SetRotation ( 0005s 178.995 176.475 -31.815 )
+	SetPosition ( 0005s  298`s  -20`s    9`s )
+	SetRotation ( 0006s 4.17 0.87 -23.59 )
+	SetPosition ( 0006s   21`s  120`s    3`s )
+	SetPosition ( 0007s  204`s    2`s  156`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s    7`s   62`s   33`s )
+	SetRotation ( 0009s 62.27 -16.045 26.265 )
+	SetPosition ( 0009s   -1`s   43`s    2`s )
+	SetRotation ( 000As 2.325 -15.61 163.165 )
+	SetPosition ( 000As   86`s   53`s  -12`s )
+	SetRotation ( 000Bs 2.37 -3.135 79.865 )
+	SetPosition ( 000Bs   20`s   21`s   -2`s )
+	SetRotation ( 000Cs -37.695 8.58 24.79 )
+	SetPosition ( 000Cs   -2`s   57`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -124.24 -38.175 -20.75 )
+	SetPosition ( 0002s   61`s  128`s -143`s )
+	SetRotation ( 0003s 17.34 -98.31 164.985 )
+	SetPosition ( 0003s  139`s   82`s -160`s )
+	SetRotation ( 0004s -27.13 -14.37 -55.17 )
+	SetPosition ( 0004s   84`s  185`s  -47`s )
+	SetRotation ( 0005s 178.38 177.09 -58.305 )
+	SetPosition ( 0005s  246`s  -63`s    8`s )
+	SetRotation ( 0006s 9.87 6.985 -70.515 )
+	SetPosition ( 0006s  115`s  204`s   21`s )
+	SetPosition ( 0007s  204`s    1`s  156`s )
+	SetRotation ( 0008s 86.99 12.745 -13.43 )
+	SetPosition ( 0008s   17`s   97`s   76`s )
+	SetRotation ( 0009s 69.795 -19.72 27.985 )
+	SetPosition ( 0009s    0`s   44`s    1`s )
+	SetRotation ( 000As -0.59 -15.915 -175.79 )
+	SetPosition ( 000As   87`s   78`s  -12`s )
+	SetRotation ( 000Bs 2.165 -3.53 89.87 )
+	SetPosition ( 000Bs   27`s   26`s   -2`s )
+	SetRotation ( 000Cs -42.12 10.715 27.38 )
+	SetPosition ( 000Cs   -2`s   61`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 38.56 -137.5 164.51 )
+	SetPosition ( 0002s   66`s  115`s -155`s )
+	SetRotation ( 0003s -61.425 -104.01 -130.215 )
+	SetPosition ( 0003s  135`s   55`s -156`s )
+	SetRotation ( 0004s -29.075 -17.365 -61.0 )
+	SetPosition ( 0004s  100`s  193`s  -55`s )
+	SetRotation ( 0005s 178.1 177.92 -84.775 )
+	SetPosition ( 0005s  176`s  -78`s    5`s )
+	SetRotation ( 0006s -170.76 164.7 62.055 )
+	SetPosition ( 0006s  238`s  191`s   43`s )
+	SetPosition ( 0007s  204`s    0`s  156`s )
+	SetRotation ( 0008s 0.0 153.82 -180.0 )
+	SetPosition ( 0008s   25`s   62`s  109`s )
+	SetRotation ( 0009s 77.4 -23.58 29.205 )
+	SetPosition ( 0009s    0`s   44`s    0`s )
+	SetRotation ( 000As -3.42 -15.205 -154.77 )
+	SetPosition ( 000As   82`s  103`s  -11`s )
+	SetRotation ( 000Bs 1.89 -3.885 99.88 )
+	SetPosition ( 000Bs   33`s   32`s   -3`s )
+	SetRotation ( 000Cs -46.48 13.045 29.815 )
+	SetPosition ( 000Cs   -2`s   64`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 19.795 -134.62 171.66 )
+	SetPosition ( 0002s   69`s   98`s -162`s )
+	SetRotation ( 0003s -86.12 -116.4 -119.825 )
+	SetPosition ( 0003s  125`s   32`s -143`s )
+	SetRotation ( 0004s -30.71 -20.535 -66.825 )
+	SetPosition ( 0004s  117`s  197`s  -65`s )
+	SetRotation ( 0005s -1.78 1.215 68.775 )
+	SetPosition ( 0005s  105`s  -59`s    3`s )
+	SetRotation ( 0006s -177.735 159.635 12.605 )
+	SetPosition ( 0006s  308`s   91`s   56`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   17`s   36`s   74`s )
+	SetRotation ( 0009s 85.155 -27.55 29.88 )
+	SetPosition ( 0009s    0`s   43`s   -1`s )
+	SetRotation ( 000As -5.785 -13.555 -133.925 )
+	SetPosition ( 000As   70`s  126`s   -9`s )
+	SetRotation ( 000Bs 1.57 -4.19 109.89 )
+	SetPosition ( 000Bs   40`s   39`s   -3`s )
+	SetRotation ( 000Cs -50.78 15.545 32.09 )
+	SetPosition ( 000Cs   -2`s   67`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 0.0 -133.605 -180.0 )
+	SetPosition ( 0002s   70`s   79`s -164`s )
+	SetRotation ( 0003s 80.06 -50.775 58.93 )
+	SetPosition ( 0003s  107`s   16`s -124`s )
+	SetRotation ( 0004s -32.03 -23.85 -72.685 )
+	SetPosition ( 0004s  133`s  198`s  -74`s )
+	SetRotation ( 0005s -1.29 0.495 42.325 )
+	SetPosition ( 0005s   47`s  -11`s    1`s )
+	SetRotation ( 0006s 173.635 161.44 -37.595 )
+	SetPosition ( 0006s  280`s  -26`s   51`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   11`s   80`s   49`s )
+	SetRotation ( 0009s 93.18 -31.575 29.95 )
+	SetPosition ( 0009s    1`s   41`s   -3`s )
+	SetRotation ( 000As -7.385 -11.21 -113.315 )
+	SetPosition ( 000As   54`s  143`s   -7`s )
+	SetRotation ( 000Bs 1.19 -4.425 119.91 )
+	SetPosition ( 000Bs   46`s   45`s   -3`s )
+	SetRotation ( 000Cs -55.03 18.2 34.19 )
+	SetPosition ( 000Cs   -2`s   69`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -19.795 -134.62 -171.66 )
+	SetPosition ( 0002s   69`s   60`s -161`s )
+	SetRotation ( 0003s 68.615 -38.39 54.07 )
+	SetPosition ( 0003s   86`s   10`s  -99`s )
+	SetRotation ( 0004s -33.0 -27.27 -78.63 )
+	SetPosition ( 0004s  150`s  196`s  -83`s )
+	SetRotation ( 0005s -0.525 0.075 15.875 )
+	SetPosition ( 0005s   14`s   57`s    0`s )
+	SetRotation ( 0006s 169.555 168.795 -85.96 )
+	SetPosition ( 0006s  174`s  -83`s   31`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   21`s  114`s   92`s )
+	SetRotation ( 0009s 101.575 -35.56 29.33 )
+	SetPosition ( 0009s    2`s   38`s   -4`s )
+	SetRotation ( 000As -8.04 -8.455 -92.94 )
+	SetPosition ( 000As   35`s  154`s   -4`s )
+	SetRotation ( 000Bs 0.775 -4.6 129.935 )
+	SetPosition ( 000Bs   52`s   52`s   -4`s )
+	SetRotation ( 000Cs -59.25 21.0 36.105 )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -38.56 -137.5 -164.51 )
+	SetPosition ( 0002s   65`s   41`s -152`s )
+	SetRotation ( 0003s 57.48 -26.92 47.16 )
+	SetPosition ( 0003s   63`s   15`s  -73`s )
+	SetRotation ( 0004s -33.585 -30.76 -84.705 )
+	SetPosition ( 0004s  167`s  192`s  -92`s )
+	SetRotation ( 0005s 0.35 0.03 -10.585 )
+	SetPosition ( 0005s   14`s  134`s    0`s )
+	SetRotation ( 0006s -7.655 3.335 47.085 )
+	SetPosition ( 0006s   61`s  -40`s   11`s )
+	SetRotation ( 0008s 0.0 153.82 -180.0 )
+	SetPosition ( 0008s   29`s   77`s  126`s )
+	SetRotation ( 0009s 110.48 -39.43 27.93 )
+	SetPosition ( 0009s    3`s   34`s   -6`s )
+	SetRotation ( 000As -7.68 -5.66 -72.725 )
+	SetPosition ( 000As   14`s  158`s   -1`s )
+	SetRotation ( 000Bs 0.345 -4.7 139.96 )
+	SetPosition ( 000Bs   56`s   60`s   -4`s )
+	SetRotation ( 000Cs -63.45 23.925 37.835 )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 124.23 -38.175 20.75 )
+	SetPosition ( 0002s   59`s   25`s -139`s )
+	SetRotation ( 0003s 45.82 -16.825 38.58 )
+	SetPosition ( 0003s   42`s   32`s  -48`s )
+	SetRotation ( 0004s 146.26 -145.71 89.025 )
+	SetPosition ( 0004s  183`s  184`s -101`s )
+	SetRotation ( 0005s 1.15 0.385 -37.035 )
+	SetPosition ( 0005s   46`s  203`s    1`s )
+	SetRotation ( 0006s 0.0 0.0 0.0 )
+	SetPosition ( 0006s   17`s   75`s    3`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   21`s   49`s   91`s )
+	SetRotation ( 0009s 120.04 -43.065 25.65 )
+	SetPosition ( 0009s    3`s   29`s   -7`s )
+	SetRotation ( 000As -6.38 -3.155 -52.565 )
+	SetPosition ( 000As   -5`s  155`s    0`s )
+	SetRotation ( 000Bs -0.105 -4.715 149.985 )
+	SetPosition ( 000Bs   60`s   66`s   -4`s )
+	SetRotation ( 000Cs -67.655 26.96 39.365 )
+	SetPosition ( 000Cs   -2`s   68`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 108.56 -32.9 23.97 )
+	SetPosition ( 0002s   52`s   11`s -122`s )
+	SetRotation ( 0003s 33.185 -8.635 28.42 )
+	SetPosition ( 0003s   23`s   58`s  -27`s )
+	SetRotation ( 0004s 146.585 -142.195 82.475 )
+	SetPosition ( 0004s  198`s  174`s -110`s )
+	SetRotation ( 0005s 1.71 1.055 -63.485 )
+	SetPosition ( 0005s  105`s  249`s    3`s )
+	SetRotation ( 0006s 7.655 3.335 -47.095 )
+	SetPosition ( 0006s   72`s  186`s   13`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   15`s   91`s   66`s )
+	SetRotation ( 0009s 130.39 -46.355 22.39 )
+	SetPosition ( 0009s    4`s   24`s   -8`s )
+	SetRotation ( 000As -4.3 -1.25 -32.38 )
+	SetPosition ( 000As  -22`s  145`s    3`s )
+	SetRotation ( 000Bs -0.55 -4.66 160.01 )
+	SetPosition ( 000Bs   63`s   73`s   -4`s )
+	SetRotation ( 000Cs -71.89 30.085 40.675 )
+	SetPosition ( 000Cs   -2`s   67`s   -3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 94.09 -27.115 25.305 )
+	SetPosition ( 0002s   44`s    3`s -103`s )
+	SetRotation ( 0003s 19.47 -2.915 16.85 )
+	SetPosition ( 0003s   11`s   92`s  -13`s )
+	SetRotation ( 0004s 147.46 -138.73 75.56 )
+	SetPosition ( 0004s  212`s  161`s -118`s )
+	SetRotation ( 0005s 1.91 1.91 -89.94 )
+	SetPosition ( 0005s  177`s  264`s    5`s )
+	SetRotation ( 0006s -169.555 168.795 85.96 )
+	SetPosition ( 0006s  191`s  220`s   34`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   25`s  123`s  109`s )
+	SetRotation ( 0009s 141.63 -49.145 18.08 )
+	SetPosition ( 0009s    4`s   19`s   -9`s )
+	SetRotation ( 000As -1.69 -0.18 -12.155 )
+	SetPosition ( 000As  -34`s  130`s    4`s )
+	SetRotation ( 000Bs -0.975 -4.53 170.035 )
+	SetPosition ( 000Bs   64`s   80`s   -5`s )
+	SetRotation ( 000Cs -76.185 33.29 41.755 )
+	SetPosition ( 000Cs   -2`s   65`s   -2`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 80.42 -21.23 25.0 )
+	SetPosition ( 0002s   35`s    0`s  -83`s )
+	SetRotation ( 0003s 4.935 -0.185 4.285 )
+	SetPosition ( 0003s    6`s  131`s   -7`s )
+	SetRotation ( 0004s 148.96 -135.375 68.175 )
+	SetPosition ( 0004s  226`s  145`s -125`s )
+	SetRotation ( 0005s -178.295 177.245 63.6 )
+	SetPosition ( 0005s  248`s  245`s    8`s )
+	SetRotation ( 0006s -173.635 161.44 37.595 )
+	SetPosition ( 0006s  296`s  153`s   53`s )
+	SetRotation ( 0008s 0.0 153.82 -180.0 )
+	SetPosition ( 0008s   33`s   84`s  142`s )
+	SetRotation ( 0009s 153.77 -51.3 12.77 )
+	SetPosition ( 0009s    4`s   13`s   -9`s )
+	SetRotation ( 000As 1.13 -0.08 8.1 )
+	SetPosition ( 000As  -39`s  112`s    5`s )
+	SetRotation ( 000Bs -1.375 -4.32 -179.955 )
+	SetPosition ( 000Bs   64`s   86`s   -5`s )
+	SetRotation ( 000Cs -80.58 36.55 42.565 )
+	SetPosition ( 000Cs   -1`s   63`s   -2`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 67.165 -15.565 23.265 )
+	SetPosition ( 0002s   27`s    0`s  -63`s )
+	SetRotation ( 0003s -9.84 -0.74 -8.55 )
+	SetPosition ( 0003s    9`s  169`s  -10`s )
+	SetRotation ( 0004s 151.18 -132.195 60.21 )
+	SetPosition ( 0004s  237`s  126`s -132`s )
+	SetRotation ( 0005s -178.855 176.575 37.11 )
+	SetPosition ( 0005s  304`s  195`s   10`s )
+	SetRotation ( 0006s 177.735 159.635 -12.605 )
+	SetPosition ( 0006s  319`s   29`s   58`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   25`s   54`s  107`s )
+	SetRotation ( 0009s 166.665 -52.665 6.62 )
+	SetPosition ( 0009s    4`s    6`s   -9`s )
+	SetRotation ( 000As 3.81 -0.965 28.34 )
+	SetPosition ( 000As  -39`s   93`s    5`s )
+	SetRotation ( 000Bs -1.725 -4.05 -169.94 )
+	SetPosition ( 000Bs   62`s   91`s   -5`s )
+	SetRotation ( 000Cs -85.115 39.86 43.1 )
+	SetPosition ( 000Cs   -1`s   60`s   -2`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 54.035 -10.43 20.295 )
+	SetPosition ( 0002s   19`s    6`s  -45`s )
+	SetRotation ( 0003s -24.155 -4.505 -20.845 )
+	SetPosition ( 0003s   19`s  203`s  -22`s )
+	SetRotation ( 0004s 154.21 -129.27 51.555 )
+	SetPosition ( 0004s  248`s  104`s -137`s )
+	SetRotation ( 0005s -179.655 176.215 10.605 )
+	SetPosition ( 0005s  332`s  125`s   11`s )
+	SetRotation ( 0006s 170.76 164.7 -62.055 )
+	SetPosition ( 0006s  246`s  -70`s   44`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   19`s   95`s   82`s )
+	SetRotation ( 0009s -180.0 -53.13 0.0 )
+	SetPosition ( 0009s    4`s    0`s   -9`s )
+	SetRotation ( 000As 6.025 -2.715 48.53 )
+	SetPosition ( 000As  -33`s   76`s    4`s )
+	SetRotation ( 000Bs -2.03 -3.72 -159.925 )
+	SetPosition ( 000Bs   59`s   96`s   -5`s )
+	SetRotation ( 000Cs -89.845 43.185 43.29 )
+	SetPosition ( 000Cs   -1`s   56`s   -1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 40.815 -6.09 16.27 )
+	SetPosition ( 0002s   12`s   16`s  -29`s )
+	SetRotation ( 0003s -37.52 -11.115 -31.975 )
+	SetPosition ( 0003s   36`s  229`s  -42`s )
+	SetRotation ( 0004s 158.14 -126.695 42.1 )
+	SetPosition ( 0004s  256`s   80`s -142`s )
+	SetRotation ( 0005s 179.48 176.26 -15.91 )
+	SetPosition ( 0005s  327`s   49`s   10`s )
+	SetRotation ( 0006s -9.87 6.985 70.51 )
+	SetPosition ( 0006s  125`s  -81`s   22`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   29`s  124`s  125`s )
+	SetPosition ( 0009s    4`s    1`s   -9`s )
+	SetRotation ( 000As 7.495 -5.12 68.695 )
+	SetPosition ( 000As  -23`s   63`s    3`s )
+	SetRotation ( 000Bs -2.27 -3.35 -149.92 )
+	SetPosition ( 000Bs   55`s   99`s   -5`s )
+	SetRotation ( 000Cs -94.84 46.515 43.1 )
+	SetPosition ( 000Cs   -1`s   52`s   -1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 27.395 -2.78 11.375 )
+	SetPosition ( 0002s    7`s   30`s  -18`s )
+	SetRotation ( 0003s -49.8 -20.01 -41.615 )
+	SetPosition ( 0003s   57`s  245`s  -66`s )
+	SetRotation ( 0004s 162.985 -124.575 31.8 )
+	SetPosition ( 0004s  263`s   54`s -146`s )
+	SetRotation ( 0005s 178.715 176.685 -42.41 )
+	SetPosition ( 0005s  290`s  -16`s    9`s )
+	SetRotation ( 0006s -4.17 0.87 23.59 )
+	SetPosition ( 0006s   39`s    0`s    7`s )
+	SetRotation ( 0008s 0.0 153.82 180.0 )
+	SetPosition ( 0008s   37`s   84`s  159`s )
+	SetPosition ( 0009s    4`s    2`s   -9`s )
+	SetRotation ( 000As 8.045 -7.89 88.895 )
+	SetPosition ( 000As   -9`s   54`s    1`s )
+	SetRotation ( 000Bs -2.44 -2.935 -139.92 )
+	SetPosition ( 000Bs   49`s  101`s   -5`s )
+	SetRotation ( 000Cs -100.195 49.82 42.445 )
+	SetPosition ( 000Cs    0`s   47`s   -1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 13.765 -0.705 5.855 )
+	SetPosition ( 0002s    5`s   45`s  -12`s )
+	SetRotation ( 0003s -61.22 -30.62 -49.66 )
+	SetPosition ( 0003s   81`s  248`s  -93`s )
+	SetRotation ( 0004s 165.495 -123.775 26.805 )
+	SetPosition ( 0004s  266`s   50`s -147`s )
+	SetRotation ( 0005s 178.225 177.41 -68.895 )
+	SetPosition ( 0005s  230`s  -60`s    7`s )
+	SetRotation ( 0006s 4.17 0.87 -23.59 )
+	SetPosition ( 0006s   44`s  120`s    8`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   28`s   53`s  124`s )
+	SetPosition ( 0009s    4`s    1`s   -9`s )
+	SetRotation ( 000As 7.595 -10.675 109.225 )
+	SetPosition ( 000As    3`s   51`s    0`s )
+	SetRotation ( 000Bs -2.54 -2.495 -129.925 )
+	SetPosition ( 000Bs   42`s  102`s   -5`s )
+	SetRotation ( 000Cs -106.0 53.065 41.235 )
+	SetPosition ( 000Cs    0`s   41`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 0.0 0.0 0.0 )
+	SetPosition ( 0002s    4`s   61`s  -11`s )
+	SetRotation ( 0003s -72.335 -42.44 -55.955 )
+	SetPosition ( 0003s  104`s  238`s -119`s )
+	SetRotation ( 0004s 168.175 -123.11 21.66 )
+	SetPosition ( 0004s  268`s   44`s -149`s )
+	SetRotation ( 0005s -1.905 1.735 84.645 )
+	SetPosition ( 0005s  158`s  -73`s    5`s )
+	SetRotation ( 0006s 9.87 6.985 -70.515 )
+	SetPosition ( 0006s  139`s  196`s   25`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   23`s   92`s   99`s )
+	SetPosition ( 0009s    4`s    0`s   -9`s )
+	SetRotation ( 000As 6.175 -13.13 129.78 )
+	SetPosition ( 000As   16`s   54`s   -2`s )
+	SetRotation ( 000Bs -2.555 -2.05 -119.935 )
+	SetPosition ( 000Bs   35`s  101`s   -5`s )
+	SetRotation ( 000Cs -112.405 56.205 39.345 )
+	SetPosition ( 000Cs    0`s   35`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -13.765 -0.705 -5.855 )
+	SetPosition ( 0002s    6`s   76`s  -15`s )
+	SetRotation ( 0003s -84.23 -55.025 -59.905 )
+	SetPosition ( 0003s  123`s  216`s -142`s )
+	SetRotation ( 0004s 170.995 -122.585 16.375 )
+	SetPosition ( 0004s  270`s   37`s -150`s )
+	SetRotation ( 0005s -1.625 0.905 58.195 )
+	SetPosition ( 0005s   90`s  -53`s    3`s )
+	SetRotation ( 0006s -170.76 164.7 62.055 )
+	SetPosition ( 0006s  261`s  173`s   47`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   33`s  121`s  142`s )
+	SetRotation ( 000As 3.94 -14.94 150.585 )
+	SetPosition ( 000As   24`s   61`s   -3`s )
+	SetRotation ( 000Bs -2.5 -1.61 -109.945 )
+	SetPosition ( 000Bs   26`s   98`s   -5`s )
+	SetRotation ( 000Cs -119.58 59.205 36.61 )
+	SetPosition ( 000Cs    0`s   28`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -27.395 -2.78 -11.375 )
+	SetPosition ( 0002s   10`s   89`s  -25`s )
+	SetRotation ( 0003s 80.025 -112.135 121.085 )
+	SetPosition ( 0003s  138`s  186`s -158`s )
+	SetRotation ( 0004s 173.93 -122.205 10.98 )
+	SetPosition ( 0004s  272`s   27`s -151`s )
+	SetRotation ( 0005s -1.0 0.29 31.745 )
+	SetPosition ( 0005s   41`s   -6`s    1`s )
+	SetRotation ( 0006s -177.735 159.635 12.605 )
+	SetPosition ( 0006s  330`s   64`s   60`s )
+	SetRotation ( 0008s 0.0 153.82 180.0 )
+	SetPosition ( 0008s   40`s   79`s  175`s )
+	SetRotation ( 000As 1.175 -15.855 171.58 )
+	SetPosition ( 000As   28`s   70`s   -3`s )
+	SetRotation ( 000Bs -2.365 -1.185 -99.96 )
+	SetPosition ( 000Bs   16`s   94`s   -5`s )
+	SetRotation ( 000Cs -127.715 61.98 32.855 )
+	SetPosition ( 000Cs    0`s   21`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -40.82 -6.09 -16.27 )
+	SetPosition ( 0002s   16`s   97`s  -39`s )
+	SetRotation ( 0003s 44.595 -100.56 142.385 )
+	SetPosition ( 0003s  145`s  149`s -167`s )
+	SetRotation ( 0004s 176.95 -121.975 5.505 )
+	SetPosition ( 0004s  273`s   14`s -151`s )
+	SetRotation ( 0005s -0.18 0.01 5.285 )
+	SetPosition ( 0005s   20`s   56`s    0`s )
+	SetRotation ( 0006s 173.635 161.44 -37.595 )
+	SetPosition ( 0006s  302`s  -62`s   54`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   32`s   46`s  140`s )
+	SetRotation ( 000As -1.755 -15.75 -167.365 )
+	SetPosition ( 000As   26`s   81`s   -3`s )
+	SetRotation ( 000Bs -2.16 -0.79 -89.97 )
+	SetPosition ( 000Bs    7`s   87`s   -5`s )
+	SetRotation ( 000Cs -137.025 64.44 27.87 )
+	SetPosition ( 000Cs    0`s   12`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -54.035 -10.43 -20.295 )
+	SetPosition ( 0002s   24`s  101`s  -56`s )
+	SetRotation ( 0003s -44.595 -100.565 -142.38 )
+	SetPosition ( 0003s  144`s  110`s -166`s )
+	SetRotation ( 0004s -180.0 -121.89 0.0 )
+	SetPosition ( 0004s  274`s    0`s -152`s )
+	SetRotation ( 0005s 0.69 0.13 -21.165 )
+	SetPosition ( 0005s   33`s  121`s    1`s )
+	SetRotation ( 0006s 169.555 168.795 -85.96 )
+	SetPosition ( 0006s  194`s -129`s   35`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   26`s   84`s  115`s )
+	SetRotation ( 000As -4.44 -14.645 -146.405 )
+	SetPosition ( 000As   17`s   91`s   -2`s )
+	SetRotation ( 000Bs -1.89 -0.435 -79.98 )
+	SetPosition ( 000Bs   -2`s   78`s   -5`s )
+	SetRotation ( 000Cs -147.67 66.48 21.515 )
+	SetPosition ( 000Cs    0`s    3`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -67.165 -15.565 -23.265 )
+	SetPosition ( 0002s   32`s   99`s  -76`s )
+	SetRotation ( 0003s -80.025 -112.135 -121.085 )
+	SetPosition ( 0003s  135`s   73`s -156`s )
+	SetPosition ( 0004s  275`s    1`s -152`s )
+	SetRotation ( 0005s 1.41 0.625 -47.62 )
+	SetPosition ( 0005s   77`s  172`s    2`s )
+	SetRotation ( 0006s -7.655 3.335 47.085 )
+	SetPosition ( 0006s   80`s  -95`s   14`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   36`s  111`s  158`s )
+	SetRotation ( 000As -6.535 -12.685 -125.65 )
+	SetPosition ( 000As    3`s   97`s    0`s )
+	SetRotation ( 000Bs -1.565 -0.135 -69.995 )
+	SetPosition ( 000Bs  -12`s   68`s   -5`s )
+	SetRotation ( 000Cs -156.005 67.595 16.19 )
+	SetPosition ( 000Cs    0`s    6`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -80.42 -21.23 -25.0 )
+	SetPosition ( 0002s   42`s   91`s  -98`s )
+	SetRotation ( 0003s 84.23 -55.025 59.905 )
+	SetPosition ( 0003s  120`s   42`s -138`s )
+	SetPosition ( 0004s  275`s    2`s -153`s )
+	SetRotation ( 0005s 1.835 1.385 -74.065 )
+	SetPosition ( 0005s  143`s  197`s    4`s )
+	SetRotation ( 0006s 0.0 0.0 0.0 )
+	SetPosition ( 0006s   34`s   10`s    6`s )
+	SetRotation ( 0008s 0.0 153.82 180.0 )
+	SetPosition ( 0008s   44`s   67`s  192`s )
+	SetRotation ( 000As -7.765 -10.14 -105.145 )
+	SetPosition ( 000As  -14`s   98`s    2`s )
+	SetRotation ( 000Bs -1.185 0.105 -60.01 )
+	SetPosition ( 000Bs  -22`s   55`s   -6`s )
+	SetRotation ( 000Cs -164.94 68.385 10.265 )
+	SetPosition ( 000Cs    0`s    8`s    1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -98.775 -21.565 22.78 )
+	SetPosition ( 0002s    7`s   14`s -112`s )
+	SetRotation ( 0003s 72.335 -42.44 55.955 )
+	SetPosition ( 0003s  100`s   20`s -115`s )
+	SetPosition ( 0004s  276`s    1`s -153`s )
+	SetRotation ( 0005s -178.13 177.745 79.48 )
+	SetPosition ( 0005s  217`s  189`s    7`s )
+	SetPosition ( 0006s   34`s   13`s    6`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   36`s   33`s  157`s )
+	SetRotation ( 000As -8.02 -7.325 -84.845 )
+	SetPosition ( 000As  -35`s   93`s    4`s )
+	SetRotation ( 000Bs 0.62 0.32 -18.365 )
+	SetPosition ( 000Bs  -49`s   35`s   -5`s )
+	SetRotation ( 000Cs -174.295 68.81 3.915 )
+	SetPosition ( 000Cs    0`s    9`s    1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 68.71 -170.57 -112.82 )
+	SetPosition ( 0002s   37`s  -65`s -100`s )
+	SetRotation ( 0003s 61.22 -30.62 49.66 )
+	SetPosition ( 0003s   78`s    9`s  -89`s )
+	SetPosition ( 0004s  277`s    0`s -154`s )
+	SetRotation ( 0005s -178.48 176.95 53.01 )
+	SetPosition ( 0005s  284`s  148`s    9`s )
+	SetPosition ( 0006s   34`s   16`s    6`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   30`s   68`s  132`s )
+	SetRotation ( 000As -7.27 -4.605 -64.66 )
+	SetPosition ( 000As  -55`s   81`s    7`s )
+	SetRotation ( 000Bs 2.11 -0.715 23.255 )
+	SetPosition ( 000Bs  -54`s    4`s   -6`s )
+	SetRotation ( 000Cs 176.195 68.845 -2.61 )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 68.03 172.37 -71.785 )
+	SetPosition ( 0002s  114`s -100`s  -67`s )
+	SetRotation ( 0003s 49.8 -20.01 41.615 )
+	SetPosition ( 0003s   55`s    9`s  -64`s )
+	SetRotation ( 0005s -179.15 176.39 26.515 )
+	SetPosition ( 0005s  329`s   81`s   10`s )
+	SetPosition ( 0006s   34`s   17`s    6`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   40`s   93`s  175`s )
+	SetRotation ( 000As -5.635 -2.305 -44.495 )
+	SetPosition ( 000As  -73`s   63`s   10`s )
+	SetRotation ( 000Bs 2.54 -2.485 64.875 )
+	SetPosition ( 000Bs  -36`s  -20`s   -8`s )
+	SetRotation ( 000Cs 166.785 68.5 -9.025 )
+	SetPosition ( 000Cs    0`s    6`s    1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 79.36 159.27 -27.955 )
+	SetPosition ( 0002s  192`s  -69`s  -33`s )
+	SetRotation ( 0003s 37.52 -11.115 31.975 )
+	SetPosition ( 0003s   36`s   21`s  -41`s )
+	SetRotation ( 0005s 180.0 176.185 0.0 )
+	SetPosition ( 0005s  345`s    0`s   11`s )
+	SetPosition ( 0006s   34`s   16`s    6`s )
+	SetRotation ( 0008s 0.0 153.82 180.0 )
+	SetPosition ( 0008s   48`s   47`s  208`s )
+	SetRotation ( 000As -3.305 -0.71 -24.295 )
+	SetPosition ( 000As  -88`s   40`s   12`s )
+	SetRotation ( 000Bs 1.685 -4.09 106.55 )
+	SetPosition ( 000Bs   -5`s  -28`s   -9`s )
+	SetRotation ( 000Cs 157.755 67.78 -15.05 )
+	SetPosition ( 000Cs    0`s    3`s    1`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 97.665 158.045 19.79 )
+	SetPosition ( 0002s  227`s   11`s  -18`s )
+	SetRotation ( 0003s 24.155 -4.505 20.845 )
+	SetPosition ( 0003s   21`s   41`s  -24`s )
+	SetPosition ( 0005s  345`s    3`s   11`s )
+	SetPosition ( 0006s   34`s   13`s    6`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   40`s   11`s  174`s )
+	SetRotation ( 000As -0.57 -0.02 -4.05 )
+	SetPosition ( 000As  -96`s   27`s   13`s )
+	SetRotation ( 000Bs -0.03 -4.72 148.315 )
+	SetPosition ( 000Bs   20`s  -15`s  -10`s )
+	SetRotation ( 000Cs 163.115 68.255 -11.49 )
+	SetPosition ( 000Cs    0`s    5`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 110.835 169.56 64.53 )
+	SetPosition ( 0002s  197`s   96`s  -31`s )
+	SetRotation ( 0003s 9.84 -0.74 8.55 )
+	SetPosition ( 0003s   13`s   67`s  -15`s )
+	SetPosition ( 0005s  345`s    6`s   11`s )
+	SetPosition ( 0006s   34`s   10`s    6`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   34`s   44`s  149`s )
+	SetRotation ( 000As 2.24 -0.32 16.205 )
+	SetPosition ( 000As  -98`s   12`s   13`s )
+	SetRotation ( 000Bs -1.725 -4.05 -169.94 )
+	SetPosition ( 000Bs   27`s   10`s  -10`s )
+	SetRotation ( 000Cs 168.645 68.6 -7.765 )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -67.705 -6.58 -74.395 )
+	SetPosition ( 0002s  118`s  140`s  -65`s )
+	SetRotation ( 0003s -4.935 -0.185 -4.285 )
+	SetPosition ( 0003s   14`s   94`s  -16`s )
+	SetPosition ( 0005s  345`s    7`s   11`s )
+	SetPosition ( 0006s   34`s   11`s    6`s )
+	SetRotation ( 0008s 86.985 12.745 -13.43 )
+	SetPosition ( 0008s   44`s   66`s  192`s )
+	SetRotation ( 000As 4.765 -1.57 36.425 )
+	SetPosition ( 000As  -94`s   -3`s   13`s )
+	SetRotation ( 000Bs -1.62 -4.15 -173.275 )
+	SetPosition ( 000Bs   27`s    9`s  -10`s )
+	SetRotation ( 000Cs 174.295 68.81 -3.915 )
+	SetPosition ( 000Cs    0`s    3`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -78.335 -20.195 -30.885 )
+	SetPosition ( 0002s   35`s  112`s -101`s )
+	SetRotation ( 0003s -19.47 -2.915 -16.85 )
+	SetPosition ( 0003s   22`s  120`s  -25`s )
+	SetPosition ( 0005s  345`s    6`s   11`s )
+	SetPosition ( 0006s   34`s   12`s    6`s )
+	SetRotation ( 0008s 0.0 153.82 180.0 )
+	SetPosition ( 0008s   52`s   18`s  225`s )
+	SetRotation ( 000As 6.71 -3.615 56.595 )
+	SetPosition ( 000As  -84`s  -17`s   11`s )
+	SetRotation ( 000Bs -1.495 -4.24 -176.615 )
+	SetPosition ( 000Bs   27`s    7`s  -10`s )
+	SetRotation ( 000Cs 180.0 68.88 0.0 )
+	SetPosition ( 000Cs    0`s    0`s    0`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s -96.54 -22.305 16.79 )
+	SetPosition ( 0002s   -6`s   28`s -119`s )
+	SetRotation ( 0003s -33.19 -8.635 -28.42 )
+	SetPosition ( 0003s   36`s  139`s  -42`s )
+	SetPosition ( 0005s  345`s    3`s   11`s )
+	SetPosition ( 0006s   34`s   11`s    6`s )
+	SetRotation ( 0008s -86.985 12.745 13.43 )
+	SetPosition ( 0008s   44`s  -20`s  190`s )
+	SetRotation ( 000As 7.83 -6.205 76.765 )
+	SetPosition ( 000As  -70`s  -29`s    9`s )
+	SetRotation ( 000Bs -1.375 -4.32 -179.955 )
+	SetPosition ( 000Bs   27`s    3`s  -10`s )
+	Wait        ( 0001s )
+	SetRotation ( 0002s 69.675 -168.575 -118.145 )
+	SetPosition ( 0002s   15`s  -66`s -109`s )
+	SetRotation ( 0003s -45.82 -16.825 -38.58 )
+	SetPosition ( 0003s   57`s  148`s  -65`s )
+	SetPosition ( 0005s  345`s    0`s   11`s )
+	SetPosition ( 0006s   34`s   10`s    6`s )
+	SetRotation ( 0008s 0.0 0.0 0.0 )
+	SetPosition ( 0008s   38`s    9`s  165`s )
+	SetRotation ( 000As 7.99 -9.025 97.0 )
+	SetPosition ( 000As  -54`s  -35`s    7`s )
+	SetPosition ( 000Bs   27`s    0`s  -10`s )
+	Wait        ( 0001s )
+	SetRotation ( 0003s -57.48 -26.92 -47.16 )
+	SetPosition ( 0003s   80`s  147`s  -92`s )
+	SetPosition ( 0005s  345`s    1`s   11`s )
+	SetRotation ( 000As 7.14 -11.72 117.415 )
+	SetPosition ( 000As  -38`s  -29`s    5`s )
+	Wait        ( 0001s )
+	SetRotation ( 0003s -68.615 -38.39 -54.07 )
+	SetPosition ( 0003s  103`s  133`s -119`s )
+	SetPosition ( 0005s  345`s    2`s   11`s )
+	SetRotation ( 000As 5.37 -13.95 138.07 )
+	SetPosition ( 000As  -24`s  -18`s    3`s )
+	Wait        ( 0001s )
+	SetRotation ( 0003s -80.065 -50.775 -58.93 )
+	SetPosition ( 0003s  124`s  107`s -143`s )
+	SetPosition ( 0005s  345`s    1`s   11`s )
+	SetRotation ( 000As 2.88 -15.425 158.96 )
+	SetPosition ( 000As  -14`s   -7`s    2`s )
+	Wait        ( 0001s )
+	SetRotation ( 0003s 86.12 -116.4 119.825 )
+	SetPosition ( 0003s  140`s   71`s -161`s )
+	SetPosition ( 0005s  345`s    0`s   11`s )
+	SetRotation ( 000As 0.0 -15.94 180.0 )
+	SetPosition ( 000As  -10`s    0`s    1`s )
+	Wait        ( 0001s )
+	RestoreReadPos  
+	End         
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C308_17 {
+@Position   102.000000 99.000000 -10.000000
+@Rotation   0.000000 0.000000 22.885220
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C334_17 {
+@Position   137.000000 94.000000 -10.000000
+@Rotation   0.000000 0.000000 60.481583
+@Next       $AnimatedModelNode_8021C308_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C360_17 {
+@Position   127.000000 56.000000 -10.000000
+@Rotation   0.000000 0.000000 -29.751884
+@Next       $AnimatedModelNode_8021C334_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C38C_17 {
+@Position   106.000000 23.000000 -10.000000
+@Rotation   0.000000 0.000000 -19.995728
+@Next       $AnimatedModelNode_8021C360_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C3B8_17 {
+@Position   122.000000 -13.000000 -10.000000
+@Rotation   0.000000 0.000000 29.999084
+@Next       $AnimatedModelNode_8021C38C_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C3E4_17 {
+@Position   120.000000 108.000000 -11.000000
+@Rotation   0.000000 0.000000 115.607162
+@Next       $AnimatedModelNode_8021C3B8_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C410_17 {
+@Position   140.000000 73.000000 -11.000000
+@Rotation   0.000000 0.000000 15.359355
+@Next       $AnimatedModelNode_8021C3E4_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C43C_17 {
+@Position   112.000000 42.000000 -11.000000
+@Rotation   0.000000 0.000000 -44.875027
+@Next       $AnimatedModelNode_8021C410_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C468_17 {
+@Position   110.000000 3.000000 -11.000000
+@Rotation   0.000000 0.000000 4.998932
+@Next       $AnimatedModelNode_8021C43C_17 
+@DisplayList   $AnimatedModelNode_8021C308_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C494_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Child      $AnimatedModelNode_8021C468_17 
+}
+
+#new:AnimatedModelTree $AnimatedModelTree_8021C4C0_17 {
+$AnimatedModelNode_8021C494_17 $AnimatedModelNode_8021C468_17 $AnimatedModelNode_8021C43C_17 $AnimatedModelNode_8021C410_17 $AnimatedModelNode_8021C3E4_17 $AnimatedModelNode_8021C3B8_17 $AnimatedModelNode_8021C38C_17 $AnimatedModelNode_8021C360_17 
+$AnimatedModelNode_8021C334_17 $AnimatedModelNode_8021C308_17 00000000 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C4F0_17 {
+@Position   62.000000 53.000000 -20.000000
+@Rotation   0.000000 0.000000 71.523178
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C51C_17 {
+@Position   97.000000 51.000000 -20.000000
+@Rotation   0.000000 0.000000 71.781364
+@Next       $AnimatedModelNode_8021C4F0_17 
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C548_17 {
+@Position   75.000000 19.000000 -20.000000
+@Rotation   0.000000 0.000000 -55.625477
+@Next       $AnimatedModelNode_8021C51C_17 
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C574_17 {
+@Position   69.000000 -19.000000 -20.000000
+@Rotation   0.000000 0.000000 0.670186
+@Next       $AnimatedModelNode_8021C548_17 
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C5A0_17 {
+@Position   76.000000 62.000000 -21.000000
+@Rotation   0.000000 0.000000 135.482040
+@Next       $AnimatedModelNode_8021C574_17 
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C5CC_17 {
+@Position   96.000000 28.000000 -21.000000
+@Rotation   0.000000 0.000000 8.075197
+@Next       $AnimatedModelNode_8021C5A0_17 
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C5F8_17 {
+@Position   67.000000 0.000000 -21.000000
+@Rotation   0.000000 0.000000 -29.328897
+@Next       $AnimatedModelNode_8021C5CC_17 
+@DisplayList   $AnimatedModelNode_8021C4F0_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C624_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Child      $AnimatedModelNode_8021C5F8_17 
+}
+
+#new:AnimatedModelTree $AnimatedModelTree_8021C650_17 {
+$AnimatedModelNode_8021C624_17 $AnimatedModelNode_8021C5F8_17 $AnimatedModelNode_8021C5CC_17 $AnimatedModelNode_8021C5A0_17 $AnimatedModelNode_8021C574_17 $AnimatedModelNode_8021C548_17 $AnimatedModelNode_8021C51C_17 $AnimatedModelNode_8021C4F0_17 
+00000000 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C678_17 {
+@Position   132.000000 -5.000000 -5.000000
+@Rotation   0.000000 0.000000 165.157013
+@DisplayList   $AnimatedModelNode_8021C678_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C6A4_17 {
+@Position   98.000000 4.000000 -5.000000
+@Rotation   0.000000 0.000000 -80.120239
+@Next       $AnimatedModelNode_8021C678_17 
+@DisplayList   $AnimatedModelNode_8021C678_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C6D0_17 {
+@Position   129.000000 -26.000000 -6.000000
+@Rotation   0.000000 0.000000 125.160072
+@Next       $AnimatedModelNode_8021C6A4_17 
+@DisplayList   $AnimatedModelNode_8021C678_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C6FC_17 {
+@Position   120.000000 12.000000 -6.000000
+@Rotation   0.000000 0.000000 -154.983368
+@Next       $AnimatedModelNode_8021C6D0_17 
+@DisplayList   $AnimatedModelNode_8021C678_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C728_17 {
+@Position   87.000000 -13.000000 -6.000000
+@Rotation   0.000000 0.000000 -39.749748
+@Next       $AnimatedModelNode_8021C6FC_17 
+@DisplayList   $AnimatedModelNode_8021C678_17 
+}
+
+#new:AnimatedModelNode $AnimatedModelNode_8021C754_17 {
+@Position   0.000000 0.000000 0.000000
+@Rotation   0.000000 0.000000 0.000000
+@Child      $AnimatedModelNode_8021C728_17 
+}
+
+#new:AnimatedModelTree $AnimatedModelTree_8021C780_17 {
+$AnimatedModelNode_8021C754_17 $AnimatedModelNode_8021C728_17 $AnimatedModelNode_8021C6FC_17 $AnimatedModelNode_8021C6D0_17 $AnimatedModelNode_8021C6A4_17 $AnimatedModelNode_8021C678_17 00000000 
+}
+
+#new:IntTable $IntTable_8021C940_17 {
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000001 11000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000011 21100000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000012 22100000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000112 22110000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000122 22210000 00000000 00000000 00000000 00000000 00000000 
+00000000 00001122 22211000 00000000 00000000 00000000 00000000 00000000 
+00000000 00001222 22221000 00000000 00000000 00000000 00000000 00000000 
+33333333 33311222 22221133 33333333 33333333 33333333 33333333 33333333 
+33333333 33312222 22222133 33333333 33333333 33333333 33333333 33333333 
+33333333 33112222 22222113 33333333 33333333 33333333 33333333 33333333 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444 
+33333333 33333333 33333333 33333333 33333333 31122222 22222113 33333333 
+33333333 33333333 33333333 33333333 33333333 33122222 22222133 33333333 
+33333333 33333333 33333333 33333333 33333333 33112222 22221133 33333333 
+00000000 00000000 00000000 00000000 00000000 00012222 22221000 00000000 
+00000000 00000000 00000000 00000000 00000000 00011222 22211000 00000000 
+00000000 00000000 00000000 00000000 00000000 00001222 22210000 00000000 
+00000000 00000000 00000000 00000000 00000000 00001122 22110000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000122 22100000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000112 21100000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000011 11000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+}
+
+#new:IntTable $IntTable_8021CD40_17 {
+014041C1 E7390241 044F0000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+}
+
+#new:DisplayList $DisplayList_8021CF40_17 {
+G_RDPPIPESYNC
+G_TEXTURE        (G_TX_RENDERTILE, 0.999985, 0.999985, 0, true)
+G_SetOtherMode_H (G_MDSFT_CYCLETYPE, G_CYC_1CYCLE)
+G_SetOtherMode_H (G_MDSFT_TEXTPERSP, 1)
+G_SetOtherMode_H (G_MDSFT_TEXTDETAIL, G_TD_CLAMP)
+G_SetOtherMode_H (G_MDSFT_TEXTLOD, G_TL_TILE)
+G_SetOtherMode_H (G_MDSFT_TEXTFILT, G_TF_BILERP)
+G_SetOtherMode_H (G_MDSFT_TEXTCONV, G_TC_FILT)
+G_SetOtherMode_L (G_MDSFT_RENDERMODE, ...
+	                  AA_EN, Z_CMP, Z_UPD, CVG_DST_FULL, CVG_X_ALPHA, ZMODE_OPA, ...
+	                  G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM, ...
+	                  G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
+G_SETCOMBINE     (G_CCMUX_0, G_CCMUX_0, G_CCMUX_0, G_CCMUX_TEXEL0, ...
+	                  G_ACMUX_0, G_ACMUX_0, G_ACMUX_0, G_ACMUX_TEXEL0, ...
+	                  G_CCMUX_0, G_CCMUX_0, G_CCMUX_0, G_CCMUX_TEXEL0, ...
+	                  G_ACMUX_0, G_ACMUX_0, G_ACMUX_0, G_ACMUX_TEXEL0)
+G_SetOtherMode_H (G_MDSFT_TEXTLUT, G_TT_RGBA16)
+G_SETIMG         (RGBA-16, 1`, $IntTable_8021CD40_17)
+G_RDPTILESYNC
+G_SETTILE        (G_TX_LOADTILE, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0) % invalid format (0:0)
+G_RDPLOADSYNC
+G_LOADTLUT       (G_TX_LOADTILE, 16`)
+G_RDPPIPESYNC
+G_SETIMG         (CI-8, 32`, $IntTable_8021C940_17)
+G_SETTILE        (G_TX_LOADTILE, CI-8, 4, 0, 0, 2, 5, 0, 0, 6, 0)
+G_RDPLOADSYNC
+G_LOADTILE       (G_TX_LOADTILE, 0.000000, 0.000000, 31.500000, 31.000000)
+G_RDPPIPESYNC
+G_SETTILE        (G_TX_RENDERTILE, CI-4, 4, 0, 0, 2, 5, 0, 0, 6, 0)
+G_SETTILESIZE    (G_TX_RENDERTILE, 0, 0, 64`, 32`)
+G_GEOMETRYMODE   (Clear, ALL)
+G_GEOMETRYMODE   (Set, G_ZBUFFER, G_SHADE)
+G_ENDDL
+}
+
+#new:IdleAnimations $IdleAnimations_8021D018_17 {
+.Status:Normal    00790003
+.Status:Stone     00790000
+.Status:Sleep     0079000A
+.Status:Poison    00790003
+.Status:Stop      00790000
+.Status:Static    00790000
+.Status:Paralyze  00790000
+.Status:Paralyze  00790000
+.Status:Dizzy     0079000A
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_8021D064_17 {
+.Status:Normal    00790004
+.Status:Stone     00790000
+.Status:Sleep     00790004
+.Status:Poison    00790004
+.Status:Stop      00790000
+.Status:Static    00790000
+.Status:Paralyze  00790000
+.Status:Paralyze  00790000
+.Status:Dizzy     0079000C
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_8021D0B0_17 {
+.Status:Normal    00790010
+.Status:Stop      00790000
+.Status:End
+}
+
+#new:DefenseTable $DefenseTable_8021D0C4_17 {
+.Element:Normal 00000000
+.Element:Water  00000000
+.Element:Ice    00000000
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:DefenseTable $DefenseTable_8021D0F0_17 {
+.Element:Normal 00000000
+.Element:Water  FFFFFFFE
+.Element:Ice    FFFFFFFE
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:DefenseTable $DefenseTable_8021D11C_17 {
+.Element:Normal 00000000
+.Element:Water  00000000
+.Element:Ice    00000000
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:StatusTable $StatusTable_8021D148_17 {
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep      25`
+.Status:Poison      0`
+.Status:Frozen      0`
+.Status:Dizzy      25`
+.Status:Fear        0`
+.Status:Static      0`
+.Status:Paralyze   40`
+.Status:Shrink      0`
+.Status:Stop       40`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod     -1`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod     -1`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod  -1`
+.Status:ShrinkTurnMod    -1`
+.Status:StopTurnMod      -2`
+.Status:End
+}
+
+#new:PartsTable $PartsTable_8021D1F4_17 {
+00120000 01000000 002800FF $IdleAnimations_8021D018_17 $DefenseTable_8021D0C4_17 00000000 00000000 00F80000 00000000 
+00800009 02000000 002800FF 00000000 $DefenseTable_8021D0C4_17 00000000 00000000 00F80000 00000000 
+}
+
+#new:Script $Script_Init_8021D264_17 {
+	UseArray  $End[788] 
+	Call  EnableGroup       ( 00000017 .True )
+	Call  EnableGroup       ( 0000001C .False )
+	Call  SetActorVar       ( .Actor:Self 00000000 00000000 )
+	Call  SetActorVar       ( .Actor:Self 00000005 00000000 )
+	Call  SetActorVar       ( .Actor:Self 00000006 00000000 )
+	Call  SetActorVar       ( .Actor:Self 0000000B 00000000 )
+	Call  SetActorVar       ( .Actor:Self 0000000D 00000000 )
+	Call  SetActorVar       ( .Actor:Self 00000001 00000000 )
+	Call  SetActorVar       ( .Actor:Self 00000002 00000000 )
+	Set   *Var0  0000001E 
+	Call  SetActorVar       ( .Actor:Self 0000000D *Var0 )
+	Call  SetActorVar       ( .Actor:Self 00000007 00790003 )
+	Call  SetActorVar       ( .Actor:Self 00000008 00790009 )
+	Call  ForceHomePos      ( .Actor:Self  61`  61`  0` )
+	Call  LoadAnimatedModel ( 00000000 $AnimatedModelTree_8021C4C0_17 )
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData ( 00000000 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Call  SetAnimatedModelRootPosition  ( 00000000 00000000 00000000 00000000 )
+	Call  SetAnimatorFlags  ( 00000000 00000080 00000001 )
+	Call  LoadAnimatedModel ( 00000001 $AnimatedModelTree_8021C650_17 )
+	Call  OverrideBattleDmaDest ( $End[6230] )
+	Call  LoadBattleDmaData ( 0000001F )
+	Call  PlayModelAnimation    ( 00000001 $End[6230] )
+	Call  SetAnimatedModelRootPosition  ( 00000001 00000000 00000000 00000000 )
+	Call  SetAnimatorFlags  ( 00000001 00000080 00000001 )
+	Call  LoadAnimatedModel ( 00000002 $AnimatedModelTree_8021C650_17 )
+	Call  OverrideBattleDmaDest ( $End[3230] )
+	Call  LoadBattleDmaData ( 0000001F )
+	Call  PlayModelAnimation    ( 00000002 $End[3230] )
+	Call  SetAnimatedModelRootPosition  ( 00000002 00000032 0000000E 00000014 )
+	Call  SetAnimatorFlags  ( 00000002 00000080 00000001 )
+	Call  LoadAnimatedModel ( 00000003 $AnimatedModelTree_8021C780_17 )
+	Call  OverrideBattleDmaDest ( $End[1230] )
+	Call  LoadBattleDmaData ( 00000022 )
+	Call  PlayModelAnimation    ( 00000003 $End[1230] )
+	Call  SetAnimatedModelRootPosition  ( 00000003 00000000 00000000 00000003 )
+	Call  SetAnimatorFlags  ( 00000003 00000080 00000001 )
+	Call  SummonEnemy       ( $SpecialFormation_8021FF04_17 00000000 )
+	Call  SummonEnemy       ( $SpecialFormation_8021FF20_17 00000000 )
+	Wait  2`
+	Exec  $Script_8021DEEC_17 
+	Call  CreateNpc ( 00000000 00B70000 )
+	Call  SetNpcYaw ( 00000000  90` )
+	Call  SetNpcPos ( 00000000  -300`  0`  0` )
+	Call  BindTakeTurn      ( .Actor:Self $Script_TakeTurn_8021FC10_17 )
+	Call  BindIdle  ( .Actor:Self $Script_Idle_8021D6EC_17 )
+	Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_8021F5A4_17 )
+	Call  BindNextTurn      ( .Actor:Self $Script_NextTurn_8021D8EC_17 )
+	Call  ForceHomePos      ( .Actor:Enemy1  57`  57`  0` )
+	Call  ForceHomePos      ( .Actor:Enemy2  107`  71`  20` )
+	Call  HPBarToHome       ( .Actor:Enemy1 )
+	Call  HPBarToHome       ( .Actor:Enemy2 )
+	Call  $Function_802188FC_17 ( )
+	Return
+	End
+}
+
+#new:Script $Script_Idle_8021D6EC_17 {
+	Label  0
+	Call  GetActorHP    ( .Actor:Self *Var0 )
+	If  *Var0  ==  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  ==  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  !=  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Sub   *Var0  00000001 
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	If  *Var0  !=  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 0000000C *Var0 )
+	Add   *Var0  00000001 
+	If  *Var0  >=  00000003 
+		Set   *Var0  00000000 
+	EndIf
+	Set   *Var0  0000001E 
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData     ( 00000001 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Label  63
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_NextTurn_8021D8EC_17 {
+	Call  GetBattlePhase    ( *Var0 )
+	Switch  *Var0 
+		Case  ==  0000000D 
+			Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+			If  *Var0  ==  00000001 
+				Call  GetActorVar   ( .Actor:Self 00000002 *Var0 )
+				If  *Var0  !&  00000001 
+					ConstOR  *Var0 00000001 
+					Call  SetActorVar   ( .Actor:Self 00000002 *Var0 )
+					ExecWait  $Script_8021D9C8_17 
+				EndIf
+			EndIf
+		Default
+	EndSwitch
+	Return
+	End
+}
+
+#new:Script $Script_8021D9C8_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self 00000000 )
+	Call  802535B4  ( 00000000 )
+	Call  SpeakToPlayer     ( 00000000 FFFFFFFF FFFFFFFF 00000000 00100104 ) % Mario! You shan't fight alone! Kolorado to the res ...
+	Thread
+		Loop  00000009 
+			Call  PlaySoundAtNpc    ( 00000000 000020BA 00000000 )
+			Wait  2`
+			Call  PlaySoundAtNpc    ( 00000000 000003B4 00000000 )
+			Wait  2`
+		EndLoop
+	EndThread
+	Call  SetNpcAnimation   ( 00000000 00B70002 )
+	Call  SetNpcAnimationSpeed  ( 00000000 *Fixed[2.0] )
+	Call  SetNpcSpeed       ( 00000000 *Fixed[10.0] )
+	Call  NpcMoveTo ( 00000000  70`  0`  0` )
+	Call  PlaySoundAtNpc    ( 00000000 000000E8 00000000 )
+	Call  SetNpcAnimationSpeed  ( 00000000 *Fixed[1.0] )
+	Call  SetNpcJumpscale   ( 00000000 *Fixed[1.0] )
+	Call  SetNpcAnimation   ( 00000000 00B70006 )
+	Thread
+		Loop  0000000A 
+			Call  GetNpcPos     ( 00000000 *Var0 *Var1 *Var2 )
+			Call  PlayEffect    ( ~FX:SmokeBurst:Black *Var0 *Var1 *Var2 *Fixed[1.0] 00000014 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Wait  2`
+		EndLoop
+	EndThread
+	Call  NpcJump0  ( 00000000  70`  180`  0`  20` )
+	Call  SpeakToPlayer ( 00000000 FFFFFFFF FFFFFFFF 00000000 00100105 ) % Ow ow OW!! HOT!!!! Oh, it burns! Really!
+	Call  SetNpcYaw ( 00000000  270` )
+	Call  SetNpcPos ( 00000000  50`  180`  0` )
+	Thread
+		Loop  0000000A 
+			Call  GetNpcPos     ( 00000000 *Var0 *Var1 *Var2 )
+			Call  PlayEffect    ( ~FX:SmokeBurst:Black *Var0 *Var1 *Var2 *Fixed[1.0] 00000014 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Wait  2`
+		EndLoop
+	EndThread
+	Call  NpcJump0  ( 00000000  50`  0`  0`  20` )
+	Call  NpcJump0  ( 00000000  50`  0`  0`  6` )
+	Call  NpcJump0  ( 00000000  50`  0`  0`  3` )
+	Wait  8`
+	Call  SetNpcAnimation   ( 00000000 00B70005 )
+	Call  SetNpcJumpscale   ( 00000000 *Fixed[0.7] )
+	Call  NpcJump0  ( 00000000  50`  0`  0`  12` )
+	Thread
+		Loop  00000004 
+			Call  PlaySoundAtNpc    ( 00000000 000020BA 00000000 )
+			Wait  2`
+			Call  PlaySoundAtNpc    ( 00000000 000003B4 00000000 )
+			Wait  2`
+		EndLoop
+	EndThread
+	Call  SetNpcAnimation   ( 00000000 00B70003 )
+	Call  SetNpcSpeed       ( 00000000 *Fixed[8.0] )
+	Call  NpcMoveTo ( 00000000  -60`  0`  0` )
+	Call  SpeakToPlayer     ( 00000000 00B70004 00B70001 00000005 00100106 ) % So sorry, old chap, but that's all I can do at the ...
+	Call  PlaySoundAtActor  ( .Actor:Self 00000174 )
+	Call  SetNpcAnimation   ( 00000000 00B70003 )
+	Call  SetNpcSpeed       ( 00000000 *Fixed[6.0] )
+	Call  NpcMoveTo ( 00000000  -300`  0`  0` )
+	Call  802535B4  ( 00000001 )
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_8021DEEC_17 {
+	UseArray  $End[788] 
+	Label  0
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 0000000A *Var0 *Var1 *Var2 )
+	Call  SetPartPos    ( .Actor:Enemy0 00000001 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 0000000A *Var0 *Var1 *Var2 )
+	Call  SetPartRotation       ( .Actor:Enemy0 00000001 *Var0 00000000 *Var2 )
+	Call  $Function_802188EC_17 ( )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 0000000A *Var0 *Var1 *Var2 )
+	Sub   *Var2  00000002 
+	Call  $Function_8021812C_17 ( 00000000 00000000 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 0000000A *Var0 *Var1 *Var2 )
+	Add   *Var2  0000005A 
+	Call  $Function_80218224_17 ( 00000000 00000000 *Var0 00000000 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000000 00000001 00000001 00000001 )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000001 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000001 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000001 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000009 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000002 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000009 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000002 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000003 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000003 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000008 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000004 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000008 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000004 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000005 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000005 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000006 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000006 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000007 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000007 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000000 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000000 00000008 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000000 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000000 00000008 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000000 00000008 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000008 *Var0 *Var1 *Var2 )
+	Call  SetPartPos    ( .Actor:Enemy1 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  00000008 
+	Call  SetPartPos    ( .Actor:Enemy1 00000002 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000008 *Var0 *Var1 *Var2 )
+	Call  SetPartRotation       ( .Actor:Enemy1 00000001 *Var0 00000000 *Var2 )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000008 *Var0 *Var1 *Var2 )
+	Sub   *Var2  00000002 
+	Call  $Function_8021812C_17 ( 00000001 00000000 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000008 *Var0 *Var1 *Var2 )
+	Add   *Var2  0000005A 
+	Call  $Function_80218224_17 ( 00000001 00000000 *Var0 00000000 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000000 00000001 00000001 00000001 )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000004 *Var0 *Var1 *Var2 )
+	Sub   *Var2  00000002 
+	Call  $Function_8021812C_17 ( 00000001 00000001 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000001 00000001 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000001 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000001 00000002 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000001 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000002 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000001 00000003 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000001 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000003 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000001 00000004 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000001 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000004 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000001 00000005 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000001 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000005 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000001 00000006 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000001 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000001 00000006 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000008 *Var0 *Var1 *Var2 )
+	Call  SetPartPos    ( .Actor:Enemy2 00000001 *Var0 *Var1 *Var2 )
+	Call  SetPartPos    ( .Actor:Enemy2 00000002 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000008 *Var0 *Var1 *Var2 )
+	Call  SetPartRotation       ( .Actor:Enemy2 00000001 *Var0 00000000 *Var2 )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000008 *Var0 *Var1 *Var2 )
+	Sub   *Var2  00000002 
+	Call  $Function_8021812C_17 ( 00000002 00000000 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000008 *Var0 *Var1 *Var2 )
+	Add   *Var2  0000005A 
+	Call  $Function_80218224_17 ( 00000002 00000000 *Var0 00000000 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000000 00000001 00000001 00000001 )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000004 *Var0 *Var1 *Var2 )
+	Sub   *Var2  00000002 
+	Call  $Function_8021812C_17 ( 00000002 00000001 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000002 00000001 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000001 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000002 00000002 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000007 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000002 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000002 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000002 00000003 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000002 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000003 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000002 00000004 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000002 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000004 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000002 00000005 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000002 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000005 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000002 00000006 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000002 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000002 00000006 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000003 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000003 00000000 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000003 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000003 00000000 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000003 00000000 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000003 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000003 00000001 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000003 00000006 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000003 00000001 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000003 00000001 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000003 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000003 00000002 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000003 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000003 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000003 00000002 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000003 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000003 00000003 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000003 00000005 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000003 00000003 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000003 00000003 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetAnimatedPositionByTreeIndex    ( 00000003 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_8021812C_17 ( 00000003 00000004 *Var0 *Var1 *Var2 )
+	Call  GetAnimatedRotationByTreeIndex    ( 00000003 00000002 *Var0 *Var1 *Var2 )
+	Call  $Function_80218224_17 ( 00000003 00000004 *Var0 *Var1 *Var2 )
+	Call  $Function_802182E4_17 ( 00000003 00000004 *Fixed[0.71484375] *Fixed[0.71484375] *Fixed[1.0] )
+	Call  GetActorVar   ( .Actor:Self 00000006 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetAnimatedPositionByTreeIndex    ( 00000000 0000000A *Var1 *Var2 *Var3 )
+		Call  GetAnimatedRotationByTreeIndex    ( 00000000 0000000A *Var4 *Var5 *Var6 )
+		Set   *Var7  0000001E 
+		Set   *Var8  FFFFFFE2 
+		Call  GetActorVar   ( .Actor:Self 0000000A *Var9 )
+		Call  $Function_80218930_17 ( *Var0 *Var1 *Var2 *Var6 *Var7 *Var8 *Var9 )
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy1 00000006 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000008 *Var1 *Var2 *Var3 )
+		Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000008 *Var4 *Var5 *Var6 )
+		Set   *Var7  0000000A 
+		Set   *Var8  FFFFFFF1 
+		Call  GetActorVar   ( .Actor:Enemy1 0000000A *Var9 )
+		Call  $Function_80218930_17 ( *Var0 *Var1 *Var2 *Var6 *Var7 *Var8 *Var9 )
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy2 00000006 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000008 *Var1 *Var2 *Var3 )
+		Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000008 *Var4 *Var5 *Var6 )
+		Set   *Var7  0000000A 
+		Set   *Var8  FFFFFFF1 
+		Call  GetActorVar   ( .Actor:Enemy2 0000000A *Var9 )
+		Call  $Function_80218930_17 ( *Var0 *Var1 *Var2 *Var6 *Var7 *Var8 *Var9 )
+	EndIf
+	Wait  1`
+	Call  GetActorFlags ( .Actor:Self *Var0 )
+	If  *Var0  !&  00400000 
+		Goto  0
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_HandleEvent_8021F5A4_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self 00000000 )
+	Call  SetAnimatorFlags  ( 00000000 00040000 00000000 )
+	Call  GetLastElement    ( *VarE )
+	Call  GetLastEvent      ( .Actor:Self *Var0 )
+	Switch  *Var0 
+		Case  ==  .Event:BeginFirstStrike % 38
+		Case  ==  .Event:HitCombo % 9
+			ExecWait  $Script_802235AC_17 
+			ExecWait  $Script_80223D78_17 
+		Case  ==  .Event:Hit % A
+			ExecWait  $Script_80223764_17 
+			ExecWait  $Script_80223D78_17 
+		Case  ==  .Event:Death % 20
+			ExecWait  $Script_DoDeath_17 
+			Return
+		Case  ==  .Event:BurnHit % E
+			If  *VarE  &  00000002 
+				ExecWait  $Script_8021F9E8_17 
+			Else
+				ExecWait  $Script_80223764_17 
+				ExecWait  $Script_80223D78_17 
+			EndIf
+		Case  ==  .Event:BurnDeath % 24
+			ExecWait  $Script_DoDeath_17 
+			Return
+		Case  ==  .Event:SpinSmashHit % B
+			ExecWait  $Script_80223764_17 
+			ExecWait  $Script_80223D78_17 
+		Case  ==  .Event:SpinSmashDeath % 21
+			ExecWait  $Script_DoDeath_17 
+			Return
+		Case  ==  .Event:ShockHit % 2F
+			SetConst  *Var0  00000001 
+			SetConst  *Var1  00790009 
+			ExecWait  DoShockHit 
+		Case  ==  .Event:ShockDeath % 26
+			ExecWait  $Script_DoDeath_17 
+			Return
+		Case  ==  00000017 % 17
+			If  *VarE  !&  00000002 
+				ExecWait  $Script_802235AC_17 
+				ExecWait  $Script_80223D78_17 
+			EndIf
+		Case  ==  .Event:Immune % 19
+			If  *VarE  !&  00000002 
+				ExecWait  $Script_80223764_17 
+				ExecWait  $Script_80223D78_17 
+			EndIf
+		Case  ==  .Event:AirLiftFailed % 1F
+		Case  ==  .Event:SpikeTaunt % 1B
+		Case  ==  .Event:EndFirstStrike % 35
+		Case  ==  .Event:RecoverStatus % 31
+			Call  SetAnimatorFlags  ( 00000000 00040000 00000000 )
+		Case  ==  00000030 % 30
+			SetConst  *Var0  00000001 
+			SetConst  *Var1  00790009 
+			ExecWait  DoNormalHit 
+			Wait  1000`
+		Default
+	EndSwitch
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  ForceHomePos  ( .Actor:Self  61`  61`  0` )
+	Else
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var1 )
+		If  *Var1  ==  00000001 
+			Call  ForceHomePos  ( .Actor:Self  61`  61`  0` )
+		Else
+			Call  ForceHomePos  ( .Actor:Self  83`  67`  0` )
+		EndIf
+	EndIf
+	Call  GetStatusFlags    ( .Actor:Self *Var0 )
+	If  *Var0  &  ~Flags:StatusFlags:Stop % 200000
+		Call  SetAnimatorFlags  ( 00000000 00040000 00000001 )
+	EndIf
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_8021F9E8_17 {
+	Thread
+		Wait  1`
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000000 
+			Goto  A
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var2 )
+		If  *Var2  ==  00000001 
+			Goto  A
+		EndIf
+		Set   *Var0  00000200 
+		ExecWait  $Script_80222EF0_17 
+		Label  A
+	EndThread
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000000 
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData ( 0000000E )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Call  SetActorVar       ( .Actor:Self 00000007 00790003 )
+			Call  SetActorVar       ( .Actor:Self 00000008 00790009 )
+			Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_8021D064_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_8021D0F0_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_8021D0F0_17 )
+			Thread
+				Wait  14`
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000000 )
+				Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			EndThread
+		EndIf
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_TakeTurn_8021FC10_17 {
+	Call  GetActorFlags ( .Actor:Self *Var0 )
+	If  *Var0  &  00400000 
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Switch  *Var0 
+		Case  ==  00000000 
+			ExecWait  $Script_8021FF3C_17 
+		Default
+			Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+			If  *Var0  ==  00000001 
+				ExecWait  $Script_802204B0_17 
+			Else
+				Call  GetActorVar   ( .Actor:Self 0000000B *Var0 )
+				Sub   *Var0  00000001 
+				Call  SetActorVar   ( .Actor:Self 0000000B *Var0 )
+				If  *Var0  <=  00000000 
+					Call  EnableIdleScript      ( .Actor:Self 00000000 )
+					Call  UseBattleCamPreset    ( 00000013 )
+					Call  SetBattleCamTarget    (  80`  70`  0` )
+					Call  SetBattleCamZoom      (  300` )
+					Call  SetBattleCamOffsetZ   (  30` )
+					Call  MoveBattleCamOver     (  30` )
+					Wait  30`
+					Loop  0000000A 
+						Call  OverrideBattleDmaDest ( $End[9230] )
+						Call  LoadBattleDmaData     ( 00000001 )
+						Call  PlayModelAnimation    ( 00000000 $End[9230] )
+						Wait  4`
+					EndLoop
+					Call  UseBattleCamPreset    ( 00000002 )
+					Call  MoveBattleCamOver     (  15` )
+					Call  PlaySoundAtActor      ( .Actor:Self 000003BB )
+					Set   *Var0  00000200 
+					ExecWait  $Script_80222EF0_17 
+					Call  SetAnimation  ( .Actor:Self 00000001 00790004 )
+					Call  OverrideBattleDmaDest ( $End[9230] )
+					Call  LoadBattleDmaData     ( 0000000E )
+					Call  PlayModelAnimation    ( 00000000 $End[9230] )
+					Wait  14`
+					Call  OverrideBattleDmaDest ( $End[9230] )
+					Call  LoadBattleDmaData     ( 00000000 )
+					Call  PlayModelAnimation    ( 00000000 $End[9230] )
+					Call  EnableIdleScript      ( .Actor:Self 00000001 )
+				EndIf
+			EndIf
+	EndSwitch
+	Return
+	End
+}
+
+#new:Vector3D $Vector3D_8021FEF8_17 {
+260` 0` 0`
+}
+
+#new:SpecialFormation $SpecialFormation_8021FF04_17 {
+$LavaBud_17 $Vector3D_8021FEF8_17 00000050 00000001 00000000 00000000 00000000 
+}
+
+#new:SpecialFormation $SpecialFormation_8021FF20_17 {
+$LavaBud_17 $Vector3D_8021FEF8_17 00000046 00000002 00000032 0000000E 00000014 
+}
+
+#new:Script $Script_8021FF3C_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  SetTargetActor    ( .Actor:Self .Actor:Player )
+	Thread
+		Wait  8`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  80`  70`  0` )
+		Call  SetBattleCamZoom      (  300` )
+		Call  SetBattleCamOffsetZ   (  30` )
+		Call  MoveBattleCamOver     (  45` )
+		Wait  57`
+		Call  UseBattleCamPreset    ( 00000002 )
+		Call  MoveBattleCamOver     (  15` )
+	EndThread
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData ( 00000002 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Wait  14`
+	Call  SetAnimation      ( .Actor:Self 00000001 00790005 )
+	Wait  10`
+	Call  PlaySoundAtActor  ( .Actor:Self 000003C1 )
+	Wait  45`
+	Call  SetAnimation      ( .Actor:Self 00000001 00790006 )
+	Call  GetPartOffset     ( .Actor:Self 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  00000032 
+	Sub   *Var1  0000000F 
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  GetGoalPos        ( .Actor:Self *Var3 *Var4 *Var5 )
+	Sub   *Var3  00000028 
+	Set   *Var4  FFFFFFF6 
+	Call  PlayEffect        ( 00000063 00000001 *Var0 *Var1 *Var2 *Var3 *Var4 *Var5 *Fixed[1.0] 00000014 00000014 00000000 00000000 00000000 )
+	Call  PlaySoundAtActor  ( .Actor:Self 000003C3 )
+	Wait  19`
+	Call  GetGoalPos        ( .Actor:Self *Var3 *Var4 *Var5 )
+	Call  PlayEffect        ( ~FX:EmitterVolume:Embers *Var3 00000000 *Var5 00000032 00000032 *Fixed[1.0] 00000028 00000037 *Fixed[1.0] *Fixed[1.0] 00000000 00000000 )
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData ( 00000003 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Call  EnemyTestTarget   ( .Actor:Self *VarA ~Flags:DamageType:Fire 00000000 00000001 00000010 )
+	Switch  *VarA 
+		CaseOR  ==  .HitResult:Miss % 6
+		CaseOR  ==  .HitResult:Lucky % 5
+			Call  SetAnimation  ( .Actor:Self 00000001 00790003 )
+			Wait  19`
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000000 )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			If  *VarA  ==  .HitResult:Lucky % 5
+				Call  EnemyTestTarget   ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
+			EndIf
+			Wait  15`
+			Call  UseBattleCamPreset    ( 00000002 )
+			Call  EnableIdleScript      ( .Actor:Self 00000001 )
+			Call  UseIdleAnimation      ( .Actor:Self .True )
+			Return
+		EndCaseGroup
+	EndSwitch
+	Wait  2`
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:Fire 0000FFFF 00000000 00000005 00000020 )
+	Set   *VarF  *Var0 
+	Switch  *VarF 
+		CaseOR  ==  .HitResult:Hit % 0
+		CaseOR  ==  .HitResult:QuakeImmune % 2
+		CaseOR  ==  0000000A % A
+			Call  SetAnimation  ( .Actor:Self 00000001 00790003 )
+			Wait  19`
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000000 )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			If  *VarF  ==  0000000A % A
+				Return
+			EndIf
+			Call  UseBattleCamPreset    ( 00000002 )
+		EndCaseGroup
+	EndSwitch
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_802204B0_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  SetTargetActor    ( .Actor:Self .Actor:Player )
+	Thread
+		Wait  8`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  80`  70`  0` )
+		Call  SetBattleCamZoom      (  300` )
+		Call  SetBattleCamOffsetZ   (  30` )
+		Call  MoveBattleCamOver     (  45` )
+		Wait  54`
+		Call  UseBattleCamPreset    ( 00000002 )
+		Call  MoveBattleCamOver     (  15` )
+	EndThread
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData ( 00000002 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Wait  14`
+	Call  SetAnimation      ( .Actor:Self 00000001 0079000E )
+	Wait  10`
+	Call  PlaySoundAtActor  ( .Actor:Self 000003C1 )
+	Wait  45`
+	Call  SetAnimation      ( .Actor:Self 00000001 00790008 )
+	Call  GetPartOffset     ( .Actor:Self 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  00000028 
+	Set   *Var1  FFFFFFF6 
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  GetGoalPos        ( .Actor:Self *Var3 *Var4 *Var5 )
+	Call  PlayEffect        ( 00000063 00000000 *Var0 *Var1 *Var2 *Var3 *Var4 *Var5 *Fixed[1.0] 00000010 00000028 00000000 00000000 00000000 )
+	Call  PlaySoundAtActor  ( .Actor:Self 000003C4 )
+	Wait  15`
+	Thread
+		Wait  24`
+		Call  PlayEffect    ( ~FX:EmitterVolume:Embers *Var3 00000000 *Var5 00000032 00000032 *Fixed[1.0] 00000028 00000037 *Fixed[1.0] *Fixed[1.0] 00000000 00000000 )
+	EndThread
+	Call  EnemyTestTarget   ( .Actor:Self *VarA ~Flags:DamageType:Fire 00000000 00000001 00000010 )
+	Switch  *VarA 
+		CaseOR  ==  .HitResult:Miss % 6
+		CaseOR  ==  .HitResult:Lucky % 5
+			Wait  20`
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000003 )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Call  SetAnimation  ( .Actor:Self 00000001 00790007 )
+			Wait  19`
+			Call  SetAnimation  ( .Actor:Self 00000001 00790004 )
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000000 )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			If  *VarA  ==  .HitResult:Lucky % 5
+				Call  EnemyTestTarget   ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
+			EndIf
+			Wait  15`
+			Call  UseBattleCamPreset    ( 00000002 )
+			Call  EnableIdleScript      ( .Actor:Self 00000001 )
+			Call  UseIdleAnimation      ( .Actor:Self .True )
+			Return
+		EndCaseGroup
+	EndSwitch
+	Wait  2`
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:Fire 0000FFFF 00000000 00000007 00000020 )
+	Wait  20`
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData ( 00000003 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Call  SetAnimation      ( .Actor:Self 00000001 00790007 )
+	Wait  19`
+	Call  SetAnimation      ( .Actor:Self 00000001 00790004 )
+	Call  OverrideBattleDmaDest ( $End[9230] )
+	Call  LoadBattleDmaData ( 00000000 )
+	Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	If  *VarF  ==  0000000A 
+		Return
+	EndIf
+	Call  UseBattleCamPreset    ( 00000002 )
+	Call  EnableIdleScript      ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation      ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_DoDeath_17 {
+	Call  SetActorVar       ( .Actor:Self 00000001 00000001 )
+	ExecWait  $Script_80223764_17 
+	Label  0
+	Call  GetBattleFlags    ( *Var0 )
+	If  *Var0  &  00000100 
+		Wait  1`
+		Goto  0
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var2 )
+	If  *Var2  ==  00000000 
+		Call  ClearStatusEffects    ( .Actor:Self )
+		Call  ClearStatusEffects    ( .Actor:Enemy1 )
+		Call  ClearStatusEffects    ( .Actor:Enemy2 )
+		Call  SetAnimatorFlags      ( 00000000 00040000 00000000 )
+		Call  GetActorVar   ( .Actor:Enemy1 00000000 *Var0 )
+		Call  SetAnimatorFlags      ( *Var0 00040000 00000000 )
+		Call  GetActorVar   ( .Actor:Enemy2 00000000 *Var0 )
+		Call  SetAnimatorFlags      ( *Var0 00040000 00000000 )
+		Call  CancelEnemyTurn       ( 00000001 )
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  90`  90`  0` )
+		Call  SetBattleCamZoom      (  360` )
+		Call  SetBattleCamOffsetZ   (  0` )
+		Call  MoveBattleCamOver     (  240` )
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData     ( 00000009 )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Call  OverrideBattleDmaDest ( $End[1230] )
+		Call  LoadBattleDmaData     ( 00000023 )
+		Call  PlayModelAnimation    ( 00000003 $End[1230] )
+		Wait  10`
+		Call  OverrideBattleDmaDest ( $End[6230] )
+		Call  LoadBattleDmaData     ( 00000018 )
+		Call  PlayModelAnimation    ( 00000001 $End[6230] )
+		Wait  5`
+		Call  OverrideBattleDmaDest ( $End[3230] )
+		Call  LoadBattleDmaData     ( 00000018 )
+		Call  PlayModelAnimation    ( 00000002 $End[3230] )
+		Wait  4`
+		Thread
+			Call  PlaySound ( 000003BC )
+			Call  ShakeCam  ( .Cam:Battle 00000000  119` *Fixed[0.3] )
+			Call  PlaySound ( 000007BC )
+		EndThread
+		Call  $Function_80218000_17 ( 00000050 000000EA )
+		Call  8027D32C  ( FFFFFF81 )
+		Call  8027D32C  ( 00000201 )
+		Call  8027D32C  ( 00000202 )
+		Call  SetAnimation      ( .Actor:Self 00000001 0079000D )
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData ( 0000000A )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Thread
+			Call  PlaySoundAtActor  ( .Actor:Self 000003C6 )
+			Wait  35`
+			Set   *Var0  00000000 
+			Set   *Var1  00000000 
+			Loop
+				Call  GetAnimatedModelRootPosition  ( 00000000 *Var2 *Var3 *Var4 )
+				Add   *Var3  *Var1 
+				Call  SetAnimatedModelRootPosition  ( 00000000 *Var2 *Var3 *Var4 )
+				Call  $Function_80218B38_17 ( *Var0 *Var1 )
+				Add   *Var0  00000001 
+				Wait  1`
+				If  *Var1  ==  00000063 
+					BreakLoop
+				EndIf
+			EndLoop
+		EndThread
+		Wait  10`
+		Call  SetAnimation  ( .Actor:Enemy1 00000001 007B000D )
+		Call  OverrideBattleDmaDest ( $End[6230] )
+		Call  LoadBattleDmaData     ( 00000019 )
+		Call  PlayModelAnimation    ( 00000001 $End[6230] )
+		Thread
+			Wait  45`
+			Set   *Var0  00000000 
+			Set   *Var1  00000000 
+			Loop
+				Call  GetAnimatedModelRootPosition  ( 00000001 *Var2 *Var3 *Var4 )
+				Add   *Var3  *Var1 
+				Call  SetAnimatedModelRootPosition  ( 00000001 *Var2 *Var3 *Var4 )
+				Call  $Function_80218B90_17 ( *Var0 *Var1 )
+				Add   *Var0  00000001 
+				Wait  1`
+				If  *Var1  ==  00000063 
+					BreakLoop
+				EndIf
+			EndLoop
+		EndThread
+		Wait  5`
+		Call  SetAnimation  ( .Actor:Enemy2 00000001 007B000D )
+		Call  OverrideBattleDmaDest ( $End[3230] )
+		Call  LoadBattleDmaData     ( 00000019 )
+		Call  PlayModelAnimation    ( 00000002 $End[3230] )
+		Thread
+			Wait  45`
+			Set   *Var0  00000000 
+			Set   *Var1  00000000 
+			Loop
+				Call  GetAnimatedModelRootPosition  ( 00000002 *Var2 *Var3 *Var4 )
+				Add   *Var3  *Var1 
+				Call  SetAnimatedModelRootPosition  ( 00000002 *Var2 *Var3 *Var4 )
+				Call  $Function_80218B90_17 ( *Var0 *Var1 )
+				Add   *Var0  00000001 
+				Wait  1`
+				If  *Var1  ==  00000063 
+					BreakLoop
+				EndIf
+			EndLoop
+		EndThread
+		Wait  35`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  90`  90`  0` )
+		Call  SetBattleCamZoom      (  360` )
+		Call  SetBattleCamOffsetZ   (  -45` )
+		Call  MoveBattleCamOver     (  110` )
+		Wait  60`
+		Call  SetAnimatedModelRootPosition  ( 00000000 00000000 FFFFFF06 00000000 )
+		Call  SetAnimatedModelRootPosition  ( 00000001 00000000 FFFFFF06 00000000 )
+		Call  SetAnimatedModelRootPosition  ( 00000002 00000000 FFFFFF06 00000000 )
+		Call  SetActorPos   ( .Actor:Self  100`  0`  0` )
+		Call  DropStarPoints        ( .Actor:Self )
+		Call  PlaySoundAtActor      ( .Actor:Self .Sound:Death )
+		Call  ForceHomePos  ( .Actor:Self  61`  61`  0` )
+		Wait  65`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  GetActorPos   ( .Actor:Player *Var0 *Var1 *Var2 )
+		Call  SetBattleCamTarget    ( *Var0 *Var1 *Var2 )
+		Call  SetBattleCamZoom      (  240` )
+		Call  SetBattleCamOffsetZ   (  40` )
+		Call  MoveBattleCamOver     (  20` )
+		Wait  20`
+		Thread
+			Call  $Function_80218A98_17 ( )
+		EndThread
+		Wait  80`
+		Thread
+			Call  PlaySound ( 000003BC )
+			Call  ShakeCam  ( .Cam:Battle 00000000  165` *Fixed[1.2] )
+			Call  PlaySound ( 000007BC )
+		EndThread
+		Call  $Function_80218000_17 ( 00000050 0000012C )
+		Call  UseIdleAnimation  ( .Actor:Player .False )
+		Call  SetAnimation      ( .Actor:Player 00000000 0001002A )
+		Wait  20`
+		Call  PlaySoundAtActor  ( .Actor:Player 00000263 )
+		Call  GetActorPos       ( .Actor:Player *Var0 *Var1 *Var2 )
+		Add   *Var1  00000014 
+		Call  PlayEffect        ( ~FX:EmoteIcon:Question 00000000 *Var0 *Var1 *Var2 00000014 0000013B 0000001E 00000000 00000000 00000000 00000000 00000000 )
+		Call  GetActorPos       ( .Actor:Partner *Var0 *Var1 *Var2 )
+		Add   *Var1  0000000A 
+		Call  PlayEffect        ( ~FX:EmoteIcon:Question 00000000 *Var0 *Var1 *Var2 00000014 0000013B 0000001E 00000000 00000000 00000000 00000000 00000000 )
+		Wait  50`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  90`  90`  0` )
+		Call  SetBattleCamZoom  (  360` )
+		Call  SetBattleCamOffsetZ   (  -60` )
+		Call  MoveBattleCamOver (  30` )
+		Wait  40`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  90`  90`  0` )
+		Call  SetBattleCamZoom  (  200` )
+		Call  SetBattleCamOffsetZ   (  -60` )
+		Call  MoveBattleCamOver (  40` )
+		Wait  40`
+		Thread
+			Call  UseIdleAnimation  ( .Actor:Player .False )
+			Call  SetAnimation      ( .Actor:Player 00000000 0001002B )
+			Wait  40`
+			Call  UseIdleAnimation  ( .Actor:Player .True )
+		EndThread
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    (  30`  90`  0` )
+		Call  SetBattleCamZoom      (  460` )
+		Call  SetBattleCamOffsetZ   (  0` )
+		Call  MoveBattleCamOver     (  30` )
+		Call  $Function_80218000_17 ( 000000B4 00000010 )
+		Thread
+			Call  ShakeCam  ( .Cam:Battle 00000000  4` *Fixed[3.0] )
+			Call  ShakeCam  ( .Cam:Battle 00000000  10` *Fixed[1.0] )
+		EndThread
+		ChildThread
+			Wait  50`
+			Call  UseBattleCamPreset    ( 00000013 )
+			Call  SetBattleCamTarget    (  90`  90`  0` )
+			Call  SetBattleCamZoom      (  360` )
+			Call  SetBattleCamOffsetZ   (  0` )
+			Call  MoveBattleCamOver     (  40` )
+			Wait  85`
+		EndChildThread
+		Call  SetActorVar   ( .Actor:Self 00000000 00000001 )
+		Call  SetActorVar   ( .Actor:Self 00000007 00790004 )
+		Call  SetActorVar   ( .Actor:Self 00000008 0079000A )
+		Call  SetActorVar   ( .Actor:Enemy1 00000007 007B0004 )
+		Call  SetActorVar   ( .Actor:Enemy1 00000008 007B000B )
+		Call  SetActorVar   ( .Actor:Enemy2 00000007 007B0004 )
+		Call  SetActorVar   ( .Actor:Enemy2 00000008 007B000B )
+		Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250D4_17 )
+		Call  SetIdleAnimations ( .Actor:Enemy1 00000001 $IdleAnimations_802250D4_17 )
+		Call  SetIdleAnimations ( .Actor:Enemy2 00000001 $IdleAnimations_802250D4_17 )
+		Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_8021D0F0_17 )
+		Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_8021D0F0_17 )
+		Call  SetDefenseTable   ( .Actor:Enemy1 00000001 $DefenseTable_80225128_17 )
+		Call  SetDefenseTable   ( .Actor:Enemy1 00000002 $DefenseTable_80225128_17 )
+		Call  SetDefenseTable   ( .Actor:Enemy2 00000001 $DefenseTable_80225128_17 )
+		Call  SetDefenseTable   ( .Actor:Enemy2 00000002 $DefenseTable_80225128_17 )
+		Call  8026D5A4      ( FFFFFF81 00000001 00000002 00000001 )
+		Call  8026D5A4      ( FFFFFF81 00000002 00000002 00000001 )
+		Call  8026D5A4      ( 00000201 00000001 00000002 00000001 )
+		Call  8026D5A4      ( 00000201 00000002 00000002 00000001 )
+		Call  8026D5A4      ( 00000202 00000001 00000002 00000001 )
+		Call  8026D5A4      ( 00000202 00000002 00000002 00000001 )
+		Call  SetPartFlagBits   ( .Actor:Enemy1 00000002 00002000 .False )
+		Call  SetPartFlagBits   ( .Actor:Enemy2 00000002 00002000 .False )
+		Set   *Var0  00000200 
+		ExecWait  $Script_80222EF0_17 
+		Call  SetAnimation  ( .Actor:Self 00000001 00790004 )
+		Set   *Var0  00000201 
+		ExecWait  $Script_80222EF0_17 
+		Call  SetAnimation  ( .Actor:Enemy1 00000001 007B0004 )
+		Set   *Var0  00000202 
+		ExecWait  $Script_80222EF0_17 
+		Call  SetAnimation  ( .Actor:Enemy2 00000001 007B0004 )
+		Call  SetActorType  ( .Actor:Self 000000B4 )
+		Call  SetActorType  ( .Actor:Enemy1 000000B6 )
+		Call  SetActorType  ( .Actor:Enemy2 000000B6 )
+		Call  SetActorFlagBits  ( .Actor:Self 00001000 .True )
+		Call  SetActorFlagBits  ( .Actor:Enemy1 00001000 .True )
+		Call  SetActorFlagBits  ( .Actor:Enemy2 00001000 .True )
+		Call  GetEnemyMaxHP ( .Actor:Self *Var0 )
+		Call  SetEnemyHP    ( .Actor:Self *Var0 )
+		Call  GetEnemyMaxHP ( .Actor:Enemy1 *Var0 )
+		Call  SetEnemyHP    ( .Actor:Enemy1 *Var0 )
+		Call  GetEnemyMaxHP ( .Actor:Enemy2 *Var0 )
+		Call  SetEnemyHP    ( .Actor:Enemy2 *Var0 )
+		Call  EnableModel   ( 0000004E .True )
+		Call  EnableModel   ( 0000004F .True )
+		Call  EnableModel   ( 00000050 .True )
+		Call  EnableModel   ( 00000051 .True )
+		Call  EnableModel   ( 00000052 .True )
+		Call  EnableModel   ( 00000053 .True )
+		Call  EnableModel   ( 00000054 .True )
+		Call  EnableModel   ( 00000055 .True )
+		Call  EnableModel   ( 00000057 .True )
+		Call  EnableModel   ( 00000058 .True )
+		Call  PlaySoundAtActor  ( .Actor:Self 000003C5 )
+		Call  PlayEffect    ( ~FX:EmitterVolume:Embers 00000064 00000000 00000000 00000046 00000050 *Fixed[2.5] 00000050 00000037 *Fixed[2.0] *Fixed[2.0] 00000000 00000000 )
+		Call  LoadAnimatedModel ( 00000004 $AnimatedModelTree_8021A330_17 )
+		Call  PlayModelAnimation    ( 00000004 $ModelAnimation_8021A364_17 )
+		Call  SetAnimatedModelRootPosition  ( 00000004 00000000 00000000 00000000 )
+		Call  EnableGroup   ( 00000017 .False )
+		Call  EnableGroup   ( 0000001C .True )
+		Thread
+			Wait  45`
+			Call  DeleteAnimatedModel   ( 00000004 )
+		EndThread
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData     ( 0000000C )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Call  SetAnimatedModelRootPosition  ( 00000000 00000000 00000000 00000000 )
+		Wait  5`
+		Call  SetAnimatedModelRootPosition  ( 00000002 00000032 0000000E 00000014 )
+		Call  OverrideBattleDmaDest ( $End[3230] )
+		Call  LoadBattleDmaData     ( 0000001C )
+		Call  PlayModelAnimation    ( 00000002 $End[3230] )
+		Wait  10`
+		Call  SetAnimatedModelRootPosition  ( 00000001 00000000 00000000 00000000 )
+		Call  OverrideBattleDmaDest ( $End[6230] )
+		Call  LoadBattleDmaData     ( 0000001C )
+		Call  PlayModelAnimation    ( 00000001 $End[6230] )
+		Wait  45`
+		Call  SetAnimatedModelRootPosition  ( 00000003 00000000 00000000 00000000 )
+		Call  OverrideBattleDmaDest ( $End[1230] )
+		Call  LoadBattleDmaData     ( 00000024 )
+		Call  PlayModelAnimation    ( 00000003 $End[1230] )
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData     ( 00000000 )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Call  SetAnimation  ( .Actor:Self 00000001 0079000E )
+		Wait  5`
+		Call  OverrideBattleDmaDest ( $End[3230] )
+		Call  LoadBattleDmaData     ( 0000001F )
+		Call  PlayModelAnimation    ( 00000002 $End[3230] )
+		Wait  10`
+		Call  OverrideBattleDmaDest ( $End[6230] )
+		Call  LoadBattleDmaData     ( 0000001F )
+		Call  PlayModelAnimation    ( 00000001 $End[6230] )
+		Wait  30`
+		Call  OverrideBattleDmaDest ( $End[1230] )
+		Call  LoadBattleDmaData     ( 00000022 )
+		Call  PlayModelAnimation    ( 00000003 $End[1230] )
+		Call  GetEnemyMaxHP ( .Actor:Enemy1 *Var0 )
+		Call  SetEnemyHP    ( .Actor:Enemy1 *Var0 )
+		Call  GetEnemyMaxHP ( .Actor:Enemy2 *Var0 )
+		Call  SetEnemyHP    ( .Actor:Enemy2 *Var0 )
+		Call  SetActorVar   ( .Actor:Self 00000001 00000000 )
+		Call  EnableIdleScript      ( .Actor:Self 00000001 )
+		Call  UseIdleAnimation      ( .Actor:Self .True )
+	Else
+		Call  8027D32C  ( 00000201 )
+		Call  8027D32C  ( 00000202 )
+		Set   *Var0  00000203 
+		ExecWait  $Script_80222B6C_17 
+		Set   *Var0  00000204 
+		ExecWait  $Script_80222B6C_17 
+		Call  OverrideBattleDmaDest ( $End[1230] )
+		Call  LoadBattleDmaData     ( 00000023 )
+		Call  PlayModelAnimation    ( 00000003 $End[1230] )
+		Thread
+			Call  PlaySound ( 000003BC )
+			Call  ShakeCam  ( .Cam:Battle 00000000  100` *Fixed[0.5] )
+			Call  ShakeCam  ( .Cam:Battle 00000000  8` *Fixed[0.2] )
+			Call  PlaySound ( 000007BC )
+		EndThread
+		Call  $Function_80218000_17 ( 00000050 000000D8 )
+		Thread
+			Call  PlaySoundAtActor  ( .Actor:Self 000003CC )
+			Call  GetActorVar       ( .Actor:Self 00000005 *Var0 )
+			If  *Var0  ==  00000000 
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000008 )
+				Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Else
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000009 )
+				Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			EndIf
+			Wait  19`
+			Call  8027D32C  ( FFFFFF81 )
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 0000000A )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+			If  *Var0  ==  00000001 
+				Call  PlayEffect    ( ~FX:EmitterVolume:Embers 00000069 0000003C 00000002 00000050 0000003C *Fixed[1.8] 0000005A 00000064 *Fixed[1.5] *Fixed[1.5] 00000000 00000000 )
+			EndIf
+			Wait  121`
+			Call  PlaySoundAtActor  ( .Actor:Self 000003CD )
+			Call  SetAnimation      ( .Actor:Self 00000001 0079000A )
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData ( 0000000B )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Wait  30`
+			Call  GetActorVar       ( .Actor:Self 0000000A *Var0 )
+			Set   *Var1  00000064 
+			Loop  00000032 
+				Sub   *Var1  00000002 
+				SetF  *Var2  *Var0 
+				MulF  *Var2  *Var1 
+				MulF  *Var2  *Fixed[0.01] 
+				Call  SetActorVar   ( .Actor:Self 0000000A *Var2 )
+				Wait  1`
+			EndLoop
+		EndThread
+		Thread
+			Wait  12`
+			Call  GetActorVar   ( .Actor:Enemy1 00000005 *Var0 )
+			If  *Var0  ==  00000000 
+				Call  OverrideBattleDmaDest ( $End[6230] )
+				Call  LoadBattleDmaData     ( 00000017 )
+				Call  PlayModelAnimation    ( 00000001 $End[6230] )
+			Else
+				Call  OverrideBattleDmaDest ( $End[6230] )
+				Call  LoadBattleDmaData     ( 00000018 )
+				Call  PlayModelAnimation    ( 00000001 $End[6230] )
+			EndIf
+			Wait  19`
+			Call  OverrideBattleDmaDest ( $End[6230] )
+			Call  LoadBattleDmaData     ( 00000019 )
+			Call  PlayModelAnimation    ( 00000001 $End[6230] )
+			Call  GetActorVar   ( .Actor:Enemy1 00000005 *Var0 )
+			If  *Var0  ==  00000001 
+				Call  PlayEffect    ( ~FX:EmitterVolume:Embers 00000043 0000001E 00000002 00000032 00000028 *Fixed[1.3] 0000001E 00000046 *Fixed[1.2] *Fixed[1.2] 00000000 00000000 )
+			EndIf
+			Wait  96`
+			Call  OverrideBattleDmaDest ( $End[6230] )
+			Call  LoadBattleDmaData     ( 0000001A )
+			Call  PlayModelAnimation    ( 00000001 $End[6230] )
+			Wait  30`
+			Call  GetActorVar   ( .Actor:Enemy1 0000000A *Var0 )
+			Set   *Var1  00000064 
+			Loop  00000032 
+				Sub   *Var1  00000002 
+				SetF  *Var2  *Var0 
+				MulF  *Var2  *Var1 
+				MulF  *Var2  *Fixed[0.01] 
+				Call  SetActorVar   ( .Actor:Enemy1 0000000A *Var2 )
+				Wait  1`
+			EndLoop
+		EndThread
+		Thread
+			Wait  5`
+			Call  GetActorVar   ( .Actor:Enemy2 00000005 *Var0 )
+			If  *Var0  ==  00000000 
+				Call  OverrideBattleDmaDest ( $End[3230] )
+				Call  LoadBattleDmaData     ( 00000017 )
+				Call  PlayModelAnimation    ( 00000002 $End[3230] )
+			Else
+				Call  OverrideBattleDmaDest ( $End[3230] )
+				Call  LoadBattleDmaData     ( 00000018 )
+				Call  PlayModelAnimation    ( 00000002 $End[3230] )
+			EndIf
+			Wait  19`
+			Call  OverrideBattleDmaDest ( $End[3230] )
+			Call  LoadBattleDmaData     ( 00000019 )
+			Call  PlayModelAnimation    ( 00000002 $End[3230] )
+			Call  GetActorVar   ( .Actor:Enemy2 00000005 *Var0 )
+			If  *Var0  ==  00000001 
+				Call  PlayEffect    ( ~FX:EmitterVolume:Embers 00000078 00000023 00000005 00000032 00000028 *Fixed[1.3] 0000001E 00000046 *Fixed[1.2] *Fixed[1.2] 00000000 00000000 )
+			EndIf
+			Wait  96`
+			Call  OverrideBattleDmaDest ( $End[3230] )
+			Call  LoadBattleDmaData     ( 0000001A )
+			Call  PlayModelAnimation    ( 00000002 $End[3230] )
+			Wait  30`
+			Call  GetActorVar   ( .Actor:Enemy2 0000000A *Var0 )
+			Set   *Var1  00000064 
+			Loop  00000032 
+				Sub   *Var1  00000002 
+				SetF  *Var2  *Var0 
+				MulF  *Var2  *Var1 
+				MulF  *Var2  *Fixed[0.01] 
+				Call  SetActorVar   ( .Actor:Enemy2 0000000A *Var2 )
+				Wait  1`
+			EndLoop
+		EndThread
+		Thread
+			Wait  150`
+			Set   *Var0  0000000E 
+			Loop  0000000E 
+				Sub   *Var0  00000001 
+				Call  SetAnimatedModelRootPosition  ( 00000002 00000032 *Var0 00000014 )
+				Wait  2`
+			EndLoop
+		EndThread
+		Wait  212`
+		Call  PlaySoundAtActor  ( .Actor:Self 000020EA )
+		Call  SetAnimation  ( .Actor:Self 00000001 0079000F )
+		Call  SetAnimation  ( .Actor:Enemy1 00000001 007B000F )
+		Call  SetAnimation  ( .Actor:Enemy2 00000001 007B000F )
+		Call  PlayEffect    ( ~FX:ShockWave:White FFFFFFC4 00000000 00000002 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+		Thread
+			Call  $Function_80218000_17 ( 000000B4 00000010 )
+			Call  ShakeCam  ( .Cam:Battle 00000000  5` *Fixed[4.0] )
+		EndThread
+		Wait  3`
+		Call  SetActorPos       ( .Actor:Self  -60`  0`  0` )
+		Call  DropStarPoints    ( .Actor:Self )
+		Call  PlaySoundAtActor  ( .Actor:Self .Sound:Death )
+		Wait  15`
+		Call  GetActorVar       ( .Actor:Self 00000006 *Var0 )
+		If  *Var0  !=  00000000 
+			Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+			Call  RemoveEffect  ( *Var0 )
+		EndIf
+		Call  GetActorVar   ( .Actor:Enemy1 00000006 *Var0 )
+		If  *Var0  !=  00000000 
+			Call  SetActorVar   ( .Actor:Enemy1 00000006 00000000 )
+			Call  RemoveEffect  ( *Var0 )
+		EndIf
+		Call  GetActorVar   ( .Actor:Enemy2 00000006 *Var0 )
+		If  *Var0  !=  00000000 
+			Call  SetActorVar   ( .Actor:Enemy2 00000006 00000000 )
+			Call  RemoveEffect  ( *Var0 )
+		EndIf
+		Wait  5`
+		Call  SetActorFlagBits  ( .Actor:Enemy0 00400000 .True )
+		Call  SetPartFlagBits   ( .Actor:Enemy0 00000001 00020000 .True )
+		Call  SetPartFlagBits   ( .Actor:Enemy0 00000002 00020000 .True )
+		Call  SetActorFlagBits  ( .Actor:Enemy1 00400000 .True )
+		Call  SetActorFlagBits  ( .Actor:Enemy2 00400000 .True )
+	EndIf
+	Return
+	End
+}
+
+#new:Unknown $???_80222B68_17 {
+00000000 
+}
+
+#new:Script $Script_80222B6C_17 {
+	Call  ActorExists   ( *Var0 *Var1 )
+	If  *Var1  ==  .False 
+		Return
+	EndIf
+	Call  GetActorHP    ( *Var0 *Var1 )
+	If  *Var1  ==  00000000 
+		Return
+	EndIf
+	Thread
+		Call  SetAnimation  ( *Var0 00000001 007A0003 )
+		Wait  10`
+		Set   *Var2  00000000 
+		Loop  00000018 
+			Call  SetPartRotation   ( *Var0 00000001 00000000 *Var2 00000000 )
+			Add   *Var2  0000001E 
+			Wait  1`
+		EndLoop
+		Call  GetActorPos   ( *Var0 *Var3 *Var4 *Var5 )
+		Call  PlayEffect    ( ~FX:BigSmokePuff *Var3 *Var4 *Var5 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+		Set   *Var3  00000000 
+		Loop  0000000C 
+			Call  SetPartRotation   ( *Var0 00000001 *Var3 *Var2 00000000 )
+			Add   *Var3  00000008 
+			Wait  1`
+		EndLoop
+		Call  RemoveActor   ( *Var0 )
+	EndThread
+	Return
+	End
+}
+
+#new:IntTable $IntTable_80222D48_17 {
+FFFFFFFF 00000000 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF 
+FFFFFFFE FFFFFFFE FFFFFFFE FFFFFFFE FFFFFFFD FFFFFFFE FFFFFFFD FFFFFFFD 
+FFFFFFFD FFFFFFFD FFFFFFFD FFFFFFFD FFFFFFFC FFFFFFFC FFFFFFFD FFFFFFFC 
+FFFFFFFC FFFFFFFC FFFFFFFB FFFFFFFC FFFFFFFC FFFFFFFB FFFFFFFB FFFFFFFB 
+FFFFFFFC FFFFFFFB FFFFFFFA FFFFFFFB FFFFFFFB FFFFFFFA FFFFFFFB FFFFFFFA 
+FFFFFFFB FFFFFFFA FFFFFFFA FFFFFFFA FFFFFFFA FFFFFFFA FFFFFFF9 FFFFFFFA 
+FFFFFFFA FFFFFFF9 FFFFFFFA FFFFFFF9 FFFFFFFA 00000063 
+}
+
+#new:IntTable $IntTable_80222E20_17 {
+FFFFFFFF 00000000 FFFFFFFF 00000000 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE 
+FFFFFFFF FFFFFFFE FFFFFFFE FFFFFFFF FFFFFFFD FFFFFFFE FFFFFFFE FFFFFFFD 
+FFFFFFFE FFFFFFFD FFFFFFFD FFFFFFFD FFFFFFFD FFFFFFFC FFFFFFFD FFFFFFFC 
+FFFFFFFC FFFFFFFD FFFFFFFB FFFFFFFC FFFFFFFC FFFFFFFD FFFFFFFB FFFFFFFB 
+FFFFFFFB FFFFFFFB FFFFFFFB FFFFFFFB FFFFFFFB FFFFFFFA FFFFFFFB FFFFFFFA 
+FFFFFFFA FFFFFFFA FFFFFFFA FFFFFFFA FFFFFFF9 FFFFFFFA FFFFFFF9 FFFFFFF9 
+FFFFFFF9 FFFFFFF9 FFFFFFF9 00000063 
+}
+
+#new:Script $Script_80222EF0_17 {
+	Switch  *Var0 
+		Case  ==  00000201 
+			Call  SetActorVar       ( .Actor:Enemy1 0000000A 00000023 )
+			Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000008 *Var1 *Var2 *Var3 )
+			Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000008 *Var4 *Var5 *Var6 )
+			Set   *Var7  0000000A 
+			Set   *Var8  FFFFFFF1 
+			Call  $Function_80218BE8_17 ( *Var1 *Var2 *Var6 *Var7 *Var8 *Var3 *Var4 )
+			Call  GetPartOffset     ( .Actor:Enemy1 00000001 *Var0 *Var1 *Var2 )
+			Sub   *Var2  00000003 
+			Call  PlayEffect        ( ~FX:Fire:LargeRed *Var3 *Var4 *Var2 *Fixed[0.3] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  SetActorVar       ( .Actor:Enemy1 00000006 *VarA )
+			Call  SetIdleAnimations ( .Actor:Enemy1 00000001 $IdleAnimations_802250D4_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy1 00000001 $DefenseTable_80225128_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy1 00000002 $DefenseTable_80225128_17 )
+			Call  SetPartEventBits  ( .Actor:Enemy1 00000001 00000002 .True )
+			Call  SetPartEventBits  ( .Actor:Enemy1 00000002 00000002 .True )
+			Call  SetActorVar       ( .Actor:Enemy1 00000007 007B0004 )
+			Call  SetActorVar       ( .Actor:Enemy1 00000008 007B000B )
+			Call  SetActorVar       ( .Actor:Enemy1 00000005 00000001 )
+			Call  SetPartFlagBits   ( .Actor:Enemy1 00000002 00020000 .False )
+			Call  SetActorFlagBits  ( .Actor:Enemy1 00040000 .False )
+		Case  ==  00000202 
+			Call  SetActorVar       ( .Actor:Enemy2 0000000A 00000023 )
+			Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000008 *Var1 *Var2 *Var3 )
+			Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000008 *Var4 *Var5 *Var6 )
+			Set   *Var7  0000000A 
+			Set   *Var8  FFFFFFF1 
+			Call  $Function_80218BE8_17 ( *Var1 *Var2 *Var6 *Var7 *Var8 *Var3 *Var4 )
+			Call  GetPartOffset     ( .Actor:Enemy2 00000001 *Var0 *Var1 *Var2 )
+			Sub   *Var2  00000003 
+			Call  PlayEffect        ( ~FX:Fire:LargeRed *Var3 *Var4 *Var2 *Fixed[0.3] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  SetActorVar       ( .Actor:Enemy2 00000006 *VarA )
+			Call  SetIdleAnimations ( .Actor:Enemy2 00000001 $IdleAnimations_802250D4_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy2 00000001 $DefenseTable_80225128_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy2 00000002 $DefenseTable_80225128_17 )
+			Call  SetPartEventBits  ( .Actor:Enemy2 00000001 00000002 .True )
+			Call  SetPartEventBits  ( .Actor:Enemy2 00000002 00000002 .True )
+			Call  SetActorVar       ( .Actor:Enemy2 00000007 007B0004 )
+			Call  SetActorVar       ( .Actor:Enemy2 00000008 007B000B )
+			Call  SetActorVar       ( .Actor:Enemy2 00000005 00000001 )
+			Call  SetPartFlagBits   ( .Actor:Enemy2 00000002 00020000 .False )
+			Call  SetActorFlagBits  ( .Actor:Enemy2 00040000 .False )
+		Default
+			Call  SetActorVar       ( .Actor:Enemy0 0000000A 00000046 )
+			Call  GetAnimatedPositionByTreeIndex    ( 00000000 0000000A *Var1 *Var2 *Var3 )
+			Call  GetAnimatedRotationByTreeIndex    ( 00000000 0000000A *Var4 *Var5 *Var6 )
+			Set   *Var7  0000001E 
+			Set   *Var8  FFFFFFE2 
+			Call  $Function_80218BE8_17 ( *Var1 *Var2 *Var6 *Var7 *Var8 *Var3 *Var4 )
+			Call  GetPartOffset     ( .Actor:Enemy0 00000001 *Var0 *Var1 *Var2 )
+			Sub   *Var2  00000003 
+			Call  PlayEffect        ( ~FX:Fire:LargeRed *Var3 *Var4 *Var2 *Fixed[0.7] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  SetActorVar       ( .Actor:Enemy0 00000006 *VarA )
+			Call  SetIdleAnimations ( .Actor:Enemy0 00000001 $IdleAnimations_8021D064_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy0 00000001 $DefenseTable_8021D0F0_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy0 00000002 $DefenseTable_8021D0F0_17 )
+			Call  SetPartEventBits  ( .Actor:Enemy0 00000001 00000002 .True )
+			Call  SetPartEventBits  ( .Actor:Enemy0 00000002 00000002 .True )
+			Call  SetActorVar       ( .Actor:Enemy0 00000007 00790004 )
+			Call  SetActorVar       ( .Actor:Enemy0 00000008 0079000A )
+			Call  SetActorVar       ( .Actor:Enemy0 00000005 00000001 )
+			Call  ForceHomePos      ( .Actor:Self  61`  61`  0` )
+			Call  SetActorFlagBits  ( .Actor:Self 00040000 .False )
+	EndSwitch
+	Return
+	End
+}
+
+#new:Script $Script_802235AC_17 {
+	Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  ==  00000002 
+		Call  GetLastDamage ( .Actor:Self *Var0 )
+		If  *Var0  <  00000004 
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000005 )
+		Else
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000004 )
+		EndIf
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Wait  29`
+		Wait  14`
+	Else
+		Call  GetLastDamage ( .Actor:Self *Var0 )
+		If  *Var0  <  00000004 
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000007 )
+		Else
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000006 )
+		EndIf
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Wait  29`
+		Wait  14`
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_80223764_17 {
+	ExecWait  $Script_80223780_17 
+	Return
+	End
+}
+
+#new:Script $Script_80223780_17 {
+	Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  GetLastDamage ( .Actor:Self *Var0 )
+		If  *Var0  <  00000004 
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000007 )
+		Else
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000006 )
+		EndIf
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Wait  29`
+		Wait  14`
+		Return
+	EndIf
+	If  *VarE  &  0000000C 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000000 
+			Call  GetLastDamage ( .Actor:Self *Var0 )
+			If  *Var0  <  00000004 
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000005 )
+			Else
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000004 )
+			EndIf
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Wait  29`
+			Wait  14`
+		Else
+			Call  SetActorVar   ( .Actor:Self 0000000B 00000002 )
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData     ( 00000006 )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Call  GetActorVar   ( .Actor:Self 00000006 *Var0 )
+			If  *Var0  !=  00000000 
+				Call  RemoveEffect  ( *Var0 )
+				Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+				Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+				Call  PlayEffect    ( ~FX:ColdBreath:PuffUp *Var0 *Var1 *Var2 *Fixed[3.0] 00000032 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			EndIf
+			Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_8021D0B0_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_8021D11C_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_8021D11C_17 )
+			Call  SetActorVar       ( .Actor:Self 00000007 0079000A )
+			Call  SetActorVar       ( .Actor:Self 00000008 00790009 )
+			Call  SetPartEventBits  ( .Actor:Self 00000001 00000002 .False )
+			Call  SetPartEventBits  ( .Actor:Self 00000002 00000002 .False )
+			Wait  29`
+			Call  PlaySoundAtActor  ( .Actor:Self 000003C8 )
+			Call  OverrideBattleDmaDest ( $End[9230] )
+			Call  LoadBattleDmaData ( 0000000D )
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Wait  14`
+			Call  SetActorVar       ( .Actor:Self 00000005 00000000 )
+		EndIf
+	Else
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000000 
+			Call  GetLastDamage ( .Actor:Self *Var0 )
+			If  *Var0  <  00000004 
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000005 )
+			Else
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000004 )
+			EndIf
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Wait  29`
+			Wait  14`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var0 )
+			If  *Var0  <  00000004 
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000007 )
+			Else
+				Call  OverrideBattleDmaDest ( $End[9230] )
+				Call  LoadBattleDmaData     ( 00000006 )
+			EndIf
+			Call  PlayModelAnimation    ( 00000000 $End[9230] )
+			Call  PlayEffect    ( ~FX:EmitterVolume:Embers 00000050 00000032 00000000 0000003C 00000032 *Fixed[1.5] 00000024 0000002A *Fixed[0.8] *Fixed[0.8] 00000000 00000000 )
+			Wait  29`
+			Wait  14`
+		EndIf
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_80223D78_17 {
+	Call  GetActorVar   ( .Actor:Self 00000007 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData     ( 00000000 )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData     ( 00000001 )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[9230] )
+		Call  LoadBattleDmaData     ( 00000000 )
+		Call  PlayModelAnimation    ( 00000000 $End[9230] )
+	EndIf
+	Return
+	End
+}
+
+#new:Actor $PetitPiranha_17 {
+% stats
+[Index]        B7b 
+[Level]         0`b 
+[MaxHP]         1`b 
+[Coins]         0`b 
+[Flags]       00000200 
+[StatusTable] $StatusTable_80223F50_17 
+% ai
+[PartsCount]    1`s 
+[PartsTable]  $PartsTable_80223FFC_17 
+[Script]      $Script_Init_80224048_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  80`b 
+[SpinSmash]     0`b % weight (0-4)
+% ui positions
+[Size]         30`b  30`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b  20`b % dx dy
+[StatusIcon]   10`b  20`b % dx dy
+}
+
+#new:IdleAnimations $IdleAnimations_802250C0_17 {
+.Status:Normal    007B0003
+.Status:Stop      007B0002
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_802250D4_17 {
+.Status:Normal    007B0004
+.Status:Stop      007B0002
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_802250E8_17 {
+.Status:Normal    007B000F
+.Status:Stop      007B000F
+.Status:End
+}
+
+#new:DefenseTable $DefenseTable_802250FC_17 {
+.Element:Normal 00000000
+.Element:Water  00000000
+.Element:Ice    00000000
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:DefenseTable $DefenseTable_80225128_17 {
+.Element:Normal 00000000
+.Element:Water  FFFFFFFE
+.Element:Ice    FFFFFFFE
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:DefenseTable $DefenseTable_80225154_17 {
+.Element:Normal 00000000
+.Element:Water  00000000
+.Element:Ice    00000000
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:StatusTable $StatusTable_80225180_17 {
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep      75`
+.Status:Poison      0`
+.Status:Frozen      0`
+.Status:Dizzy      30`
+.Status:Fear        0`
+.Status:Static      0`
+.Status:Paralyze   75`
+.Status:Shrink      0`
+.Status:Stop       60`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod     -1`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod     -1`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod  -1`
+.Status:ShrinkTurnMod    -1`
+.Status:StopTurnMod      -2`
+.Status:End
+}
+
+#new:PartsTable $PartsTable_8022522C_17 {
+00120000 01000000 000000FF $IdleAnimations_802250C0_17 $DefenseTable_802250FC_17 00000000 00000000 00F80000 00000000 
+00900021 02000000 000000FF 00000000 $DefenseTable_802250FC_17 00000000 00000000 00F80000 00000000 
+}
+
+#new:Actor $LavaBud_17 {
+% stats
+[Index]        B5b 
+[Level]         0`b 
+[MaxHP]         8`b 
+[Coins]         0`b 
+[Flags]       00000000 
+[StatusTable] $StatusTable_80225180_17 
+% ai
+[PartsCount]    2`s 
+[PartsTable]  $PartsTable_8022522C_17 
+[Script]      $Script_Init_8022529C_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  80`b 
+[SpinSmash]     4`b % weight (0-4)
+% ui positions
+[Size]         30`b  30`b % width height
+[HealthBar]    10`b -42`b % dx dy
+[StatusTurn]  -18`b  10`b % dx dy
+[StatusIcon]    0`b   0`b % dx dy
+}
+
+#new:Script $Script_Init_8022529C_17 {
+	UseArray  $End[890] 
+	Call  SetActorVar   ( .Actor:Self 00000005 00000000 )
+	Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+	Call  SetActorVar   ( .Actor:Self 00000009 00000000 )
+	Call  SetActorVar   ( .Actor:Self 00000004 00000000 )
+	Call  SetActorVar   ( .Actor:Self 0000000B 00000000 )
+	Call  SetActorVar   ( .Actor:Self 0000000D 00000000 )
+	Call  RandInt       ( 00000014 *Var0 )
+	Add   *Var0  0000000F 
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Call  SetActorVar   ( .Actor:Self 00000007 007B0003 )
+	Call  SetActorVar   ( .Actor:Self 00000008 007B0009 )
+	Call  BindTakeTurn  ( .Actor:Self $Script_TakeTurn_80225D98_17 )
+	Call  BindIdle      ( .Actor:Self $Script_Idle_802253F0_17 )
+	Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_80225738_17 )
+	Return
+	End
+}
+
+#new:Script $Script_Idle_802253F0_17 {
+	Label  0
+	Call  GetActorHP    ( .Actor:Enemy0 *Var0 )
+	If  *Var0  ==  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorFlags ( .Actor:Self *Var0 )
+	If  *Var0  &  00400000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  !=  00000002 
+		Goto  63
+	EndIf
+	Label  A
+	Call  GetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Sub   *Var0  00000001 
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	If  *Var0  !=  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 0000000C *Var0 )
+	Add   *Var0  00000001 
+	If  *Var0  >=  00000003 
+		Set   *Var0  00000000 
+	EndIf
+	Call  SetActorVar   ( .Actor:Self 0000000C *Var0 )
+	Switch  *Var0 
+		Case  ==  00000000 
+			Call  RandInt   ( 00000032 *Var0 )
+			Add   *Var0  00000019 
+		Case  ==  00000001 
+			Call  RandInt   ( 00000028 *Var0 )
+			Add   *Var0  00000014 
+		Default
+			Call  RandInt   ( 00000003 *Var0 )
+			Add   *Var0  00000003 
+	EndSwitch
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 0000001E )
+	ExecWait  $Script_802256E0_17 
+	Label  63
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_802256E0_17 {
+	If  *Var0  ==  00000001 
+		Call  PlayModelAnimation    ( *Var0 $End[6230] )
+	Else
+		Call  PlayModelAnimation    ( *Var0 $End[3230] )
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_HandleEvent_80225738_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self 00000000 )
+	Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+	Call  SetAnimatorFlags  ( *Var0 00040000 00000000 )
+	Call  GetLastElement    ( *VarE )
+	Call  GetLastEvent      ( .Actor:Self *Var0 )
+	Switch  *Var0 
+		Case  ==  .Event:BeginFirstStrike % 38
+		Case  ==  .Event:HitCombo % 9
+			ExecWait  $Script_802270B4_17 
+		Case  ==  .Event:Hit % A
+			ExecWait  $Script_802275E4_17 
+		Case  ==  .Event:BurnHit % E
+			If  *VarE  &  00000002 
+				ExecWait  $Script_80225AA8_17 
+			Else
+				ExecWait  $Script_802275E4_17 
+			EndIf
+		Case  ==  .Event:BurnDeath % 24
+			ExecWait  $Script_80226B58_17 
+		Case  ==  .Event:SpinSmashHit % B
+			ExecWait  $Script_802275E4_17 
+		Case  ==  .Event:SpinSmashDeath % 21
+			ExecWait  $Script_80226B58_17 
+		Case  ==  .Event:ShockHit % 2F
+			SetConst  *Var0  00000001 
+			Call  GetActorVar   ( .Actor:Self 00000008 *Var1 )
+			ExecWait  DoShockHit 
+		Case  ==  .Event:ShockDeath % 26
+			ExecWait  DoShockHit 
+		Case  ==  00000017 % 17
+			If  *VarE  !&  00000002 
+				ExecWait  $Script_802270B4_17 
+			EndIf
+		Case  ==  .Event:Immune % 19
+			If  *VarE  !&  00000002 
+				ExecWait  $Script_802275E4_17 
+			EndIf
+		Case  ==  .Event:AirLiftFailed % 1F
+		Case  ==  .Event:SpikeTaunt % 1B
+		Case  ==  .Event:Death % 20
+			ExecWait  $Script_80226B58_17 
+		Case  ==  .Event:EndFirstStrike % 35
+		Case  ==  .Event:RecoverStatus % 31
+			Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+			Call  SetAnimatorFlags  ( *Var0 00040000 00000000 )
+		Case  ==  00000030 % 30
+			SetConst  *Var0  00000001 
+			Call  GetActorVar   ( .Actor:Self 00000008 *Var1 )
+			ExecWait  DoNormalHit 
+			Wait  1000`
+		Default
+	EndSwitch
+	Call  GetStatusFlags    ( .Actor:Self *Var0 )
+	If  *Var0  &  ~Flags:StatusFlags:Stop % 200000
+		Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+		Call  SetAnimatorFlags  ( *Var0 00040000 00000001 )
+	EndIf
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_80225AA8_17 {
+	Thread
+		Wait  1`
+		Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+		If  *Var0  ==  00000000 
+			Goto  A
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var2 )
+		If  *Var2  ==  00000001 
+			Goto  A
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Set   *Var0  00000201 
+		Else
+			Set   *Var0  00000202 
+		EndIf
+		ExecWait  $Script_80222EF0_17 
+		Label  A
+	EndThread
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000002 
+			Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+			If  *Var0  ==  00000001 
+				Call  OverrideBattleDmaDest ( $End[6230] )
+			Else
+				Call  OverrideBattleDmaDest ( $End[3230] )
+			EndIf
+			Call  LoadBattleDmaData ( 0000001D )
+			ExecWait  $Script_802256E0_17 
+			Call  SetActorVar       ( .Actor:Self 00000007 007B0003 )
+			Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+			Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250D4_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_80225128_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_80225128_17 )
+			Thread
+				Wait  14`
+				Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001F )
+				ExecWait  $Script_802256E0_17 
+			EndThread
+		EndIf
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_TakeTurn_80225D98_17 {
+	Call  GetActorFlags ( .Actor:Self *Var0 )
+	If  *Var0  &  00400000 
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000002 
+			Return
+		EndIf
+		ExecWait  $Script_ShootBombs_17 
+	Else
+		Call  GetActorVar   ( .Actor:Self 00000004 *Var1 )
+		If  *Var1  !=  00000000 
+			Sub   *Var1  00000001 
+			Call  SetActorVar   ( .Actor:Self 00000004 *Var1 )
+			Return
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000001 
+			If  *Var1  !=  00000000 
+				Return
+			EndIf
+			Call  SetActorVar   ( .Actor:Self 00000004 00000001 )
+			ExecWait  $Script_8022646C_17 
+		Else
+			Call  GetActorVar   ( .Actor:Self 0000000B *Var0 )
+			Sub   *Var0  00000001 
+			Call  SetActorVar   ( .Actor:Self 0000000B *Var0 )
+			If  *Var0  <=  00000000 
+				Call  EnableIdleScript  ( .Actor:Self 00000000 )
+				Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  UseBattleCamPreset    ( 00000013 )
+					Call  SetBattleCamTarget    (  40`  30`  0` )
+					Call  SetBattleCamZoom      (  270` )
+					Call  SetBattleCamOffsetZ   (  20` )
+					Call  MoveBattleCamOver     (  30` )
+				Else
+					Call  UseBattleCamPreset    ( 00000013 )
+					Call  SetBattleCamTarget    (  110`  35`  0` )
+					Call  SetBattleCamZoom      (  300` )
+					Call  SetBattleCamOffsetZ   (  20` )
+					Call  MoveBattleCamOver     (  30` )
+				EndIf
+				Wait  30`
+				Loop  0000000A 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 0000001E )
+					ExecWait  $Script_802256E0_17 
+					Wait  4`
+				EndLoop
+				Call  UseBattleCamPreset    ( 00000002 )
+				Call  MoveBattleCamOver     (  15` )
+				Call  GetEnemyMaxHP ( .Actor:Self *Var0 )
+				Call  SetEnemyHP    ( .Actor:Self *Var0 )
+				Call  SetAnimation  ( .Actor:Self 00000001 007B0004 )
+				Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Set   *Var0  00000201 
+				Else
+					Set   *Var0  00000202 
+				EndIf
+				Call  PlaySoundAtActor  ( *Var0 000020BF )
+				ExecWait  $Script_80222EF0_17 
+				Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001D )
+				ExecWait  $Script_802256E0_17 
+				Wait  14`
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001F )
+				ExecWait  $Script_802256E0_17 
+				Call  GetEnemyMaxHP     ( .Actor:Self *Var0 )
+				Call  SetEnemyHP        ( .Actor:Self *Var0 )
+				Call  EnableIdleScript  ( .Actor:Self 00000001 )
+			EndIf
+		EndIf
+	EndIf
+	ExecWait  $Script_8022630C_17 
+	Return
+	End
+}
+
+#new:Script $Script_8022630C_17 {
+	Call  GetActorVar   ( .Actor:Self 00000007 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var3 )
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var3 )
+	If  *Var3  ==  00000002 
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001E )
+		ExecWait  $Script_802256E0_17 
+	Else
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001F )
+		ExecWait  $Script_802256E0_17 
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_8022646C_17 {
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  ==  00000002 
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000009 *Var0 )
+	If  *Var0  !=  00000000 
+		Return
+	EndIf
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Thread
+		Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+		Wait  8`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    ( *Var0 *Var1 *Var2 )
+		Call  SetBattleCamZoom      (  300` )
+		Call  SetBattleCamOffsetZ   (  30` )
+		Call  MoveBattleCamOver     (  30` )
+		Wait  45`
+		Call  UseBattleCamPreset    ( 00000002 )
+		Call  MoveBattleCamOver     (  20` )
+	EndThread
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 00000012 )
+	ExecWait  $Script_802256E0_17 
+	Thread
+		Wait  20`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0007 )
+		Wait  34`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0008 )
+		Wait  10`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0004 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001F )
+		ExecWait  $Script_802256E0_17 
+	EndThread
+	Wait  56`
+	If  *Var0  ==  00000001 
+		Call  SummonEnemy   ( $SpecialFormation_80226B04_17 00000000 )
+	Else
+		Call  SummonEnemy   ( $SpecialFormation_80226B20_17 00000000 )
+	EndIf
+	Set   *Var5  *Var0 
+	Call  GetActorVar   ( .Actor:Self 00000009 *Var0 )
+	Add   *Var0  00000001 
+	Call  SetActorVar   ( .Actor:Self 00000009 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  SetActorVar   ( *Var5 00000000 00000201 )
+	Else
+		Call  SetActorVar   ( *Var5 00000000 00000202 )
+	EndIf
+	Call  GetPartOffset ( .Actor:Self 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000000F 
+	Sub   *Var1  0000000F 
+	Call  SetActorPos   ( *Var5 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000001E 
+	Sub   *Var1  0000000F 
+	Call  PlaySoundAtActor  ( *Var5 000003C9 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var9 )
+	If  *Var9  ==  00000001 
+		Call  GetActorPos   ( *Var5 *Var0 *Var1 *Var2 )
+		Set   *Var0  FFFFFFF4 
+		Set   *Var1  00000050 
+		Call  SetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetHomePos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetActorSpeed ( *Var5 *Fixed[4.0] )
+		Call  SetActorJumpGravity   ( *Var5 *Fixed[1.0] )
+		Call  FlyToGoal     ( *Var5  24`  -42` .Easing:QuarticOut )
+	Else
+		Call  GetActorPos   ( *Var5 *Var0 *Var1 *Var2 )
+		Set   *Var0  00000012 
+		Set   *Var1  0000001C 
+		Call  SetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetHomePos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetActorSpeed ( *Var5 *Fixed[5.0] )
+		Call  SetActorJumpGravity   ( *Var5 *Fixed[1.2] )
+		Call  FlyToGoal     ( *Var5  16`  -15` .Easing:CubicOut )
+	EndIf
+	Call  HPBarToHome   ( *Var5 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 0000001F )
+	ExecWait  $Script_802256E0_17 
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Vector3D $Vector3D_80226AF8_17 {
+260` 0` 0`
+}
+
+#new:SpecialFormation $SpecialFormation_80226B04_17 {
+$PetitPiranha_17 $Vector3D_80226AF8_17 0000005F FFFFFFF4 00000055 00000000 00000000 
+}
+
+#new:SpecialFormation $SpecialFormation_80226B20_17 {
+$PetitPiranha_17 $Vector3D_80226AF8_17 0000005E 00000012 00000026 00000000 00000000 
+}
+
+#new:SpecialFormation $SpecialFormation_80226B3C_17 {
+$PetitPiranhaBomb_17 $Vector3D_80226AF8_17 0000005F 00000000 00000000 00000000 00000000 
+}
+
+#new:Script $Script_80226B58_17 {
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000002 
+			ExecWait  $Script_802275E4_17 
+			Return
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+		Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 00000015 )
+		ExecWait  $Script_802256E0_17 
+		Call  SetActorVar       ( .Actor:Self 0000000B 00000002 )
+		Call  GetActorVar       ( .Actor:Self 00000006 *Var0 )
+		If  *Var0  !=  00000000 
+			Call  RemoveEffect  ( *Var0 )
+			Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+		EndIf
+		Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250E8_17 )
+		Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_80225154_17 )
+		Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_80225154_17 )
+		Call  SetActorVar       ( .Actor:Self 00000007 007B000F )
+		Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+		Call  SetAnimation      ( .Actor:Self 00000001 007B000F )
+		Call  SetPartEventBits  ( .Actor:Self 00000001 00000002 .False )
+		Call  SetPartEventBits  ( .Actor:Self 00000002 00000002 .False )
+		Wait  29`
+		Call  PlaySoundAtActor  ( .Actor:Self 000003C7 )
+		Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001B )
+		ExecWait  $Script_802256E0_17 
+		Wait  14`
+		Call  SetActorVar       ( .Actor:Self 00000005 00000002 )
+		Call  GetActorVar       ( .Actor:Enemy0 00000001 *VarF )
+		If  *VarF  ==  00000000 
+			ExecWait  $Script_8022630C_17 
+		EndIf
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 00000015 )
+		ExecWait  $Script_802256E0_17 
+		Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250E8_17 )
+		Call  SetActorVar       ( .Actor:Self 00000007 007B000F )
+		Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+		Wait  29`
+		Call  PlaySoundAtActor  ( .Actor:Self 000003C7 )
+		Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001B )
+		ExecWait  $Script_802256E0_17 
+		Wait  14`
+		Call  SetActorVar       ( .Actor:Self 00000005 00000002 )
+		ExecWait  $Script_8022630C_17 
+		Call  SetPartFlagBits   ( .Actor:Self 00000002 00022000 .True )
+		Call  SetActorFlagBits  ( .Actor:Self 00040000 .True )
+	Else
+		ExecWait  $Script_802275E4_17 
+		Return
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_802270B4_17 {
+	Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var1 )
+	If  *Var1  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var5 )
+		If  *Var5  !=  00000002 
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000016 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000014 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000013 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		EndIf
+	Else
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var5 )
+		If  *Var5  ==  00000001 
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000016 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000014 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000013 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Call  GetActorPos   ( .Actor:Self *Var1 *Var2 *Var3 )
+			Sub   *Var2  00000019 
+			Add   *Var3  00000002 
+			Call  PlayEffect    ( ~FX:EmitterVolume:Embers *Var1 *Var2 *Var3 00000028 00000032 *Fixed[1.2] 00000018 0000002A *Fixed[0.8] *Fixed[0.6] 00000000 00000000 )
+			Wait  29`
+		EndIf
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_802275E4_17 {
+	Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var5 )
+	If  *Var5  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var5 )
+		If  *Var5  ==  00000000 
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000016 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000014 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000013 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		EndIf
+	Else
+		If  *VarE  &  0000000C 
+			Call  GetActorVar   ( .Actor:Self 00000005 *Var3 )
+			If  *Var3  ==  00000002 
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  <  00000004 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000014 )
+				Else
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000013 )
+				EndIf
+				ExecWait  $Script_802256E0_17 
+				Wait  29`
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+				ExecWait  $Script_802256E0_17 
+				Call  SetActorVar       ( .Actor:Self 0000000B 00000002 )
+				Call  GetActorVar       ( .Actor:Self 00000006 *Var0 )
+				If  *Var0  !=  00000000 
+					Call  RemoveEffect  ( *Var0 )
+					Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+					Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+					Call  PlayEffect    ( ~FX:ColdBreath:PuffUp *Var0 *Var1 *Var2 *Fixed[2.0] 0000002D 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+				EndIf
+				Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250E8_17 )
+				Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_80225154_17 )
+				Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_80225154_17 )
+				Call  SetActorVar       ( .Actor:Self 00000007 007B000F )
+				Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+				Call  SetAnimation      ( .Actor:Self 00000001 007B000F )
+				Call  SetPartEventBits  ( .Actor:Self 00000001 00000002 .False )
+				Call  SetPartEventBits  ( .Actor:Self 00000002 00000002 .False )
+				Wait  29`
+				Call  PlaySoundAtActor  ( .Actor:Self 000003C7 )
+				Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001B )
+				ExecWait  $Script_802256E0_17 
+				Wait  14`
+				Call  SetActorVar       ( .Actor:Self 00000005 00000002 )
+			EndIf
+		Else
+			Call  GetActorVar   ( .Actor:Self 00000005 *Var3 )
+			If  *Var3  ==  00000002 
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  ==  00000000 
+					Return
+				EndIf
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  <  00000004 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000014 )
+				Else
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000013 )
+				EndIf
+				ExecWait  $Script_802256E0_17 
+				Wait  29`
+			Else
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  <  00000004 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000016 )
+				Else
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000015 )
+				EndIf
+				ExecWait  $Script_802256E0_17 
+				Call  GetActorPos   ( .Actor:Self *Var1 *Var2 *Var3 )
+				Sub   *Var2  00000019 
+				Add   *Var3  00000002 
+				Call  PlayEffect    ( ~FX:EmitterVolume:Embers *Var1 *Var2 *Var3 00000028 00000032 *Fixed[1.2] 00000018 0000002A *Fixed[0.8] *Fixed[0.6] 00000000 00000000 )
+				Wait  29`
+			EndIf
+		EndIf
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy0 00000001 *VarF )
+	If  *VarF  ==  00000000 
+		ExecWait  $Script_8022630C_17 
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_ShootBombs_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Thread
+		Wait  8`
+		Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+		Sub   *Var1  00000019 
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    ( *Var0 *Var1 *Var2 )
+		Call  SetBattleCamZoom      (  350` )
+		Call  SetBattleCamOffsetZ   (  30` )
+		Call  MoveBattleCamOver     (  30` )
+		Wait  45`
+		Call  UseBattleCamPreset    ( 00000002 )
+		Call  MoveBattleCamOver     (  20` )
+	EndThread
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 00000012 )
+	ExecWait  $Script_802256E0_17 
+	Thread
+		Wait  20`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0005 )
+		Wait  39`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0006 )
+		Wait  5`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0003 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001F )
+		ExecWait  $Script_802256E0_17 
+	EndThread
+	Wait  56`
+	Call  SummonEnemy       ( $SpecialFormation_80226B3C_17 00000000 )
+	Set   *Var5  *Var0 
+	Call  GetPartOffset     ( .Actor:Self 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000000F 
+	Sub   *Var1  0000000F 
+	Call  SetActorPos       ( *Var5 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000001E 
+	Sub   *Var1  0000000F 
+	Call  SetAnimation      ( *Var5 00000001 007A0005 )
+	Call  SetGoalPos        ( *Var5 *Var0 *Var1 *Var2 )
+	Call  SetActorSpeed     ( *Var5 *Fixed[6.0] )
+	Call  SetActorJumpGravity   ( *Var5 *Fixed[1.8] )
+	Call  PlaySoundAtActor  ( *Var5 000003CB )
+	Call  SetTargetActor    ( *Var5 .Actor:Player )
+	Call  SetGoalToTarget   ( *Var5 )
+	Call  EnemyTestTarget   ( *Var5 *Var9 ~Flags:DamageType:0 00000000 00000001 00000010 )
+	Switch  *Var9 
+		CaseOR  ==  .HitResult:Miss % 6
+		CaseOR  ==  .HitResult:Lucky % 5
+			Call  SetGoalToTarget       ( *Var5 )
+			Call  GetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+			Set   *Var0  FFFFFF4C 
+			Call  SetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+			Call  SetActorSpeed ( *Var5 *Fixed[13.0] )
+			Call  SetActorJumpGravity   ( *Var5 *Fixed[1.8] )
+			Call  FlyToGoal     ( *Var5  0`  0` .Easing:Linear )
+			If  *Var9  ==  .HitResult:Lucky % 5
+				Call  EnemyTestTarget   ( *Var5 *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
+			EndIf
+			Call  UseBattleCamPreset    ( 00000002 )
+			Call  RemoveActor   ( *Var5 )
+			Return
+		EndCaseGroup
+	EndSwitch
+	Call  SetTargetActor    ( *Var5 .Actor:Player )
+	Call  SetGoalToTarget   ( *Var5 )
+	Call  SetActorSpeed     ( *Var5 *Fixed[13.0] )
+	Call  SetActorJumpGravity   ( *Var5 *Fixed[1.8] )
+	Call  FlyToGoal ( *Var5  0`  0` .Easing:Linear )
+	Wait  2`
+	Call  SetGoalToTarget   ( *Var5 )
+	Call  SetTargetActor    ( .Actor:Self .Actor:Player )
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  EnemyDamageTarget ( .Actor:Self *Var9 ~Flags:DamageType:Fire 0000FFFF 00000000 00000004 00000020 )
+	Switch  *Var9 
+		CaseOR  ==  .HitResult:Hit % 0
+		CaseOR  ==  .HitResult:QuakeImmune % 2
+		CaseOR  ==  0000000A % A
+			Call  SetPartFlagBits   ( *Var5 00000001 00000001 .True )
+			Call  SetGoalToTarget   ( *Var5 )
+			Call  GetGoalPos        ( *Var5 *Var0 *Var1 *Var2 )
+			Set   *Var1  0000000A 
+			Add   *Var2  00000002 
+			Call  PlayEffect        ( ~FX:Fire:TinyBlue *Var0 *Var1 *Var2 *Fixed[0.3] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  MakeLerp  ( 00000078 0000000A 00000014 .Easing:QuadraticIn )
+			Loop
+				Call  UpdateLerp ( )
+				MulF  *Var0  *Fixed[0.01] 
+				Call  $Function_80218DF0_17 ( *VarA *Var0 )
+				Wait  1`
+				If  *Var1  ==  00000000 
+					BreakLoop
+				EndIf
+			EndLoop
+			Wait  1`
+			Call  RemoveEffect  ( *VarA )
+			Call  RemoveActor   ( *Var5 )
+			Wait  15`
+			If  *Var9  ==  0000000A % A
+				Return
+			EndIf
+			Call  UseBattleCamPreset    ( 00000002 )
+		EndCaseGroup
+	EndSwitch
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:IdleAnimations $IdleAnimations_80228720_17 {
+.Status:Normal    007A0001
+.Status:Stone     007A0000
+.Status:Sleep     007A0000
+.Status:Poison    007A0001
+.Status:Stop      007A0000
+.Status:Static    007A0000
+.Status:Paralyze  007A0000
+.Status:Paralyze  007A0000
+.Status:Dizzy     007A0001
+.Status:Dizzy     007A0001
+.Status:End
+}
+
+#new:DefenseTable $DefenseTable_80228774_17 {
+.Element:Normal 00000000
+.Element:Water  FFFFFFFE
+.Element:Ice    FFFFFFFE
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:StatusTable $StatusTable_802287A0_17 {
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep       0`
+.Status:Poison      0`
+.Status:Frozen      0`
+.Status:Dizzy       0`
+.Status:Fear        0`
+.Status:Static      0`
+.Status:Paralyze    0`
+.Status:Shrink      0`
+.Status:Stop        0`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod      0`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod      0`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod   0`
+.Status:ShrinkTurnMod     0`
+.Status:StopTurnMod       0`
+.Status:End
+}
+
+#new:PartsTable $PartsTable_8022884C_17 {
+00800000 01000000 001800FF $IdleAnimations_80228720_17 $DefenseTable_80228774_17 00000002 00000002 FEEA0000 00000000 
+}
+
+#new:Actor $PetitPiranhaBomb_17 {
+% stats
+[Index]        B8b 
+[Level]         0`b 
+[MaxHP]         1`b 
+[Coins]         0`b 
+[Flags]       00000200 
+[StatusTable] $StatusTable_802287A0_17 
+% ai
+[PartsCount]    1`s 
+[PartsTable]  $PartsTable_8022884C_17 
+[Script]      $Script_Init_80228898_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  80`b 
+[SpinSmash]     0`b % weight (0-4)
+% ui positions
+[Size]         30`b  30`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b  20`b % dx dy
+[StatusIcon]   10`b  20`b % dx dy
+}
+
+#new:Script $Script_Init_80228898_17 {
+	Call  BindTakeTurn      ( .Actor:Self $Script_TakeTurn_8022894C_17 )
+	Call  BindIdle  ( .Actor:Self $Script_Idle_802288E4_17 )
+	Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_80228918_17 )
+	Return
+	End
+}
+
+#new:Script $Script_Idle_802288E4_17 {
+	Label  0
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_HandleEvent_80228918_17 {
+	Label  0
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_TakeTurn_8022894C_17 {
+	Label  0
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:ConstDouble $ConstDouble_8022AC40_17 {
+90.000000d
+}
+

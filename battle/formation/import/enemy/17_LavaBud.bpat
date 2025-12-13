@@ -1,0 +1,1247 @@
+% Automatically dumped from section 17
+
+#new:Actor $17_LavaBud {
+% stats
+[Index]        B5b 
+[Level]         0`b 
+[MaxHP]         8`b 
+[Coins]         0`b 
+[Flags]       00000000 
+[StatusTable] $StatusTable_80225180_17 
+% ai
+[PartsCount]    2`s 
+[PartsTable]  $PartsTable_8022522C_17 
+[Script]      $Script_Init_8022529C_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  80`b 
+[SpinSmash]     4`b % weight (0-4)
+% ui positions
+[Size]         30`b  30`b % width height
+[HealthBar]    10`b -42`b % dx dy
+[StatusTurn]  -18`b  10`b % dx dy
+[StatusIcon]    0`b   0`b % dx dy
+}
+
+#new:Function $Function_80218DF0_17 {
+	ADDIU     SP, SP, FFE0
+	SW        S1, 14 (SP)
+	COPY      S1, A0
+	SW        RA, 18 (SP)
+	SW        S0, 10 (SP)
+	LW        S0, C (S1)
+	LW        A1, 0 (S0)
+	JAL       ~Func:get_variable
+	ADDIU     S0, S0, 4
+	LW        A1, 0 (S0)
+	LW        S0, C (V0)
+	JAL       ~Func:get_float_variable
+	COPY      A0, S1
+	SWC1      F0, 2C (S0)
+	SWC1      F0, 30 (S0)
+	LW        RA, 18 (SP)
+	LW        S1, 14 (SP)
+	LW        S0, 10 (SP)
+	LI        V0, 2
+	JR        RA
+	ADDIU     SP, SP, 20
+}
+
+#new:Script $Script_80222EF0_17 {
+	Switch  *Var0 
+		Case  ==  00000201 
+			Call  SetActorVar       ( .Actor:Enemy1 0000000A 00000023 )
+			Call  GetAnimatedPositionByTreeIndex    ( 00000001 00000008 *Var1 *Var2 *Var3 )
+			Call  GetAnimatedRotationByTreeIndex    ( 00000001 00000008 *Var4 *Var5 *Var6 )
+			Set   *Var7  0000000A 
+			Set   *Var8  FFFFFFF1 
+			Call  $Function_80218BE8_17 ( *Var1 *Var2 *Var6 *Var7 *Var8 *Var3 *Var4 )
+			Call  GetPartOffset     ( .Actor:Enemy1 00000001 *Var0 *Var1 *Var2 )
+			Sub   *Var2  00000003 
+			Call  PlayEffect        ( ~FX:Fire:LargeRed *Var3 *Var4 *Var2 *Fixed[0.3] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  SetActorVar       ( .Actor:Enemy1 00000006 *VarA )
+			Call  SetIdleAnimations ( .Actor:Enemy1 00000001 $IdleAnimations_802250D4_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy1 00000001 $DefenseTable_80225128_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy1 00000002 $DefenseTable_80225128_17 )
+			Call  SetPartEventBits  ( .Actor:Enemy1 00000001 00000002 .True )
+			Call  SetPartEventBits  ( .Actor:Enemy1 00000002 00000002 .True )
+			Call  SetActorVar       ( .Actor:Enemy1 00000007 007B0004 )
+			Call  SetActorVar       ( .Actor:Enemy1 00000008 007B000B )
+			Call  SetActorVar       ( .Actor:Enemy1 00000005 00000001 )
+			Call  SetPartFlagBits   ( .Actor:Enemy1 00000002 00020000 .False )
+			Call  SetActorFlagBits  ( .Actor:Enemy1 00040000 .False )
+		Case  ==  00000202 
+			Call  SetActorVar       ( .Actor:Enemy2 0000000A 00000023 )
+			Call  GetAnimatedPositionByTreeIndex    ( 00000002 00000008 *Var1 *Var2 *Var3 )
+			Call  GetAnimatedRotationByTreeIndex    ( 00000002 00000008 *Var4 *Var5 *Var6 )
+			Set   *Var7  0000000A 
+			Set   *Var8  FFFFFFF1 
+			Call  $Function_80218BE8_17 ( *Var1 *Var2 *Var6 *Var7 *Var8 *Var3 *Var4 )
+			Call  GetPartOffset     ( .Actor:Enemy2 00000001 *Var0 *Var1 *Var2 )
+			Sub   *Var2  00000003 
+			Call  PlayEffect        ( ~FX:Fire:LargeRed *Var3 *Var4 *Var2 *Fixed[0.3] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  SetActorVar       ( .Actor:Enemy2 00000006 *VarA )
+			Call  SetIdleAnimations ( .Actor:Enemy2 00000001 $IdleAnimations_802250D4_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy2 00000001 $DefenseTable_80225128_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy2 00000002 $DefenseTable_80225128_17 )
+			Call  SetPartEventBits  ( .Actor:Enemy2 00000001 00000002 .True )
+			Call  SetPartEventBits  ( .Actor:Enemy2 00000002 00000002 .True )
+			Call  SetActorVar       ( .Actor:Enemy2 00000007 007B0004 )
+			Call  SetActorVar       ( .Actor:Enemy2 00000008 007B000B )
+			Call  SetActorVar       ( .Actor:Enemy2 00000005 00000001 )
+			Call  SetPartFlagBits   ( .Actor:Enemy2 00000002 00020000 .False )
+			Call  SetActorFlagBits  ( .Actor:Enemy2 00040000 .False )
+		Default
+			Call  SetActorVar       ( .Actor:Enemy0 0000000A 00000046 )
+			Call  GetAnimatedPositionByTreeIndex    ( 00000000 0000000A *Var1 *Var2 *Var3 )
+			Call  GetAnimatedRotationByTreeIndex    ( 00000000 0000000A *Var4 *Var5 *Var6 )
+			Set   *Var7  0000001E 
+			Set   *Var8  FFFFFFE2 
+			Call  $Function_80218BE8_17 ( *Var1 *Var2 *Var6 *Var7 *Var8 *Var3 *Var4 )
+			Call  GetPartOffset     ( .Actor:Enemy0 00000001 *Var0 *Var1 *Var2 )
+			Sub   *Var2  00000003 
+			Call  PlayEffect        ( ~FX:Fire:LargeRed *Var3 *Var4 *Var2 *Fixed[0.7] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  SetActorVar       ( .Actor:Enemy0 00000006 *VarA )
+			Call  SetIdleAnimations ( .Actor:Enemy0 00000001 $IdleAnimations_8021D064_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy0 00000001 $DefenseTable_8021D0F0_17 )
+			Call  SetDefenseTable   ( .Actor:Enemy0 00000002 $DefenseTable_8021D0F0_17 )
+			Call  SetPartEventBits  ( .Actor:Enemy0 00000001 00000002 .True )
+			Call  SetPartEventBits  ( .Actor:Enemy0 00000002 00000002 .True )
+			Call  SetActorVar       ( .Actor:Enemy0 00000007 00790004 )
+			Call  SetActorVar       ( .Actor:Enemy0 00000008 0079000A )
+			Call  SetActorVar       ( .Actor:Enemy0 00000005 00000001 )
+			Call  ForceHomePos      ( .Actor:Self  61`  61`  0` )
+			Call  SetActorFlagBits  ( .Actor:Self 00040000 .False )
+	EndSwitch
+	Return
+	End
+}
+
+#new:Actor $PetitPiranha_17 {
+% stats
+[Index]        B7b 
+[Level]         0`b 
+[MaxHP]         1`b 
+[Coins]         0`b 
+[Flags]       00000200 
+[StatusTable] $StatusTable_80223F50_17 
+% ai
+[PartsCount]    1`s 
+[PartsTable]  $PartsTable_80223FFC_17 
+[Script]      $Script_Init_80224048_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  80`b 
+[SpinSmash]     0`b % weight (0-4)
+% ui positions
+[Size]         30`b  30`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b  20`b % dx dy
+[StatusIcon]   10`b  20`b % dx dy
+}
+
+#new:IdleAnimations $IdleAnimations_802250C0_17 {
+.Status:Normal    007B0003
+.Status:Stop      007B0002
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_802250D4_17 {
+.Status:Normal    007B0004
+.Status:Stop      007B0002
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_802250E8_17 {
+.Status:Normal    007B000F
+.Status:Stop      007B000F
+.Status:End
+}
+
+#new:DefenseTable $DefenseTable_802250FC_17 {
+.Element:Normal 00000000
+.Element:Water  00000000
+.Element:Ice    00000000
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:DefenseTable $DefenseTable_80225128_17 {
+.Element:Normal 00000000
+.Element:Water  FFFFFFFE
+.Element:Ice    FFFFFFFE
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:DefenseTable $DefenseTable_80225154_17 {
+.Element:Normal 00000000
+.Element:Water  00000000
+.Element:Ice    00000000
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:StatusTable $StatusTable_80225180_17 {
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep      75`
+.Status:Poison      0`
+.Status:Frozen      0`
+.Status:Dizzy      30`
+.Status:Fear        0`
+.Status:Static      0`
+.Status:Paralyze   75`
+.Status:Shrink      0`
+.Status:Stop       60`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod     -1`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod     -1`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod  -1`
+.Status:ShrinkTurnMod    -1`
+.Status:StopTurnMod      -2`
+.Status:End
+}
+
+#new:PartsTable $PartsTable_8022522C_17 {
+00120000 01000000 000000FF $IdleAnimations_802250C0_17 $DefenseTable_802250FC_17 00000000 00000000 00F80000 00000000 
+00900021 02000000 000000FF 00000000 $DefenseTable_802250FC_17 00000000 00000000 00F80000 00000000 
+}
+
+#new:Script $Script_Init_8022529C_17 {
+	UseArray  $End[890] 
+	Call  SetActorVar   ( .Actor:Self 00000005 00000000 )
+	Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+	Call  SetActorVar   ( .Actor:Self 00000009 00000000 )
+	Call  SetActorVar   ( .Actor:Self 00000004 00000000 )
+	Call  SetActorVar   ( .Actor:Self 0000000B 00000000 )
+	Call  SetActorVar   ( .Actor:Self 0000000D 00000000 )
+	Call  RandInt       ( 00000014 *Var0 )
+	Add   *Var0  0000000F 
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Call  SetActorVar   ( .Actor:Self 00000007 007B0003 )
+	Call  SetActorVar   ( .Actor:Self 00000008 007B0009 )
+	Call  BindTakeTurn  ( .Actor:Self $Script_TakeTurn_80225D98_17 )
+	Call  BindIdle      ( .Actor:Self $Script_Idle_802253F0_17 )
+	Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_80225738_17 )
+	Return
+	End
+}
+
+#new:Script $Script_Idle_802253F0_17 {
+	Label  0
+	Call  GetActorHP    ( .Actor:Enemy0 *Var0 )
+	If  *Var0  ==  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorFlags ( .Actor:Self *Var0 )
+	If  *Var0  &  00400000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  !=  00000002 
+		Goto  63
+	EndIf
+	Label  A
+	Call  GetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Sub   *Var0  00000001 
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	If  *Var0  !=  00000000 
+		Goto  63
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 0000000C *Var0 )
+	Add   *Var0  00000001 
+	If  *Var0  >=  00000003 
+		Set   *Var0  00000000 
+	EndIf
+	Call  SetActorVar   ( .Actor:Self 0000000C *Var0 )
+	Switch  *Var0 
+		Case  ==  00000000 
+			Call  RandInt   ( 00000032 *Var0 )
+			Add   *Var0  00000019 
+		Case  ==  00000001 
+			Call  RandInt   ( 00000028 *Var0 )
+			Add   *Var0  00000014 
+		Default
+			Call  RandInt   ( 00000003 *Var0 )
+			Add   *Var0  00000003 
+	EndSwitch
+	Call  SetActorVar   ( .Actor:Self 0000000D *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 0000001E )
+	ExecWait  $Script_802256E0_17 
+	Label  63
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_802256E0_17 {
+	If  *Var0  ==  00000001 
+		Call  PlayModelAnimation    ( *Var0 $End[6230] )
+	Else
+		Call  PlayModelAnimation    ( *Var0 $End[3230] )
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_HandleEvent_80225738_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Call  EnableIdleScript  ( .Actor:Self 00000000 )
+	Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+	Call  SetAnimatorFlags  ( *Var0 00040000 00000000 )
+	Call  GetLastElement    ( *VarE )
+	Call  GetLastEvent      ( .Actor:Self *Var0 )
+	Switch  *Var0 
+		Case  ==  .Event:BeginFirstStrike % 38
+		Case  ==  .Event:HitCombo % 9
+			ExecWait  $Script_802270B4_17 
+		Case  ==  .Event:Hit % A
+			ExecWait  $Script_802275E4_17 
+		Case  ==  .Event:BurnHit % E
+			If  *VarE  &  00000002 
+				ExecWait  $Script_80225AA8_17 
+			Else
+				ExecWait  $Script_802275E4_17 
+			EndIf
+		Case  ==  .Event:BurnDeath % 24
+			ExecWait  $Script_80226B58_17 
+		Case  ==  .Event:SpinSmashHit % B
+			ExecWait  $Script_802275E4_17 
+		Case  ==  .Event:SpinSmashDeath % 21
+			ExecWait  $Script_80226B58_17 
+		Case  ==  .Event:ShockHit % 2F
+			SetConst  *Var0  00000001 
+			Call  GetActorVar   ( .Actor:Self 00000008 *Var1 )
+			ExecWait  DoShockHit 
+		Case  ==  .Event:ShockDeath % 26
+			ExecWait  DoShockHit 
+		Case  ==  00000017 % 17
+			If  *VarE  !&  00000002 
+				ExecWait  $Script_802270B4_17 
+			EndIf
+		Case  ==  .Event:Immune % 19
+			If  *VarE  !&  00000002 
+				ExecWait  $Script_802275E4_17 
+			EndIf
+		Case  ==  .Event:AirLiftFailed % 1F
+		Case  ==  .Event:SpikeTaunt % 1B
+		Case  ==  .Event:Death % 20
+			ExecWait  $Script_80226B58_17 
+		Case  ==  .Event:EndFirstStrike % 35
+		Case  ==  .Event:RecoverStatus % 31
+			Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+			Call  SetAnimatorFlags  ( *Var0 00040000 00000000 )
+		Case  ==  00000030 % 30
+			SetConst  *Var0  00000001 
+			Call  GetActorVar   ( .Actor:Self 00000008 *Var1 )
+			ExecWait  DoNormalHit 
+			Wait  1000`
+		Default
+	EndSwitch
+	Call  GetStatusFlags    ( .Actor:Self *Var0 )
+	If  *Var0  &  ~Flags:StatusFlags:Stop % 200000
+		Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+		Call  SetAnimatorFlags  ( *Var0 00040000 00000001 )
+	EndIf
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_80225AA8_17 {
+	Thread
+		Wait  1`
+		Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+		If  *Var0  ==  00000000 
+			Goto  A
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var2 )
+		If  *Var2  ==  00000001 
+			Goto  A
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Set   *Var0  00000201 
+		Else
+			Set   *Var0  00000202 
+		EndIf
+		ExecWait  $Script_80222EF0_17 
+		Label  A
+	EndThread
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000002 
+			Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+			If  *Var0  ==  00000001 
+				Call  OverrideBattleDmaDest ( $End[6230] )
+			Else
+				Call  OverrideBattleDmaDest ( $End[3230] )
+			EndIf
+			Call  LoadBattleDmaData ( 0000001D )
+			ExecWait  $Script_802256E0_17 
+			Call  SetActorVar       ( .Actor:Self 00000007 007B0003 )
+			Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+			Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250D4_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_80225128_17 )
+			Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_80225128_17 )
+			Thread
+				Wait  14`
+				Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001F )
+				ExecWait  $Script_802256E0_17 
+			EndThread
+		EndIf
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_TakeTurn_80225D98_17 {
+	Call  GetActorFlags ( .Actor:Self *Var0 )
+	If  *Var0  &  00400000 
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000002 
+			Return
+		EndIf
+		ExecWait  $Script_ShootBombs_17 
+	Else
+		Call  GetActorVar   ( .Actor:Self 00000004 *Var1 )
+		If  *Var1  !=  00000000 
+			Sub   *Var1  00000001 
+			Call  SetActorVar   ( .Actor:Self 00000004 *Var1 )
+			Return
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000001 
+			If  *Var1  !=  00000000 
+				Return
+			EndIf
+			Call  SetActorVar   ( .Actor:Self 00000004 00000001 )
+			ExecWait  $Script_8022646C_17 
+		Else
+			Call  GetActorVar   ( .Actor:Self 0000000B *Var0 )
+			Sub   *Var0  00000001 
+			Call  SetActorVar   ( .Actor:Self 0000000B *Var0 )
+			If  *Var0  <=  00000000 
+				Call  EnableIdleScript  ( .Actor:Self 00000000 )
+				Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  UseBattleCamPreset    ( 00000013 )
+					Call  SetBattleCamTarget    (  40`  30`  0` )
+					Call  SetBattleCamZoom      (  270` )
+					Call  SetBattleCamOffsetZ   (  20` )
+					Call  MoveBattleCamOver     (  30` )
+				Else
+					Call  UseBattleCamPreset    ( 00000013 )
+					Call  SetBattleCamTarget    (  110`  35`  0` )
+					Call  SetBattleCamZoom      (  300` )
+					Call  SetBattleCamOffsetZ   (  20` )
+					Call  MoveBattleCamOver     (  30` )
+				EndIf
+				Wait  30`
+				Loop  0000000A 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 0000001E )
+					ExecWait  $Script_802256E0_17 
+					Wait  4`
+				EndLoop
+				Call  UseBattleCamPreset    ( 00000002 )
+				Call  MoveBattleCamOver     (  15` )
+				Call  GetEnemyMaxHP ( .Actor:Self *Var0 )
+				Call  SetEnemyHP    ( .Actor:Self *Var0 )
+				Call  SetAnimation  ( .Actor:Self 00000001 007B0004 )
+				Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Set   *Var0  00000201 
+				Else
+					Set   *Var0  00000202 
+				EndIf
+				Call  PlaySoundAtActor  ( *Var0 000020BF )
+				ExecWait  $Script_80222EF0_17 
+				Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001D )
+				ExecWait  $Script_802256E0_17 
+				Wait  14`
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001F )
+				ExecWait  $Script_802256E0_17 
+				Call  GetEnemyMaxHP     ( .Actor:Self *Var0 )
+				Call  SetEnemyHP        ( .Actor:Self *Var0 )
+				Call  EnableIdleScript  ( .Actor:Self 00000001 )
+			EndIf
+		EndIf
+	EndIf
+	ExecWait  $Script_8022630C_17 
+	Return
+	End
+}
+
+#new:Script $Script_8022630C_17 {
+	Call  GetActorVar   ( .Actor:Self 00000007 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var3 )
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var3 )
+	If  *Var3  ==  00000002 
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001E )
+		ExecWait  $Script_802256E0_17 
+	Else
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001F )
+		ExecWait  $Script_802256E0_17 
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_8022646C_17 {
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  ==  00000002 
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000009 *Var0 )
+	If  *Var0  !=  00000000 
+		Return
+	EndIf
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Thread
+		Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+		Wait  8`
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    ( *Var0 *Var1 *Var2 )
+		Call  SetBattleCamZoom      (  300` )
+		Call  SetBattleCamOffsetZ   (  30` )
+		Call  MoveBattleCamOver     (  30` )
+		Wait  45`
+		Call  UseBattleCamPreset    ( 00000002 )
+		Call  MoveBattleCamOver     (  20` )
+	EndThread
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 00000012 )
+	ExecWait  $Script_802256E0_17 
+	Thread
+		Wait  20`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0007 )
+		Wait  34`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0008 )
+		Wait  10`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0004 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001F )
+		ExecWait  $Script_802256E0_17 
+	EndThread
+	Wait  56`
+	If  *Var0  ==  00000001 
+		Call  SummonEnemy   ( $SpecialFormation_80226B04_17 00000000 )
+	Else
+		Call  SummonEnemy   ( $SpecialFormation_80226B20_17 00000000 )
+	EndIf
+	Set   *Var5  *Var0 
+	Call  GetActorVar   ( .Actor:Self 00000009 *Var0 )
+	Add   *Var0  00000001 
+	Call  SetActorVar   ( .Actor:Self 00000009 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  SetActorVar   ( *Var5 00000000 00000201 )
+	Else
+		Call  SetActorVar   ( *Var5 00000000 00000202 )
+	EndIf
+	Call  GetPartOffset ( .Actor:Self 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000000F 
+	Sub   *Var1  0000000F 
+	Call  SetActorPos   ( *Var5 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000001E 
+	Sub   *Var1  0000000F 
+	Call  PlaySoundAtActor  ( *Var5 000003C9 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var9 )
+	If  *Var9  ==  00000001 
+		Call  GetActorPos   ( *Var5 *Var0 *Var1 *Var2 )
+		Set   *Var0  FFFFFFF4 
+		Set   *Var1  00000050 
+		Call  SetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetHomePos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetActorSpeed ( *Var5 *Fixed[4.0] )
+		Call  SetActorJumpGravity   ( *Var5 *Fixed[1.0] )
+		Call  FlyToGoal     ( *Var5  24`  -42` .Easing:QuarticOut )
+	Else
+		Call  GetActorPos   ( *Var5 *Var0 *Var1 *Var2 )
+		Set   *Var0  00000012 
+		Set   *Var1  0000001C 
+		Call  SetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetHomePos    ( *Var5 *Var0 *Var1 *Var2 )
+		Call  SetActorSpeed ( *Var5 *Fixed[5.0] )
+		Call  SetActorJumpGravity   ( *Var5 *Fixed[1.2] )
+		Call  FlyToGoal     ( *Var5  16`  -15` .Easing:CubicOut )
+	EndIf
+	Call  HPBarToHome   ( *Var5 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 0000001F )
+	ExecWait  $Script_802256E0_17 
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Vector3D $Vector3D_80226AF8_17 {
+260` 0` 0`
+}
+
+#new:SpecialFormation $SpecialFormation_80226B04_17 {
+$PetitPiranha_17 $Vector3D_80226AF8_17 0000005F FFFFFFF4 00000055 00000000 00000000 
+}
+
+#new:SpecialFormation $SpecialFormation_80226B20_17 {
+$PetitPiranha_17 $Vector3D_80226AF8_17 0000005E 00000012 00000026 00000000 00000000 
+}
+
+#new:SpecialFormation $SpecialFormation_80226B3C_17 {
+$PetitPiranhaBomb_17 $Vector3D_80226AF8_17 0000005F 00000000 00000000 00000000 00000000 
+}
+
+#new:Script $Script_80226B58_17 {
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var0 )
+	If  *Var0  !=  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+		If  *Var0  ==  00000002 
+			ExecWait  $Script_802275E4_17 
+			Return
+		EndIf
+		Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+		Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 00000015 )
+		ExecWait  $Script_802256E0_17 
+		Call  SetActorVar       ( .Actor:Self 0000000B 00000002 )
+		Call  GetActorVar       ( .Actor:Self 00000006 *Var0 )
+		If  *Var0  !=  00000000 
+			Call  RemoveEffect  ( *Var0 )
+			Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+		EndIf
+		Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250E8_17 )
+		Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_80225154_17 )
+		Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_80225154_17 )
+		Call  SetActorVar       ( .Actor:Self 00000007 007B000F )
+		Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+		Call  SetAnimation      ( .Actor:Self 00000001 007B000F )
+		Call  SetPartEventBits  ( .Actor:Self 00000001 00000002 .False )
+		Call  SetPartEventBits  ( .Actor:Self 00000002 00000002 .False )
+		Wait  29`
+		Call  PlaySoundAtActor  ( .Actor:Self 000003C7 )
+		Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001B )
+		ExecWait  $Script_802256E0_17 
+		Wait  14`
+		Call  SetActorVar       ( .Actor:Self 00000005 00000002 )
+		Call  GetActorVar       ( .Actor:Enemy0 00000001 *VarF )
+		If  *VarF  ==  00000000 
+			ExecWait  $Script_8022630C_17 
+		EndIf
+		Return
+	EndIf
+	Call  GetActorVar   ( .Actor:Self 00000005 *Var0 )
+	If  *Var0  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 00000015 )
+		ExecWait  $Script_802256E0_17 
+		Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250E8_17 )
+		Call  SetActorVar       ( .Actor:Self 00000007 007B000F )
+		Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+		Wait  29`
+		Call  PlaySoundAtActor  ( .Actor:Self 000003C7 )
+		Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001B )
+		ExecWait  $Script_802256E0_17 
+		Wait  14`
+		Call  SetActorVar       ( .Actor:Self 00000005 00000002 )
+		ExecWait  $Script_8022630C_17 
+		Call  SetPartFlagBits   ( .Actor:Self 00000002 00022000 .True )
+		Call  SetActorFlagBits  ( .Actor:Self 00040000 .True )
+	Else
+		ExecWait  $Script_802275E4_17 
+		Return
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_802270B4_17 {
+	Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var1 )
+	If  *Var1  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var5 )
+		If  *Var5  !=  00000002 
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000016 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000014 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000013 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		EndIf
+	Else
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var5 )
+		If  *Var5  ==  00000001 
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000016 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000014 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000013 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Call  GetActorPos   ( .Actor:Self *Var1 *Var2 *Var3 )
+			Sub   *Var2  00000019 
+			Add   *Var3  00000002 
+			Call  PlayEffect    ( ~FX:EmitterVolume:Embers *Var1 *Var2 *Var3 00000028 00000032 *Fixed[1.2] 00000018 0000002A *Fixed[0.8] *Fixed[0.6] 00000000 00000000 )
+			Wait  29`
+		EndIf
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_802275E4_17 {
+	Call  GetActorVar   ( .Actor:Self 00000008 *Var0 )
+	Call  SetAnimation  ( .Actor:Self 00000001 *Var0 )
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	Call  GetActorVar   ( .Actor:Enemy0 00000000 *Var5 )
+	If  *Var5  ==  00000000 
+		Call  GetActorVar   ( .Actor:Self 00000005 *Var5 )
+		If  *Var5  ==  00000000 
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000016 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		Else
+			Call  GetLastDamage ( .Actor:Self *Var5 )
+			If  *Var5  <  00000004 
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000014 )
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000013 )
+			EndIf
+			ExecWait  $Script_802256E0_17 
+			Wait  29`
+		EndIf
+	Else
+		If  *VarE  &  0000000C 
+			Call  GetActorVar   ( .Actor:Self 00000005 *Var3 )
+			If  *Var3  ==  00000002 
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  <  00000004 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000014 )
+				Else
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000013 )
+				EndIf
+				ExecWait  $Script_802256E0_17 
+				Wait  29`
+			Else
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 00000015 )
+				ExecWait  $Script_802256E0_17 
+				Call  SetActorVar       ( .Actor:Self 0000000B 00000002 )
+				Call  GetActorVar       ( .Actor:Self 00000006 *Var0 )
+				If  *Var0  !=  00000000 
+					Call  RemoveEffect  ( *Var0 )
+					Call  SetActorVar   ( .Actor:Self 00000006 00000000 )
+					Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+					Call  PlayEffect    ( ~FX:ColdBreath:PuffUp *Var0 *Var1 *Var2 *Fixed[2.0] 0000002D 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+				EndIf
+				Call  SetIdleAnimations ( .Actor:Self 00000001 $IdleAnimations_802250E8_17 )
+				Call  SetDefenseTable   ( .Actor:Self 00000001 $DefenseTable_80225154_17 )
+				Call  SetDefenseTable   ( .Actor:Self 00000002 $DefenseTable_80225154_17 )
+				Call  SetActorVar       ( .Actor:Self 00000007 007B000F )
+				Call  SetActorVar       ( .Actor:Self 00000008 007B0009 )
+				Call  SetAnimation      ( .Actor:Self 00000001 007B000F )
+				Call  SetPartEventBits  ( .Actor:Self 00000001 00000002 .False )
+				Call  SetPartEventBits  ( .Actor:Self 00000002 00000002 .False )
+				Wait  29`
+				Call  PlaySoundAtActor  ( .Actor:Self 000003C7 )
+				Call  GetActorVar       ( .Actor:Self 00000000 *Var0 )
+				If  *Var0  ==  00000001 
+					Call  OverrideBattleDmaDest ( $End[6230] )
+				Else
+					Call  OverrideBattleDmaDest ( $End[3230] )
+				EndIf
+				Call  LoadBattleDmaData ( 0000001B )
+				ExecWait  $Script_802256E0_17 
+				Wait  14`
+				Call  SetActorVar       ( .Actor:Self 00000005 00000002 )
+			EndIf
+		Else
+			Call  GetActorVar   ( .Actor:Self 00000005 *Var3 )
+			If  *Var3  ==  00000002 
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  ==  00000000 
+					Return
+				EndIf
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  <  00000004 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000014 )
+				Else
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000013 )
+				EndIf
+				ExecWait  $Script_802256E0_17 
+				Wait  29`
+			Else
+				Call  GetLastDamage ( .Actor:Self *Var5 )
+				If  *Var5  <  00000004 
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000016 )
+				Else
+					If  *Var0  ==  00000001 
+						Call  OverrideBattleDmaDest ( $End[6230] )
+					Else
+						Call  OverrideBattleDmaDest ( $End[3230] )
+					EndIf
+					Call  LoadBattleDmaData ( 00000015 )
+				EndIf
+				ExecWait  $Script_802256E0_17 
+				Call  GetActorPos   ( .Actor:Self *Var1 *Var2 *Var3 )
+				Sub   *Var2  00000019 
+				Add   *Var3  00000002 
+				Call  PlayEffect    ( ~FX:EmitterVolume:Embers *Var1 *Var2 *Var3 00000028 00000032 *Fixed[1.2] 00000018 0000002A *Fixed[0.8] *Fixed[0.6] 00000000 00000000 )
+				Wait  29`
+			EndIf
+		EndIf
+	EndIf
+	Call  GetActorVar   ( .Actor:Enemy0 00000001 *VarF )
+	If  *VarF  ==  00000000 
+		ExecWait  $Script_8022630C_17 
+	EndIf
+	Return
+	End
+}
+
+#new:Script $Script_ShootBombs_17 {
+	Call  UseIdleAnimation  ( .Actor:Self .False )
+	Thread
+		Wait  8`
+		Call  GetActorPos   ( .Actor:Self *Var0 *Var1 *Var2 )
+		Sub   *Var1  00000019 
+		Call  UseBattleCamPreset    ( 00000013 )
+		Call  SetBattleCamTarget    ( *Var0 *Var1 *Var2 )
+		Call  SetBattleCamZoom      (  350` )
+		Call  SetBattleCamOffsetZ   (  30` )
+		Call  MoveBattleCamOver     (  30` )
+		Wait  45`
+		Call  UseBattleCamPreset    ( 00000002 )
+		Call  MoveBattleCamOver     (  20` )
+	EndThread
+	Call  GetActorVar   ( .Actor:Self 00000000 *Var0 )
+	If  *Var0  ==  00000001 
+		Call  OverrideBattleDmaDest ( $End[6230] )
+	Else
+		Call  OverrideBattleDmaDest ( $End[3230] )
+	EndIf
+	Call  LoadBattleDmaData ( 00000012 )
+	ExecWait  $Script_802256E0_17 
+	Thread
+		Wait  20`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0005 )
+		Wait  39`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0006 )
+		Wait  5`
+		Call  SetAnimation  ( .Actor:Self 00000001 007B0003 )
+		If  *Var0  ==  00000001 
+			Call  OverrideBattleDmaDest ( $End[6230] )
+		Else
+			Call  OverrideBattleDmaDest ( $End[3230] )
+		EndIf
+		Call  LoadBattleDmaData ( 0000001F )
+		ExecWait  $Script_802256E0_17 
+	EndThread
+	Wait  56`
+	Call  SummonEnemy       ( $SpecialFormation_80226B3C_17 00000000 )
+	Set   *Var5  *Var0 
+	Call  GetPartOffset     ( .Actor:Self 00000001 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000000F 
+	Sub   *Var1  0000000F 
+	Call  SetActorPos       ( *Var5 *Var0 *Var1 *Var2 )
+	Sub   *Var0  0000001E 
+	Sub   *Var1  0000000F 
+	Call  SetAnimation      ( *Var5 00000001 007A0005 )
+	Call  SetGoalPos        ( *Var5 *Var0 *Var1 *Var2 )
+	Call  SetActorSpeed     ( *Var5 *Fixed[6.0] )
+	Call  SetActorJumpGravity   ( *Var5 *Fixed[1.8] )
+	Call  PlaySoundAtActor  ( *Var5 000003CB )
+	Call  SetTargetActor    ( *Var5 .Actor:Player )
+	Call  SetGoalToTarget   ( *Var5 )
+	Call  EnemyTestTarget   ( *Var5 *Var9 ~Flags:DamageType:0 00000000 00000001 00000010 )
+	Switch  *Var9 
+		CaseOR  ==  .HitResult:Miss % 6
+		CaseOR  ==  .HitResult:Lucky % 5
+			Call  SetGoalToTarget       ( *Var5 )
+			Call  GetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+			Set   *Var0  FFFFFF4C 
+			Call  SetGoalPos    ( *Var5 *Var0 *Var1 *Var2 )
+			Call  SetActorSpeed ( *Var5 *Fixed[13.0] )
+			Call  SetActorJumpGravity   ( *Var5 *Fixed[1.8] )
+			Call  FlyToGoal     ( *Var5  0`  0` .Easing:Linear )
+			If  *Var9  ==  .HitResult:Lucky % 5
+				Call  EnemyTestTarget   ( *Var5 *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
+			EndIf
+			Call  UseBattleCamPreset    ( 00000002 )
+			Call  RemoveActor   ( *Var5 )
+			Return
+		EndCaseGroup
+	EndSwitch
+	Call  SetTargetActor    ( *Var5 .Actor:Player )
+	Call  SetGoalToTarget   ( *Var5 )
+	Call  SetActorSpeed     ( *Var5 *Fixed[13.0] )
+	Call  SetActorJumpGravity   ( *Var5 *Fixed[1.8] )
+	Call  FlyToGoal ( *Var5  0`  0` .Easing:Linear )
+	Wait  2`
+	Call  SetGoalToTarget   ( *Var5 )
+	Call  SetTargetActor    ( .Actor:Self .Actor:Player )
+	Call  SetGoalToTarget   ( .Actor:Self )
+	Call  EnemyDamageTarget ( .Actor:Self *Var9 ~Flags:DamageType:Fire 0000FFFF 00000000 00000004 00000020 )
+	Switch  *Var9 
+		CaseOR  ==  .HitResult:Hit % 0
+		CaseOR  ==  .HitResult:QuakeImmune % 2
+		CaseOR  ==  0000000A % A
+			Call  SetPartFlagBits   ( *Var5 00000001 00000001 .True )
+			Call  SetGoalToTarget   ( *Var5 )
+			Call  GetGoalPos        ( *Var5 *Var0 *Var1 *Var2 )
+			Set   *Var1  0000000A 
+			Add   *Var2  00000002 
+			Call  PlayEffect        ( ~FX:Fire:TinyBlue *Var0 *Var1 *Var2 *Fixed[0.3] *VarA 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+			Call  MakeLerp  ( 00000078 0000000A 00000014 .Easing:QuadraticIn )
+			Loop
+				Call  UpdateLerp ( )
+				MulF  *Var0  *Fixed[0.01] 
+				Call  $Function_80218DF0_17 ( *VarA *Var0 )
+				Wait  1`
+				If  *Var1  ==  00000000 
+					BreakLoop
+				EndIf
+			EndLoop
+			Wait  1`
+			Call  RemoveEffect  ( *VarA )
+			Call  RemoveActor   ( *Var5 )
+			Wait  15`
+			If  *Var9  ==  0000000A % A
+				Return
+			EndIf
+			Call  UseBattleCamPreset    ( 00000002 )
+		EndCaseGroup
+	EndSwitch
+	Call  EnableIdleScript  ( .Actor:Self 00000001 )
+	Call  UseIdleAnimation  ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:IdleAnimations $IdleAnimations_80228720_17 {
+.Status:Normal    007A0001
+.Status:Stone     007A0000
+.Status:Sleep     007A0000
+.Status:Poison    007A0001
+.Status:Stop      007A0000
+.Status:Static    007A0000
+.Status:Paralyze  007A0000
+.Status:Paralyze  007A0000
+.Status:Dizzy     007A0001
+.Status:Dizzy     007A0001
+.Status:End
+}
+
+#new:DefenseTable $DefenseTable_80228774_17 {
+.Element:Normal 00000000
+.Element:Water  FFFFFFFE
+.Element:Ice    FFFFFFFE
+.Element:Fire   00000063
+.Element:Blast  00000000
+.Element:End
+}
+
+#new:StatusTable $StatusTable_802287A0_17 {
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep       0`
+.Status:Poison      0`
+.Status:Frozen      0`
+.Status:Dizzy       0`
+.Status:Fear        0`
+.Status:Static      0`
+.Status:Paralyze    0`
+.Status:Shrink      0`
+.Status:Stop        0`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod      0`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod      0`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod   0`
+.Status:ShrinkTurnMod     0`
+.Status:StopTurnMod       0`
+.Status:End
+}
+
+#new:PartsTable $PartsTable_8022884C_17 {
+00800000 01000000 001800FF $IdleAnimations_80228720_17 $DefenseTable_80228774_17 00000002 00000002 FEEA0000 00000000 
+}
+
+#new:Actor $PetitPiranhaBomb_17 {
+% stats
+[Index]        B8b 
+[Level]         0`b 
+[MaxHP]         1`b 
+[Coins]         0`b 
+[Flags]       00000200 
+[StatusTable] $StatusTable_802287A0_17 
+% ai
+[PartsCount]    1`s 
+[PartsTable]  $PartsTable_8022884C_17 
+[Script]      $Script_Init_80228898_17 
+% move effectiveness
+[Escape]        0`b 
+[Item]          0`b 
+[AirLift]       0`b 
+[Hurricane]     0`b % Bow's "Spook" as well
+[UpAndAway]     0`b 
+[PowerBounce]  80`b 
+[SpinSmash]     0`b % weight (0-4)
+% ui positions
+[Size]         30`b  30`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b  20`b % dx dy
+[StatusIcon]   10`b  20`b % dx dy
+}
+
+#new:Script $Script_Init_80228898_17 {
+	Call  BindTakeTurn      ( .Actor:Self $Script_TakeTurn_8022894C_17 )
+	Call  BindIdle  ( .Actor:Self $Script_Idle_802288E4_17 )
+	Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_80228918_17 )
+	Return
+	End
+}
+
+#new:Script $Script_Idle_802288E4_17 {
+	Label  0
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_HandleEvent_80228918_17 {
+	Label  0
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+
+#new:Script $Script_TakeTurn_8022894C_17 {
+	Label  0
+	Wait  1`
+	Goto  0
+	Return
+	End
+}
+

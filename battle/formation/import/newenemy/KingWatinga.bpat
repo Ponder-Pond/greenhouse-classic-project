@@ -13,11 +13,6 @@
 #define .KingWatingaActorValue:PhaseOne 1`
 #define .KingWatingaActorValue:PhaseTwo 2`
 #define .KingWatingaActorVar:TurnCount 1`
-#define .KingWatingaActorValue:TurnOne 1`
-#define .KingWatingaActorValue:TurnTwo 2`
-#define .KingWatingaActorValue:TurnThree 3`
-#define .KingWatingaActorValue:TurnFour 4`
-#define .KingWatingaActorValue:TurnFive 5`
 %? I am not sure what to do for summoning positions do the Flies don't overlap each other ?%
 
 % King Watinga Stats
@@ -132,9 +127,10 @@
 {
 	Call BindIdle ( .Actor:Self $Script_Idle_KingWatinga )
 	Call BindHandleEvent ( .Actor:Self $Script_HandleEvent_KingWatinga )
-	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga_PhaseOne )
+	% Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga_PhaseOne )
+	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga_PhaseTwo )
 	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseOne )
-	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnOne )
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount 0` )
 	Return
 	End
 }
@@ -253,28 +249,26 @@
     Div *VarA *VarB
     If *VarA < 50`
         Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseTwo )
-        ExecWait $Script_TakeTurn_KingWatinga_PhaseTwo
+        ExecWait $Script_TransitionToPhaseTwo_KingWatinga
+		Return
     EndIf
 
 	%~ Phase 1 ~%
-	Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
-	Switch *Var0
-	Case == .KingWatingaActorValue:TurnOne
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnTwo )
-		ExecWait $Script_Fly_Summons_KingWatinga
-	Case == .KingWatingaActorValue:TurnTwo
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnThree )
-		ExecWait $Script_Fly_Summons_KingWatinga
-	Case == .KingWatingaActorValue:TurnThree
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnFour )
-		ExecWait $Script_Fly_Summons_KingWatinga
-	Case == .KingWatingaActorValue:TurnFour
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnFive )
-		ExecWait $Script_Assist_Attacks_KingWatinga
-	Case == .KingWatingaActorValue:TurnFive
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnOne )
-		ExecWait $Script_Move_Charge_KingWatinga
-	EndSwitch
+    % increment turn counter
+    Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
+    Add  *Var0  1`
+    If  *Var0  >  5`
+        Set  *Var0  1`
+    EndIf
+    Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
+    Switch *Var0
+        Case  ==  4`
+            ExecWait $Script_Assist_Attacks_KingWatinga
+        Case  ==  5`
+            ExecWait $Script_Move_Charge_KingWatinga
+        Default
+            ExecWait $Script_Fly_Summons_KingWatinga
+    EndSwitch
 
 	Call EnableIdleScript ( .Actor:Self .True )
 	Call UseIdleAnimation ( .Actor:Self .True )
@@ -302,24 +296,21 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 
 	%~ Phase 2 ~%
-	Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
-	Switch *Var0
-	Case == .KingWatingaActorValue:TurnOne
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnTwo )
-		ExecWait $Script_Fly_Summons_KingWatinga
-	Case == .KingWatingaActorValue:TurnTwo
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnThree )
-		ExecWait $Script_Fly_Summons_KingWatinga
-	Case == .KingWatingaActorValue:TurnThree
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnFour )
-		ExecWait $Script_Fly_Summons_KingWatinga
-	Case == .KingWatingaActorValue:TurnFour
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnFive )
-		ExecWait $Script_Assist_Attacks_KingWatinga
-	Case == .KingWatingaActorValue:TurnFive
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount .KingWatingaActorValue:TurnOne )
-		ExecWait $Script_Move_Charge_KingWatinga
-	EndSwitch
+    % increment turn counter
+    Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
+    Add  *Var0  1`
+    If  *Var0  >  5`
+        Set  *Var0  1`
+    EndIf
+    Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
+    Switch *Var0
+        Case  ==  4`
+            ExecWait $Script_Assist_Attacks_KingWatinga
+        Case  ==  5`
+            ExecWait $Script_Move_Charge_KingWatinga
+        Default
+            ExecWait $Script_Fly_Summons_KingWatinga
+    EndSwitch
 
 	Call EnableIdleScript ( .Actor:Self .True )
 	Call UseIdleAnimation ( .Actor:Self .True )
