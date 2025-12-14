@@ -142,6 +142,8 @@
 			SetConst *Var1 .Anim:Fly_Idle % BurnHurt
 			SetConst *Var2 .Anim:Fly_Idle % BurnStill
 			ExecWait DoBurnHit
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % BurnStill
 			ExecWait DoDeath
@@ -159,6 +161,8 @@
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % Hurt?
 			ExecWait DoShockHit
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % Death
 			ExecWait DoDeath
@@ -176,6 +180,8 @@
 			SetConst *Var1 .Anim:Fly_Idle % Hurt
 			ExecWait DoNormalHit
 			Wait 10`
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % Death
 			ExecWait DoDeath
@@ -233,6 +239,7 @@
 				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 			EndIf
 			Call UseBattleCamPreset ( 00000002 )
+			% Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			Call YieldTurn ( )
 			Call 8027D32C ( .Actor:Self ) % HideHealthBar
 			Call UseIdleAnimation ( .Actor:Self .False )
@@ -250,6 +257,8 @@
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .FlyDamage:Charge 00000020 )
 	Call UseBattleCamPreset ( 00000002 )
+	Sub  *VarA  1`
+	Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 	Call YieldTurn ( )
 	SetConst *Var0 .FlyPart:Main
 	SetConst *Var1 .Anim:Fly_Idle

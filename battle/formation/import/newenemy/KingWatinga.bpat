@@ -9,11 +9,15 @@
 #define .SummonedBombFlyPart:Main 1
 
 % King Watinga Actor Variables
-#define .KingWatingaActorVar:Phase 0`
-#define .KingWatingaActorValue:PhaseOne 1`
-#define .KingWatingaActorValue:PhaseTwo 2`
-#define .KingWatingaActorVar:TurnCount 1`
-#define .KingWatingaActorVar:FlyAway 2`
+#define .KingWatingaActorVar:Phase 				0`
+#define .KingWatingaActorVar:TurnCount 			1`
+#define .KingWatingaActorVar:FlyAway 			3`
+#define .KingWatingaActorValue:PhaseOne 		1`
+#define .KingWatingaActorValue:PhaseTwo 		2`
+#define .KingWatingaActorValue:SummonFly		0`
+#define .KingWatingaActorValue:SummonSuperFly	1`
+#define .KingWatingaActorValue:SummonFlyParent	2`
+#define .KingWatingaActorValue:SummonBombFly	3`
 %? I am not sure what to do for summoning positions do the Flies don't overlap each other ?%
 
 % King Watinga Stats
@@ -128,10 +132,10 @@
 {
 	Call BindIdle ( .Actor:Self $Script_Idle_KingWatinga )
 	Call BindHandleEvent ( .Actor:Self $Script_HandleEvent_KingWatinga )
-	% Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga_PhaseOne )
-	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga_PhaseTwo ) %! For testing Phase Two directly !%
-	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseOne )
-	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount 2` ) %! 0` is for initialization before first turn !%
+	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga )
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseTwo )
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount 3` ) %! 0` is for initialization before first turn !%
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount 0` )
 	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway .False ) %! Bool !%
 	Return
 	End
@@ -241,37 +245,62 @@
 	End
 }
 
-#new:Script $Script_TakeTurn_KingWatinga_PhaseOne
+#new:Script $Script_TakeTurn_KingWatinga
 {
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call UseIdleAnimation ( .Actor:Self .False )
-	%? Is Boss at half health  ?%
+
+	%? Is Boss at half health ?%
 	Call GetActorHP ( .Actor:Self *VarA )
     Mul *VarA 100`
     Div *VarA *VarB
     If *VarA < 50`
         Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseTwo )
-        ExecWait $Script_TransitionToPhaseTwo_KingWatinga
-		Return
+    Else
+		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseOne )
     EndIf
 
-	%~ Phase 1 ~%
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:Phase .KingWatingaActorValue:PhaseTwo ) %! Testing purposes. !%
+
     % increment turn counter
-    Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
-    Add  *Var0  1`
-    If  *Var0  >  5`
-        Set  *Var0  1`
-    EndIf
-	% Set *Var0 5` %! Testing purposes !%
-    Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
-    Switch *Var0
-        Case  ==  4`
-            ExecWait $Script_Assist_Attacks_KingWatinga
-        Case  ==  5`
-            ExecWait $Script_Move_Charge_KingWatinga
-        Default
-            ExecWait $Script_Fly_Summons_KingWatinga
+	Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var5 )
+	Add  *Var5  1`
+	If  *Var5  >  5`
+		Set  *Var5  1`
+	EndIf
+	% Set *Var5 1` %! Testing purposes. !%
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var5 )
+
+    % get actor phase
+    Call GetActorVar ( .Actor:Self .KingWatingaActorVar:Phase *Var6 )
+    Switch	*Var6
+    Case  ==  .KingWatingaActorValue:PhaseOne
+		ExecWait  $Subscript_TakeTurn_KingWatinga_PhaseOne
+	Case  ==  .KingWatingaActorValue:PhaseTwo
+		ExecWait  $Subscript_TakeTurn_KingWatinga_PhaseTwo
     EndSwitch
+
+    % end turn
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Subscript_TakeTurn_KingWatinga_PhaseOne
+{
+	Call EnableIdleScript ( .Actor:Self .False )
+	Call UseIdleAnimation ( .Actor:Self .False )
+
+	% execute script
+	Switch *Var5
+		Case  ==  4`
+			ExecWait  $Script_Assist_Attacks_KingWatinga
+		Case  ==  5`
+			ExecWait  $Script_Move_Charge_KingWatinga
+		Default
+			ExecWait  $Script_Fly_Summons_KingWatinga
+	EndSwitch
 
 	Call EnableIdleScript ( .Actor:Self .True )
 	Call UseIdleAnimation ( .Actor:Self .True )
@@ -284,7 +313,7 @@
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call UseIdleAnimation ( .Actor:Self .False )
 
-	Call BindTakeTurn ( .Actor:Self $Script_TakeTurn_KingWatinga_PhaseTwo )
+	Call BindTakeTurn ( .Actor:Self $Subscript_TakeTurn_KingWatinga_PhaseTwo )
 	Wait 30`
 
 	Call EnableIdleScript ( .Actor:Self .True )
@@ -293,28 +322,20 @@
 	End
 }
 
-#new:Script $Script_TakeTurn_KingWatinga_PhaseTwo
+#new:Script $Subscript_TakeTurn_KingWatinga_PhaseTwo
 {
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call UseIdleAnimation ( .Actor:Self .False )
 
-	%~ Phase 2 ~%
-    % increment turn counter
-    Call GetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
-    Add  *Var0  1`
-    If  *Var0  >  5`
-        Set  *Var0  1`
-    EndIf
-	% Set *Var0 0` %! Testing purposes. !%
-    Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
-    Switch *Var0
-        Case  ==  4`
-            ExecWait $Script_Assist_Attacks_KingWatinga
-        Case  ==  5`
-            ExecWait $Script_Move_Charge_KingWatinga
-        Default
-            ExecWait $Script_Fly_Summons_KingWatinga
-    EndSwitch
+	% execute script
+	Switch *Var5
+		Case  ==  4`
+			ExecWait  $Script_Assist_Attacks_KingWatinga
+		Case  ==  5`
+			ExecWait  $Script_Move_Charge_KingWatinga
+		Default
+			ExecWait  $Script_Fly_Summons_KingWatinga
+	EndSwitch
 
 	Call EnableIdleScript ( .Actor:Self .True )
 	Call UseIdleAnimation ( .Actor:Self .True )
@@ -322,68 +343,272 @@
 	End
 }
 
-#new:Script $Script_Fly_Summons_KingWatinga {
+#new:Script $Script_Fly_Summons_KingWatinga
+{
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call UseIdleAnimation ( .Actor:Self .False )
-	%~ Check Phase ~%
-    Call GetActorVar ( .Actor:Self .KingWatingaActorVar:Phase *Var3 )
-    Switch *Var3
-	%~ Phase 1 ~%
-	Case == .KingWatingaActorValue:PhaseOne
-		Call RandInt (100` *Var5) % Get Summon to do
+	% get random summon by phase
+	Call  RandInt  ( 100` *Var5 )
+	Call  GetActorVar  ( .Actor:Self .KingWatingaActorVar:Phase *Var3 )
+    Switch  *Var3
+	Case  ==  .KingWatingaActorValue:PhaseOne
 		Switch *Var5
 		Case < 40` % 40% Chance
-			Set *Var4 0` % Fly Summon
+			Set  *Var4  .KingWatingaActorValue:SummonFly
 		Case < 70` % 30% Chance
-			Set *Var4 1` % Super Fly Summon
+			Set  *Var4  .KingWatingaActorValue:SummonSuperFly
 		Case < 90` % 20% Chance
-			Set *Var4 2` % Fly Parent Summon
+			Set  *Var4  .KingWatingaActorValue:SummonFlyParent
 		Default % 10% Chance
-			Set *Var4 3` % Bomb Fly Summon
+			Set  *Var4  .KingWatingaActorValue:SummonBombFly
 		EndSwitch
-		% Set *Var4 0` %! Testing purposes. !%
-		%? Which Summon? ?%
-		Switch *Var4
-		Case == 0`
-			ExecWait $Script_Summon_Fly_KingWatinga
-		Case == 1`
-			ExecWait $Script_Summon_SuperFly_KingWatinga
-		Case == 2`
-			ExecWait $Script_Summon_FlyParent_KingWatinga
-		Case == 3`
-			ExecWait $Script_Summon_BombFly_KingWatinga
-		EndSwitch
-
-	%~ Phase 2 ~%
-	Case == .KingWatingaActorValue:PhaseTwo
-		Call RandInt (100` *Var5) % Get Summon to do
+	Case  ==  .KingWatingaActorValue:PhaseTwo
 		Switch *Var5
 		Case < 10` % 10% Chance
-			Set *Var4 0` % Fly Summon
+			Set  *Var4  .KingWatingaActorValue:SummonFly
 		Case < 50` % 40% Chance
-			Set *Var4 1` % Super Fly Summon
+			Set  *Var4  .KingWatingaActorValue:SummonSuperFly
 		Case < 80` % 30% Chance
-			Set *Var4 2` % Fly Parent Summon
+			Set  *Var4  .KingWatingaActorValue:SummonFlyParent
 		Default % 20% Chance
-			Set *Var4 3` % Bomb Fly Summon
+			Set  *Var4  .KingWatingaActorValue:SummonBombFly
 		EndSwitch
-		% Set *Var4 0` %! Testing purposes. !%
-		%? Which Summon? ?%
-		Switch *Var4
-		Case == 0`
-			ExecWait $Script_Summon_Fly_KingWatinga
-		Case == 1`
-			ExecWait $Script_Summon_SuperFly_KingWatinga
-		Case == 2`
-			ExecWait $Script_Summon_FlyParent_KingWatinga
-		Case == 3`
-			ExecWait $Script_Summon_BombFly_KingWatinga
-		EndSwitch
-	EndSwitch
+    EndSwitch
+
+    % summon fly variant
+	ExecWait  $Subscript_SummonFlyVariant_KingWatinga
+
+	% end script
 	Call EnableIdleScript ( .Actor:Self .True )
 	Call UseIdleAnimation ( .Actor:Self .True )
 	Return
 	End
+}
+
+#new:Script $Subscript_SummonFlyVariant_KingWatinga
+{
+	Call EnableIdleScript ( .Actor:Self .False )
+	Call UseIdleAnimation ( .Actor:Self .False )
+	% watinga prepare summon
+	Call UseBattleCamPreset ( 0000000D ) % BTL_CAM_ACTOR_CLOSE
+	Call BattleCamTargetActor ( .Actor:Self )
+	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
+	Call SetBattleCamZoom ( 250` )
+	Call SetBattleCamOffsetZ ( 35` )
+	Call MoveBattleCamOver ( 30` )
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_ShotPrepare )
+	Wait 30`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_ShotEnd )
+	Wait 12`
+	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+	Call MoveBattleCamOver ( 20` )
+	Wait 20`
+
+	% summon fly variant
+	Switch  *Var4
+	Case == .KingWatingaActorValue:SummonFly
+		Call SummonEnemy ( $SpecialFormation_Fly 00000000 )
+		% store fly ID
+		Set *VarB *Var0
+		% init fly position
+		Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Add *Var2 5`
+		Call SetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		% update fly anim
+		Call UseIdleAnimation ( *VarB .False )
+		Call EnableIdleScript ( *VarB .False )
+		Call SetAnimation ( *VarB .SummonedFlyPart:Main .Anim:Fly_Idle )
+
+		% get available fly home position
+		Call GetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+		Switch	*VarA
+		Case  ==  0`
+			Set  *Var0  50`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  1`
+			Set  *Var0  75`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  2`
+			Set  *Var0  100`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  3`
+			Set  *Var0  125`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		EndSwitch
+		Add  *VarA  1`
+		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+
+		% fly to home
+		Call SetGoalPos ( *VarB *Var0 *Var1 *Var2 )
+		Call FlyToGoal ( *VarB 15` 0` .Easing:Linear )
+		Call GetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		Call ForceHomePos ( *VarB *Var0 *Var1 *Var2 )
+		Call HPBarToHome ( *VarB )
+		Call EnableIdleScript  ( *VarB .True )
+		Call UseIdleAnimation  ( *VarB .True )
+	Case == .KingWatingaActorValue:SummonSuperFly
+		Call SummonEnemy ( $SpecialFormation_SuperFly 00000000 )
+		% store super fly ID
+		Set *VarB *Var0
+		% init super fly position
+		Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Add *Var2 5`
+		Call SetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		% update super fly anim
+		Call UseIdleAnimation ( *VarB .False )
+		Call EnableIdleScript ( *VarB .False )
+		Call SetAnimation ( *VarB .SummonedSuperFlyPart:Main .Anim:SuperFly_Idle )
+
+		% get available fly home position
+		Call GetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+		Switch	*VarA
+		Case  ==  0`
+			Set  *Var0  50`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  1`
+			Set  *Var0  75`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  2`
+			Set  *Var0  100`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  3`
+			Set  *Var0  125`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		EndSwitch
+		Add  *VarA  1`
+		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+
+		% fly to home
+		Call SetGoalPos ( *VarB *Var0 *Var1 *Var2 )
+		Call FlyToGoal ( *VarB 15` 0` .Easing:Linear )
+		Call GetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		Call ForceHomePos ( *VarB *Var0 *Var1 *Var2 )
+		Call HPBarToHome ( *VarB )
+		Call EnableIdleScript  ( *VarB .True )
+		Call UseIdleAnimation  ( *VarB .True )
+	Case == .KingWatingaActorValue:SummonFlyParent
+		Call SummonEnemy ( $SpecialFormation_FlyParent 00000000 )
+		% store fly parent ID
+		Set *VarB *Var0
+		% init fly position
+		Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Add *Var2 5`
+		Call SetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		% update fly anim
+		Call UseIdleAnimation ( *VarB .False )
+		Call EnableIdleScript ( *VarB .False )
+		Call SetAnimation ( *VarB .SummonedFlyParentPart:Main .Anim:FlyParent_Idle )
+
+		% get available fly home position
+		Call GetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+		Switch	*VarA
+		Case  ==  0`
+			Set  *Var0  50`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  1`
+			Set  *Var0  75`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  2`
+			Set  *Var0  100`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  3`
+			Set  *Var0  125`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		EndSwitch
+		Add  *VarA  1`
+		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+
+		% fly to home
+		Call SetGoalPos ( *VarB *Var0 *Var1 *Var2 )
+		Call FlyToGoal ( *VarB 15` 0` .Easing:Linear )
+		Call GetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		Call ForceHomePos ( *VarB *Var0 *Var1 *Var2 )
+		Call HPBarToHome ( *VarB )
+		Call EnableIdleScript  ( *VarB .True )
+		Call UseIdleAnimation  ( *VarB .True )
+	Case == .KingWatingaActorValue:SummonBombFly
+		Call SummonEnemy ( $SpecialFormation_BombFly 00000000 )
+		% store bomb fly ID
+		Set *VarB *Var0
+		% init bomb fly position
+		Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Add *Var2 5`
+		Call SetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		% update bomb fly anim
+		Call UseIdleAnimation ( *VarB .False )
+		Call EnableIdleScript ( *VarB .False )
+		Call SetAnimation ( *VarB .SummonedBombFlyPart:Main .Anim:BombFly_Idle )
+
+		% get available fly home position
+		Call GetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+		Switch	*VarA
+		Case  ==  0`
+			Set  *Var0  50`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  1`
+			Set  *Var0  75`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  2`
+			Set  *Var0  100`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		Case  ==  3`
+			Set  *Var0  125`
+			Set  *Var1  20`
+			Set  *Var2  5`
+		EndSwitch
+		Add  *VarA  1`
+		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:SummonCount *VarA )
+
+		% fly to home
+		Call SetGoalPos ( *VarB *Var0 *Var1 *Var2 )
+		Call FlyToGoal ( *VarB 15` 0` .Easing:Linear )
+		Call GetActorPos ( *VarB *Var0 *Var1 *Var2 )
+		Call ForceHomePos ( *VarB *Var0 *Var1 *Var2 )
+		Call HPBarToHome ( *VarB )
+		Call EnableIdleScript  ( *VarB .True )
+		Call UseIdleAnimation  ( *VarB .True )
+	EndSwitch
+
+	% end script
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Vector3D $Vector3D_Default {
+0` -1000` 0`
+}
+
+#new:SpecialFormation $SpecialFormation_Fly {
+$Fly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
+}
+
+#new:SpecialFormation $SpecialFormation_SuperFly {
+$SuperFly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
+}
+
+#new:SpecialFormation $SpecialFormation_FlyParent {
+$FlyParent $Vector3D_Default 100` 00000000 00000000 00000000 00000000
+}
+
+#new:SpecialFormation $SpecialFormation_BombFly {
+$BombFly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
 }
 
 #new:Script $Script_Assist_Attacks_KingWatinga {
@@ -438,8 +663,114 @@
 	End
 }
 
-%%%%% & WIP Scripts & %%%%%
+%%%%% & Unfinished Scripts & %%%%%
 
+#new:Script $Script_Attack_SmallFlyShot_KingWatinga {
+	Call UseIdleAnimation ( .Actor:Self .False )
+	Call EnableIdleScript ( .Actor:Self .False )
+
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_Attack_EnergyShot_KingWatinga {
+	Call UseIdleAnimation ( .Actor:Self .False )
+	Call EnableIdleScript ( .Actor:Self .False )
+
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_Move_FlyAway_KingWatinga {
+	Call UseIdleAnimation ( .Actor:Self .False )
+	Call EnableIdleScript ( .Actor:Self .False )
+	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Add *Var1 300`
+	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchStart )
+	Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
+	Wait 30`
+	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var2 300`
+	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Call FlyToGoal ( .Actor:Self 0` 0` .Easing:Linear )
+	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var1 300`
+	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchStart )
+	Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
+	Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:Main 00020000 .True ) % ACTOR_PART_FLAG_NO_TARGET
+	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway .True )
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchEnd )
+	Wait 30`
+
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	Return
+	End
+}
+
+#new:Script $Script_Move_Charge_KingWatinga {
+	Call UseIdleAnimation ( .Actor:Self .False )
+	Call EnableIdleScript ( .Actor:Self .False )
+	Call GetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway *VarA )
+	If *VarA == .True
+		Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Add *Var1 300`
+		Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchStart )
+		Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
+		Wait 30`
+		Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Add *Var2 300`
+		Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchStart )
+		Call FlyToGoal ( .Actor:Self 0` 0` .Easing:Linear )
+		Call ResetAllActorSounds ( .Actor:Self )
+		Call SetGoalToHome ( .Actor:Self )
+		Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
+		Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:Main 00020000 .False ) % ACTOR_PART_FLAG_NO_TARGET
+		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway .False )
+		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchEnd )
+		Wait 30`
+		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_Idle )
+	EndIf
+	Call SetTargetActor ( .Actor:Self .Actor:Player )
+	Call UseBattleCamPreset ( 0000000E ) % BTL_CAM_ACTOR
+	Call BattleCamTargetActor ( .Actor:Self )
+	Call MoveBattleCamOver ( 15` )
+	Wait 15`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_Laugh ) %? Change to Charge Anim? ?%
+	Wait 8`
+	Thread
+		Wait 10`
+		Call PlaySoundAtActor ( .Actor:Self 000002DD ) % SOUND_MAGIKOOPA_POWER_UP
+	EndThread
+	Thread
+		Call 8026BF48 ( .True )
+		Call BoostDefense ( .Actor:Self 1` )
+		Call 8026BF48 ( .False )
+	EndThread
+	Call WaitForBuffDone ( )
+	Wait 24`
+	% Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_Idle )
+	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+	Call MoveBattleCamOver ( 20` )
+	Wait 20`
+	Call YieldTurn ( )
+	Call EnableIdleScript ( .Actor:Self .True )
+	Call UseIdleAnimation ( .Actor:Self .True )
+	Return
+	End
+}
+
+%%%%% & Unused Scripts & %%%%%
+
+/%
 #new:Vector3D $Vector3D_Fly {
 0` -1000` 0`
 }
@@ -655,85 +986,4 @@ $BombFly $Vector3D_BombFly 100` 00000000 00000000 00000000 00000000
 	Return
 	End
 }
-
-%%%%% & Unfinished Scripts & %%%%%
-
-#new:Script $Script_Attack_SmallFlyShot_KingWatinga {
-	Call UseIdleAnimation ( .Actor:Self .False )
-	Call EnableIdleScript ( .Actor:Self .False )
-
-	Call EnableIdleScript ( .Actor:Self .True )
-	Call UseIdleAnimation ( .Actor:Self .True )
-	Return
-	End
-}
-
-#new:Script $Script_Attack_EnergyShot_KingWatinga {
-	Call UseIdleAnimation ( .Actor:Self .False )
-	Call EnableIdleScript ( .Actor:Self .False )
-
-	Call EnableIdleScript ( .Actor:Self .True )
-	Call UseIdleAnimation ( .Actor:Self .True )
-	Return
-	End
-}
-
-#new:Script $Script_Move_FlyAway_KingWatinga {
-	Call UseIdleAnimation ( .Actor:Self .False )
-	Call EnableIdleScript ( .Actor:Self .False )
-	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Set *Var1 300`
-	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchStart )
-	Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
-	Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:Main 00020000 .True ) % ACTOR_PART_FLAG_NO_TARGET
-	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway .True )
-	Wait 30`
-	Call EnableIdleScript ( .Actor:Self .True )
-	Call UseIdleAnimation ( .Actor:Self .True )
-	Return
-	End
-}
-
-#new:Script $Script_Move_Charge_KingWatinga {
-	Call UseIdleAnimation ( .Actor:Self .False )
-	Call EnableIdleScript ( .Actor:Self .False )
-	Call GetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway *VarA )
-	If *VarA == .True
-		Call ResetAllActorSounds ( .Actor:Self )
-		Call SetGoalToHome ( .Actor:Self )
-		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_LaunchEnd )
-		Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
-		Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:Main 00020000 .False ) % ACTOR_PART_FLAG_NO_TARGET
-		Call SetActorVar ( .Actor:Self .KingWatingaActorVar:FlyAway .False )
-		Wait 30`
-		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_Idle )
-	EndIf
-	Call SetTargetActor ( .Actor:Self .Actor:Player )
-	Call UseBattleCamPreset ( 0000000E ) % BTL_CAM_ACTOR
-	Call BattleCamTargetActor ( .Actor:Self )
-	Call MoveBattleCamOver ( 15` )
-	Wait 15`
-	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_Laugh ) %? Change to Charge Anim? ?%
-	Wait 8`
-	Thread
-		Wait 10`
-		Call PlaySoundAtActor ( .Actor:Self 000002DD ) % SOUND_MAGIKOOPA_POWER_UP
-	EndThread
-	Thread
-		Call 8026BF48 ( .True )
-		Call BoostDefense ( .Actor:Self 1` )
-		Call 8026BF48 ( .False )
-	EndThread
-	Call WaitForBuffDone ( )
-	Wait 24`
-	% Call SetAnimation ( .Actor:Self .KingWatingaPart:Main .Anim:KingWatinga_Idle )
-	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
-	Call MoveBattleCamOver ( 20` )
-	Wait 20`
-	Call YieldTurn ( )
-	Call EnableIdleScript ( .Actor:Self .True )
-	Call UseIdleAnimation ( .Actor:Self .True )
-	Return
-	End
-}
+%/

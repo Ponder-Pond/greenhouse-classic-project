@@ -164,6 +164,8 @@
 			SetConst *Var1 .Anim:SuperFly_Idle % BurnHurt
 			SetConst *Var2 .Anim:SuperFly_Idle % BurnStill
 			ExecWait DoBurnHit
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .SuperFlyPart:Main
 			SetConst *Var1 .Anim:SuperFly_Idle % BurnStill
 			ExecWait DoDeath
@@ -181,6 +183,8 @@
 			SetConst *Var0 .SuperFlyPart:Main
 			SetConst *Var1 .Anim:SuperFly_Idle % Hurt?
 			ExecWait DoShockHit
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .SuperFlyPart:Main
 			SetConst *Var1 .Anim:SuperFly_Idle % Death
 			ExecWait DoDeath
@@ -198,6 +202,8 @@
 			SetConst *Var1 .Anim:SuperFly_Idle % Hurt
 			ExecWait DoNormalHit
 			Wait 10`
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .SuperFlyPart:Main
 			SetConst *Var1 .Anim:SuperFly_Idle % Death
 			ExecWait DoDeath
@@ -296,6 +302,8 @@
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .SuperFlyDamage:QuadShot 00000020 )
 	Call UseBattleCamPreset ( 00000002 )
+	Sub  *VarA  1`
+	Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 	Call YieldTurn ( )
 	SetConst *Var0 .SuperFlyPart:Main
 	SetConst *Var1 .Anim:SuperFly_Attack

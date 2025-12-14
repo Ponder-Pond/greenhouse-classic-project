@@ -152,6 +152,7 @@
 				SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 				SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 				ExecWait DoBurnHit
+				Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 				ExecWait $Script_Explode_BombFly
 				SetConst *Var0 .BombFlyPart:Main
 				SetConst *Var1 .Anim:BombFly_Idle % BurnStill
@@ -173,6 +174,7 @@
 			SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 			SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 			ExecWait DoBurnHit
+			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			ExecWait $Script_Explode_BombFly
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
@@ -193,12 +195,14 @@
 			SetConst *Var1 .Anim:BombFly_Idle % Hurt
 			ExecWait DoSpinSmashHit
 			% ExecWait $Script_Cleanup_BombFly %? Not sure if we are going to use this or not
+			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % Hurt
 			ExecWait DoDeath
 			Return
 		CaseOR == .Event:ShockHit % 2F
 		CaseOR == .Event:ShockDeath % 26
+			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 			Set *Var2 FFFFCFC7
@@ -224,6 +228,7 @@
 				SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 				SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 				ExecWait DoBurnHit
+				Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 				ExecWait $Script_Explode_BombFly
 				SetConst *Var0 .BombFlyPart:Main
 				SetConst *Var1 .Anim:BombFly_Idle % BurnStill
@@ -236,6 +241,7 @@
 				ExecWait DoNormalHit
 				Wait 10`
 				% ExecWait $Script_Cleanup_BombFly %? Not sure if we are going to use this or not
+				Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 				SetConst *Var0 .BombFlyPart:Main
 				SetConst *Var1 .Anim:BombFly_Idle % Hurt
 				ExecWait DoDeath
@@ -247,6 +253,7 @@
 			SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 			ExecWait DoBurnHit
 			ExecWait $Script_Explode_BombFly
+			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 			Set *Var2 FFFFCFC7
@@ -294,6 +301,8 @@
 					SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 					ExecWait DoNormalHit
 					ExecWait $Script_Explode_BombFly
+					Sub  *VarA  1`
+					Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 					SetConst *Var0 .BombFlyPart:Main
 					SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 					Set *Var2 FFFFCFC7
@@ -306,6 +315,8 @@
 					Call GetLastDamage ( .Actor:Self *Var0 )
 					If *Var0 > 0`
 						ExecWait $Script_Explode_BombFly
+						Sub  *VarA  1`
+						Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 						SetConst *Var0 .BombFlyPart:Main
 						SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 						Set *Var2 FFFFCFC7
@@ -319,6 +330,8 @@
 		CaseOR == .Event:SpinSmashDeath % 21
 		CaseOR == .Event:ExplodeTrigger % 22
 			ExecWait $Script_Explode_BombFly
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 			Set *Var2 FFFFCFC7
@@ -343,11 +356,15 @@
 				SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 				Set *Var2 FFFFCFC7
 			EndIf
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			ExecWait DoDeath
 			Return
 		CaseOR == .Event:ShockHit % 2F
 		CaseOR == .Event:ShockDeath % 26
 			ExecWait $Script_Explode_BombFly
+			Sub  *VarA  1`
+			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 			Set *Var2 FFFFCFC7
@@ -464,6 +481,7 @@
 			If *VarA == .HitResult:Lucky % 5
 				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 			EndIf
+			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			Call YieldTurn ( )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Attack
@@ -484,6 +502,8 @@
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:NoContact|Blast 00000000 00000000 .BombFlyDamage:ChargeBlast 00000020 )
 	Call UseBattleCamPreset ( 00000002 )
+	Sub  *VarA  1`
+	Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 	Call YieldTurn ( )
 	SetConst *Var0 .BombFlyPart:Main
 	SetConst *Var1 .Anim:BombFly_Attack
