@@ -126,7 +126,7 @@
 #new:Script $Script_ReturnHome_BombFly {
 	Call ResetAllActorSounds ( .Actor:Self )
 	Call SetGoalToHome ( .Actor:Self )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Idle )
 	Return
 	End
@@ -152,7 +152,6 @@
 				SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 				SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 				ExecWait DoBurnHit
-				Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 				ExecWait $Script_Explode_BombFly
 				SetConst *Var0 .BombFlyPart:Main
 				SetConst *Var1 .Anim:BombFly_Idle % BurnStill
@@ -174,7 +173,6 @@
 			SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 			SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 			ExecWait DoBurnHit
-			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			ExecWait $Script_Explode_BombFly
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
@@ -195,14 +193,12 @@
 			SetConst *Var1 .Anim:BombFly_Idle % Hurt
 			ExecWait DoSpinSmashHit
 			% ExecWait $Script_Cleanup_BombFly %? Not sure if we are going to use this or not
-			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % Hurt
 			ExecWait DoDeath
 			Return
 		CaseOR == .Event:ShockHit % 2F
 		CaseOR == .Event:ShockDeath % 26
-			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 			Set *Var2 FFFFCFC7
@@ -228,7 +224,6 @@
 				SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 				SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 				ExecWait DoBurnHit
-				Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 				ExecWait $Script_Explode_BombFly
 				SetConst *Var0 .BombFlyPart:Main
 				SetConst *Var1 .Anim:BombFly_Idle % BurnStill
@@ -241,7 +236,6 @@
 				ExecWait DoNormalHit
 				Wait 10`
 				% ExecWait $Script_Cleanup_BombFly %? Not sure if we are going to use this or not
-				Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 				SetConst *Var0 .BombFlyPart:Main
 				SetConst *Var1 .Anim:BombFly_Idle % Hurt
 				ExecWait DoDeath
@@ -253,7 +247,6 @@
 			SetConst *Var2 .Anim:BombFly_Idle % BurnStill
 			ExecWait DoBurnHit
 			ExecWait $Script_Explode_BombFly
-			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 			Set *Var2 FFFFCFC7
@@ -301,8 +294,6 @@
 					SetConst *Var1 .Anim:BombFly_Idle % BurnHurt
 					ExecWait DoNormalHit
 					ExecWait $Script_Explode_BombFly
-					Sub  *VarA  1`
-					Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 					SetConst *Var0 .BombFlyPart:Main
 					SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 					Set *Var2 FFFFCFC7
@@ -315,8 +306,6 @@
 					Call GetLastDamage ( .Actor:Self *Var0 )
 					If *Var0 > 0`
 						ExecWait $Script_Explode_BombFly
-						Sub  *VarA  1`
-						Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 						SetConst *Var0 .BombFlyPart:Main
 						SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 						Set *Var2 FFFFCFC7
@@ -330,8 +319,6 @@
 		CaseOR == .Event:SpinSmashDeath % 21
 		CaseOR == .Event:ExplodeTrigger % 22
 			ExecWait $Script_Explode_BombFly
-			Sub  *VarA  1`
-			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 			Set *Var2 FFFFCFC7
@@ -356,15 +343,11 @@
 				SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 				Set *Var2 FFFFCFC7
 			EndIf
-			Sub  *VarA  1`
-			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			ExecWait DoDeath
 			Return
 		CaseOR == .Event:ShockHit % 2F
 		CaseOR == .Event:ShockDeath % 26
 			ExecWait $Script_Explode_BombFly
-			Sub  *VarA  1`
-			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Idle % BurnStill
 			Set *Var2 FFFFCFC7
@@ -393,17 +376,13 @@
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetBattleCamZoom ( 250` )
 	Call SetBattleCamOffsetZ ( 35` )
-	Call MoveBattleCamOver ( 20` )
-	Wait 20`
+	Call MoveBattleCamOver ( 40` )
 	Call PlaySoundAtActor ( .Actor:Self .Sound:PowerUp )
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Attack )
 	Call SetIdleAnimations ( .Actor:Self .BombFlyPart:Main $IdleAnimations_Ignited_BombFly )
 	Call BindHandleEvent ( .Actor:Self $Script_HandleEvent_Ignited_BombFly )
 	Call SetPartEventBits ( .Actor:Self .BombFlyPart:Main 00008000 .True )
 	Wait 30`
-	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
-	Call MoveBattleCamOver ( 20` )
-	Wait 20`
 	Return
 	End
 }
@@ -459,11 +438,13 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
+	Call SetTargetActor ( .Actor:Self .Actor:Player )
 	Call SetGoalToTarget ( .Actor:Self )
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Attack )
+	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
 	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
 	Switch *Var0
 		CaseOR == .HitResult:Miss % 6
@@ -474,14 +455,13 @@
 			Add *Var1 10`
 			Add *Var2 2`
 			Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
+			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:Linear )
 			Call UseBattleCamPreset ( 00000002 )
 			ExecWait $Script_Explode_BombFly
 			Wait 10`
 			If *VarA == .HitResult:Lucky % 5
 				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 			EndIf
-			Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			Call YieldTurn ( )
 			SetConst *Var0 .BombFlyPart:Main
 			SetConst *Var1 .Anim:BombFly_Attack
@@ -495,15 +475,13 @@
 	Add *Var1 10`
 	Add *Var2 2`
 	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
 	Call SetGoalToTarget ( .Actor:Self )
 	Set *VarA 1`
 	ExecWait $Script_Explode_BombFly
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:NoContact|Blast 00000000 00000000 .BombFlyDamage:ChargeBlast 00000020 )
 	Call UseBattleCamPreset ( 00000002 )
-	Sub  *VarA  1`
-	Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 	Call YieldTurn ( )
 	SetConst *Var0 .BombFlyPart:Main
 	SetConst *Var1 .Anim:BombFly_Attack

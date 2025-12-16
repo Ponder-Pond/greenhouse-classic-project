@@ -116,7 +116,7 @@
 	Call ResetAllActorSounds ( .Actor:Self )
 	Call SetGoalToHome ( .Actor:Self )
 	Call SetAnimation ( .Actor:Self .FlyPart:Main .Anim:Fly_Idle )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
 	Return
 	End
 }
@@ -142,8 +142,6 @@
 			SetConst *Var1 .Anim:Fly_Idle % BurnHurt
 			SetConst *Var2 .Anim:Fly_Idle % BurnStill
 			ExecWait DoBurnHit
-			Sub  *VarA  1`
-			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % BurnStill
 			ExecWait DoDeath
@@ -161,8 +159,6 @@
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % Hurt?
 			ExecWait DoShockHit
-			Sub  *VarA  1`
-			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % Death
 			ExecWait DoDeath
@@ -180,8 +176,6 @@
 			SetConst *Var1 .Anim:Fly_Idle % Hurt
 			ExecWait DoNormalHit
 			Wait 10`
-			Sub  *VarA  1`
-			Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 			SetConst *Var0 .FlyPart:Main
 			SetConst *Var1 .Anim:Fly_Idle % Death
 			ExecWait DoDeath
@@ -219,11 +213,13 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
+	Call SetTargetActor ( .Actor:Self .Actor:Player )
 	Call SetGoalToTarget ( .Actor:Self )
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetAnimation ( .Actor:Self .FlyPart:Main .Anim:Fly_Idle )
+	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
 	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
 	Switch *Var0
 		CaseOR == .HitResult:Miss % 6
@@ -234,12 +230,11 @@
 			Add *Var1 10`
 			Add *Var2 2`
 			Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:CosIn )
+			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:Linear )
 			If *VarA == .HitResult:Lucky % 5
 				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 			EndIf
 			Call UseBattleCamPreset ( 00000002 )
-			% Call AddActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount -1` )
 			Call YieldTurn ( )
 			Call 8027D32C ( .Actor:Self ) % HideHealthBar
 			Call UseIdleAnimation ( .Actor:Self .False )
@@ -252,13 +247,11 @@
 	Add *Var1 10`
 	Add *Var2 2`
 	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:CosIn )
+	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
 	Call SetGoalToTarget ( .Actor:Self )
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .FlyDamage:Charge 00000020 )
 	Call UseBattleCamPreset ( 00000002 )
-	Sub  *VarA  1`
-	Call SetActorVar ( .Actor:Enemy0 .KingWatingaActorVar:SummonCount *VarA )
 	Call YieldTurn ( )
 	SetConst *Var0 .FlyPart:Main
 	SetConst *Var1 .Anim:Fly_Idle
