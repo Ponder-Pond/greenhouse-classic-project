@@ -235,6 +235,9 @@
 		Call SetAnimation ( .Actor:Self .FlyParentPart:Main .Anim:FlyParent_Attack )
         Call SetIdleAnimations ( .Actor:Self .FlyParentPart:Main $IdleAnimations_Attack_FlyParent )
 		Wait 30`
+		Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+		Call MoveBattleCamOver ( 30` )
+		Wait 30`
 		Call SetActorVar ( .Actor:Self .FlyParentActorVar:TurnCount .FlyParentActorValue:TurnTwo )
 	Case == .FlyParentActorValue:TurnTwo
 		ExecWait $Script_Attack_QuadShot_FlyParent

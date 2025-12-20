@@ -257,6 +257,9 @@
 	SetConst *Var1 .Anim:Fly_Idle
 	Set *Var2 FFFFCFC7
 	ExecWait DoDeath
+	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+	Call MoveBattleCamOver ( 30` )
+	Wait 30`
 	Return
 	End
 }

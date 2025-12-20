@@ -234,6 +234,9 @@
 		Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack )
         Call SetIdleAnimations ( .Actor:Self .SuperFlyPart:Main $IdleAnimations_Attack_SuperFly )
 		Wait 30`
+		Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+		Call MoveBattleCamOver ( 30` )
+		Wait 30`
 		Call SetActorVar ( .Actor:Self .SuperFlyActorVar:TurnCount .SuperFlyActorValue:TurnTwo )
 	Case == .SuperFlyActorValue:TurnTwo
         Call GetStatusFlags ( .Actor:Self *Var0 )

@@ -67,3 +67,20 @@ false	% reversed
 00EB0006 = KingWatinga_LaunchStart
 00EB0007 = KingWatinga_LaunchEnd
 00EB0008 = KingWatinga_Hurt
+00EB0009 = KingWatinga_FlyShotStart
+00EB000A = KingWatinga_FlyShotEnd
+00EB000B = KingWatinga_Shot
+
+% King Watinga Red Animations
+00EB0100 = KingWatinga_Red_Still
+00EB0101 = KingWatinga_Red_Idle
+00EB0102 = KingWatinga_Red_Talk
+00EB0103 = KingWatinga_Red_Laugh
+00EB0104 = KingWatinga_Red_ShotPrepare
+00EB0105 = KingWatinga_Red_ShotEnd
+00EB0106 = KingWatinga_Red_LaunchStart
+00EB0107 = KingWatinga_Red_LaunchEnd
+00EB0108 = KingWatinga_Red_Hurt
+00EB0109 = KingWatinga_Red_FlyShotStart
+00EB010A = KingWatinga_Red_FlyShotEnd
+00EB010B = KingWatinga_Red_Shot

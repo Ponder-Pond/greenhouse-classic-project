@@ -376,7 +376,7 @@
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
 	Call SetBattleCamZoom ( 250` )
 	Call SetBattleCamOffsetZ ( 35` )
-	Call MoveBattleCamOver ( 40` )
+	Call MoveBattleCamOver ( 30` )
 	Call PlaySoundAtActor ( .Actor:Self .Sound:PowerUp )
 	Call SetAnimation ( .Actor:Self .BombFlyPart:Main .Anim:BombFly_Attack )
 	Call SetIdleAnimations ( .Actor:Self .BombFlyPart:Main $IdleAnimations_Ignited_BombFly )
@@ -423,6 +423,9 @@
 	Switch(*Var0)
 	Case == .BombFlyActorValue:TurnOne
 		ExecWait $Script_Ignite_Bombfly
+		Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+		Call MoveBattleCamOver ( 30` )
+		Wait 30`
 		Call SetActorVar ( .Actor:Self .BombFlyActorVar:TurnCount .BombFlyActorValue:TurnTwo )
 	Case == .BombFlyActorValue:TurnTwo
 		ExecWait $Script_Attack_BlastCharge_BombFly
@@ -487,6 +490,9 @@
 	SetConst *Var1 .Anim:BombFly_Attack
 	Set *Var2 FFFFCFC7
 	ExecWait DoDeath
+	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+	Call MoveBattleCamOver ( 30` )
+	Wait 30`
 	Return
 	End
 }
