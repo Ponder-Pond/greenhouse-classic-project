@@ -1,6 +1,10 @@
 % Super Fly Parts
 #define .SuperFlyPart:Main 1
-#define .SuperFlyPart:Shot 2
+#define .SuperFlyPart:BigShot 2
+#define .SuperFlyPart:QuadShot1 3
+#define .SuperFlyPart:QuadShot2 4
+#define .SuperFlyPart:QuadShot3 5
+#define .SuperFlyPart:QuadShot4 6
 
 % Super Fly Actor Variables
 #define .SuperFlyActorVar:TurnCount 0`
@@ -21,7 +25,7 @@
 [Flags]			00000200
 [StatusTable]	$StatusTable_SuperFly
 % ai
-[PartsCount]	2`s
+[PartsCount]	6`s
 [PartsTable]	$PartsTable_SuperFly
 [Script]		$Script_Init_SuperFly
 % move effectiveness
@@ -43,7 +47,6 @@
 .Element:Normal 0`
 .Element:End
 }
-
 
 #new:StatusTable $StatusTable_SuperFly {
 .Status:Normal 				0`
@@ -70,6 +73,38 @@
 .Status:End
 }
 
+#new:IdleAnimations $IdleAnimations_SuperFly {
+.Status:Normal	    .Anim:SuperFly_Idle
+.Status:Stone	    .Anim:SuperFly_Idle
+.Status:Sleep	    .Anim:SuperFly_Idle
+.Status:Poison	    .Anim:SuperFly_Idle
+.Status:Stop	    .Anim:SuperFly_Idle
+.Status:Static	    .Anim:SuperFly_Idle
+.Status:Paralyze	.Anim:SuperFly_Idle
+.Status:Dizzy	    .Anim:SuperFly_Idle
+.Status:Fear	    .Anim:SuperFly_Idle
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_Attack_SuperFly {
+.Status:Normal		.Anim:SuperFly_Attack
+.Status:Stone	    .Anim:SuperFly_Attack
+.Status:Sleep	    .Anim:SuperFly_Attack
+.Status:Poison	    .Anim:SuperFly_Attack
+.Status:Stop	    .Anim:SuperFly_Attack
+.Status:Static	    .Anim:SuperFly_Attack
+.Status:Paralyze	.Anim:SuperFly_Attack
+.Status:Dizzy	    .Anim:SuperFly_Attack
+.Status:Fear	    .Anim:SuperFly_Attack
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_QuadShot_SuperFly
+{
+.Status:Normal 		.Anim:SmallFly_Idle %TODO: Change to Quad Shot Animation!
+.Status:End
+}
+
 #new:PartsTable $PartsTable_SuperFly % ActorPartBlueprint struct in decomp
 {
 	/% s32 flags %/						00800000
@@ -86,13 +121,13 @@
 	/% s8 unk_1F %/						00b
 	/% s32 overrideNameMsg %/			00000000
 
-    /% Shot %/
+    /% Big Shot %/
 	/% s32 flags %/						00120001
-	/% s8 index %/						~Byte:.SuperFlyPart:Shot
+	/% s8 index %/						~Byte:.SuperFlyPart:BigShot
 	/% Vec3b posOffset %/				0`b 0`b 0`b
 	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
 	/% s16 opacity %/					00FFs
-	/% s32* IdleAnimations %/			$IdleAnimations_SuperFly %? No Shot Animation yet.
+	/% s32* IdleAnimations %/			$IdleAnimations_QuadShot_SuperFly %? No Quad Shot Animation yet.
 	/% s32* defenseTable %/				$DefenseTable_SuperFly
 	/% s32 eventFlags %/				00000000
 	/% s32 elementImmunityFlags %/		00000000
@@ -100,24 +135,66 @@
 	/% s8 unk_1E %/						00b
 	/% s8 unk_1F %/						00b
 	/% s32 overrideNameMsg %/			00000000
-}
 
-#new:IdleAnimations $IdleAnimations_SuperFly {
-.Status:Normal	    .Anim:SuperFly_Idle
-.Status:Stone	    .Anim:SuperFly_Idle
-.Status:Sleep	    .Anim:SuperFly_Idle
-.Status:Poison	    .Anim:SuperFly_Idle
-.Status:Stop	    .Anim:SuperFly_Idle
-.Status:Static	    .Anim:SuperFly_Idle
-.Status:Paralyze	.Anim:SuperFly_Idle
-.Status:Dizzy	    .Anim:SuperFly_Idle
-.Status:Fear	    .Anim:SuperFly_Idle
-.Status:End
-}
+    /% Quad Shot 1 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.SuperFlyPart:QuadShot1
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_QuadShot_SuperFly %? No Quad Shot Animation yet.
+	/% s32* defenseTable %/				$DefenseTable_SuperFly
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
 
-#new:IdleAnimations $IdleAnimations_Attack_SuperFly {
-.Status:Normal		.Anim:SuperFly_Attack
-.Status:End
+	/% Quad Shot 2 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.SuperFlyPart:QuadShot2
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_QuadShot_SuperFly %? No Quad Shot Animation yet.
+	/% s32* defenseTable %/				$DefenseTable_SuperFly
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+
+	/% Quad Shot 3 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.SuperFlyPart:QuadShot3
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_QuadShot_SuperFly %? No Quad Shot Animation yet.
+	/% s32* defenseTable %/				$DefenseTable_SuperFly
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+
+	/% Quad Shot 4 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.SuperFlyPart:QuadShot4
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_QuadShot_SuperFly %? No Quad Shot Animation yet.
+	/% s32* defenseTable %/				$DefenseTable_SuperFly
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
 }
 
 #new:Script $Script_Init_SuperFly {
@@ -218,7 +295,7 @@
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
 	Call GetActorVar ( .Actor:Self .SuperFlyActorVar:TurnCount *Var0 )
-	Switch(*Var0)
+	Switch *Var0
 	Case == .SuperFlyActorValue:TurnOne
         Call GetStatusFlags ( .Actor:Self *Var0 )
         If *Var0 & ~Flags:StatusFlags:Sleep|Frozen|Fear|Paralyze|Dizzy|Stone|Stop % 35D000
@@ -257,51 +334,149 @@
 #new:Script $Script_Attack_QuadShot_SuperFly {
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
-	Call SetTargetActor ( .Actor:Self .Actor:Player )
+    Call UseBattleCamPreset ( 0000000D ) % BTL_CAM_ACTOR_CLOSE
+    Call BattleCamTargetActor ( .Actor:Self )
+    Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
+    Call SetBattleCamZoom ( 300` )
+    Call SetBattleCamOffsetZ ( 25` ) % SetBattleCamOffsetY
+    Call MoveBattleCamOver ( 12` )
+	Wait 12`
 	Call SetTargetActor ( .Actor:Self .Actor:Player )
 	Call SetGoalToTarget ( .Actor:Self )
+	Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack ) % Shot Prepare
+	Wait 10`
+	Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack ) % Shot End
+	Call SetAnimation ( .Actor:Self .SuperFlyPart:BigShot .Anim:SmallFly_Idle )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	% Add *Var1 50`
+  	Add *Var2 4`
+  	Call SetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+	Call SetPartScale ( .Actor:Self .SuperFlyPart:BigShot *Fixed[2.0] *Fixed[2.0] *Fixed[1.0] )
+	Call SetPartScale ( .Actor:Self .SuperFlyPart:QuadShot1 *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Call SetPartScale ( .Actor:Self .SuperFlyPart:QuadShot2 *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Call SetPartScale ( .Actor:Self .SuperFlyPart:QuadShot3 *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Call SetPartScale ( .Actor:Self .SuperFlyPart:QuadShot4 *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Call EnemyTestTarget ( .Actor:Self *Var0 0 0 0 0 )
+	Switch *Var0
+	CaseOR == .HitResult:Miss
+	CaseOR == .HitResult:Lucky
+		Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:BigShot 00000001 .False )
+		Call GetActorPos ( .Actor:Player *Var0 *Var1 *Var2 )
+		Add *Var1 -5`
+		Add *Var2 4`
+		Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+		Wait 12`
+		Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack ) % Idle
+		Call UseBattleCamPreset ( 0000003F )
+		Call BattleCamTargetActor ( .Actor:Self )
+		Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
+		Call MoveBattleCamOver ( 24` )
+		Wait 24`
+		Call FlyPartTo ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 24` 0` .Easing:Linear )
+		Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:BigShot 00000001 .True )
+		Call SetGoalToTarget ( .Actor:Self )
+		If *Var0 == .HitResult:Lucky
+			Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
+		EndIf
+		Goto ReturnHome
+	EndSwitch
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:BigShot 00000001 .False )
+	Call GetActorPos ( .Actor:Player *Var0 *Var1 *Var2 )
+	Add *Var1 -5`
+	Add *Var2 4`
+	Wait 12`
+	Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack ) % Idle
 	Call UseBattleCamPreset ( 0000003F )
 	Call BattleCamTargetActor ( .Actor:Self )
 	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
-	Call SetAnimation ( .Actor:Self .SuperFlyPart:Main .Anim:SuperFly_Attack )
-	Call 8024E664 ( 00000013 ) % UseBattleCamPresetImmediately
-	Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 1` 00000010 )
-	Switch *Var0
-		CaseOR == .HitResult:Miss % 6
-		CaseOR == .HitResult:Lucky % 5
-			Set *VarA *Var0
-			Call GetActorPos ( .Actor:Player *Var0 *Var1 *Var2 )
-			Sub *Var0 90`
-			Add *Var1 10`
-			Add *Var2 2`
-			Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-			Call FlyToGoal ( .Actor:Self 30` 0` .Easing:Linear )
-			If *VarA == .HitResult:Lucky % 5
-				Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
-			EndIf
-			Call UseBattleCamPreset ( 00000002 )
-			Call YieldTurn ( )
-			Call 8027D32C ( .Actor:Self ) % HideHealthBar
-			Call UseIdleAnimation ( .Actor:Self .False )
-			Call RemoveActor ( .Actor:Self )
-			Return
-		EndCaseGroup
-	EndSwitch
-	Call GetActorPos ( .Actor:Player *Var0 *Var1 *Var2 )
-	Add *Var0 5`
-	Add *Var1 10`
-	Add *Var2 2`
-	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Call FlyToGoal ( .Actor:Self 15` 0` .Easing:Linear )
+    Call MoveBattleCamOver ( 24` )
+	Wait 24`
+  	Call FlyPartTo ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 24` 0` .Easing:Linear )
 	Call SetGoalToTarget ( .Actor:Self )
+	Call StartRumble ( 0000000B )
+	Thread
+		Call ShakeCam ( .Cam:Battle 0` 2` *Fixed[0.75] )
+		Call ShakeCam ( .Cam:Battle 0` 5` *Fixed[3.0] )
+		Call ShakeCam ( .Cam:Battle 0` 10` *Fixed[4.5] )
+		Call ShakeCam ( .Cam:Battle 0` 5` *Fixed[3.0] )
+	EndThread
+	Call GetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+	Add *Var2 2`
+	Call PlayEffect ( ~FX:SmokeRing:Blast1 *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+	Add *Var1 20`
+	Add *Var2 2`
+	Call PlayEffect ( ~FX:Explosion1 *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+	Call PlaySoundAtActor ( .Actor:Self .Sound:BombBlast )
 	Wait 2`
-	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 00000000 00000000 .SuperFlyDamage:QuadShot 00000020 )
-	Call UseBattleCamPreset ( 00000002 )
-	Call YieldTurn ( )
+	Thread
+		Call GetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+		Add *Var2 2`
+		Call SetPartPos ( .Actor:Self .SuperFlyPart:QuadShot1 *Var0 *Var1 *Var2 )
+		Call SetAnimation ( .Actor:Self .SuperFlyPart:QuadShot1 .Anim:SmallFly_Idle )
+		Call SetPartPos ( .Actor:Self .SuperFlyPart:QuadShot2 *Var0 *Var1 *Var2 )
+		Call SetAnimation ( .Actor:Self .SuperFlyPart:QuadShot2 .Anim:SmallFly_Idle )
+		Call SetPartPos ( .Actor:Self .SuperFlyPart:QuadShot3 *Var0 *Var1 *Var2 )
+		Call SetAnimation ( .Actor:Self .SuperFlyPart:QuadShot3 .Anim:SmallFly_Idle )
+		Call SetPartPos ( .Actor:Self .SuperFlyPart:QuadShot4 *Var0 *Var1 *Var2 )
+		Call SetAnimation ( .Actor:Self .SuperFlyPart:QuadShot4 .Anim:SmallFly_Idle )
+	EndThread
+	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:NoContact 0000FFFF 00000000 .SuperFlyDamage:QuadShot 00000020 )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:BigShot 00000001 .True )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot1 00000001 .False )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot2 00000001 .False )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot3 00000001 .False )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot4 00000001 .False )
+	Wait 1`
+	Thread
+		Call GetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+		Call SetPartPos (.Actor:Self .SuperFlyPart:QuadShot1 *Var0 *Var1 *Var2 )
+		% Add *Var0 300`
+		Add *Var1 300`
+		Add *Var2 2`
+		Call SetPartMoveSpeed ( .Actor:Self .SuperFlyPart:QuadShot1 *Fixed[6.0] )
+		Call FlyPartTo ( .Actor:Self .SuperFlyPart:QuadShot1 *Var0 *Var1 *Var2 0` 0` .Easing:Linear )
+	EndThread
+	Thread
+		Call GetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+		Call SetPartPos (.Actor:Self .SuperFlyPart:QuadShot2 *Var0 *Var1 *Var2 )
+		% Add *Var0 -300`
+		Add *Var1 -300`
+		Add *Var2 2`
+		Call SetPartMoveSpeed ( .Actor:Self .SuperFlyPart:QuadShot2 *Fixed[6.0] )
+		Call FlyPartTo ( .Actor:Self .SuperFlyPart:QuadShot2 *Var0 *Var1 *Var2 0` 0` .Easing:Linear )
+	EndThread
+	Thread
+		Call GetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+		Call SetPartPos (.Actor:Self .SuperFlyPart:QuadShot3 *Var0 *Var1 *Var2 )
+		Add *Var0 300`
+		% Add *Var1 -300`
+		Add *Var2 2`
+		Call SetPartMoveSpeed ( .Actor:Self .SuperFlyPart:QuadShot3 *Fixed[6.0] )
+		Call FlyPartTo ( .Actor:Self .SuperFlyPart:QuadShot3 *Var0 *Var1 *Var2 0` 0` .Easing:Linear )
+	EndThread
+	Thread
+		Call GetPartPos ( .Actor:Self .SuperFlyPart:BigShot *Var0 *Var1 *Var2 )
+		Call SetPartPos (.Actor:Self .SuperFlyPart:QuadShot4 *Var0 *Var1 *Var2 )
+		Add *Var0 -300`
+		% Add *Var1 -300`
+		Add *Var2 2`
+		Call SetPartMoveSpeed ( .Actor:Self .SuperFlyPart:QuadShot4 *Fixed[6.0] )
+		Call FlyPartTo ( .Actor:Self .SuperFlyPart:QuadShot4 *Var0 *Var1 *Var2 0` 0` .Easing:Linear )
+	EndThread
+	Wait 60`
+	Label ReturnHome
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot1 00000001 .True )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot2 00000001 .True )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot3 00000001 .True )
+	Call SetPartFlagBits ( .Actor:Self .SuperFlyPart:QuadShot4 00000001 .True )
+	Call YieldTurn ()
 	SetConst *Var0 .SuperFlyPart:Main
 	SetConst *Var1 .Anim:SuperFly_Attack
 	Set *Var2 FFFFCFC7
 	ExecWait DoDeath
+	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
+	Call MoveBattleCamOver ( 24` )
+	Wait 24`
 	Return
 	End
 }

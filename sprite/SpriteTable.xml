@@ -236,6 +236,7 @@
 		<Sprite id="E9" src="E9" name="Leaf"/>
 		<Sprite id="EA" src="EA - GnatAttackFlies" name="Gnat Attack Flies"/>
 		<Sprite id="EB" src="EB - KingWatinga" name="King Watinga"/>
+		<Sprite id="EC" src="EC - Panser" name="Panser"/>
 	</NpcSprites>
 	<PlayerSprites>
 		<Sprite id="1" src="01" name="Mario 1"/>

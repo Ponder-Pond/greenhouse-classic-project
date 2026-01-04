@@ -84,3 +84,31 @@ false	% reversed
 00EB0109 = KingWatinga_Red_FlyShotStart
 00EB010A = KingWatinga_Red_FlyShotEnd
 00EB010B = KingWatinga_Red_Shot
+
+% Red Panser Animations
+00EC0000 = Panser_Red_Still
+00EC0001 = Panser_Red_Idle
+00EC0002 = Panser_Red_Shot
+00EC0005 = Panser_Red_Hurt
+00EC0006 = Panser_Red_Talk
+00EC0007 = Panser_Red_Walk
+
+% Pink Panser Animations
+00EC0100 = Panser_Pink_Still
+00EC0101 = Panser_Pink_Idle
+00EC0102 = Panser_Pink_Shot
+00EC0105 = Panser_Pink_Hurt
+00EC0106 = Panser_Pink_Talk
+00EC0107 = Panser_Pink_Walk
+
+% Purple Panser Animations
+00EC0200 = Panser_Purple_Still
+00EC0201 = Panser_Purple_Idle
+00EC0202 = Panser_Purple_Shot
+00EC0205 = Panser_Purple_Hurt
+00EC0206 = Panser_Purple_Talk
+00EC0207 = Panser_Purple_Walk
+
+% Misc Panser Animations
+00EC0003 = Panser_FireBall
+00EC0004 = Panser_Seed

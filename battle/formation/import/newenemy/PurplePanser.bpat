@@ -1,0 +1,305 @@
+%Panser Parts
+#define .PurplePanserPart:Main 1
+#define .PurplePanserPart:Seed 2
+
+%Panser Stats
+#define .HP:PurplePanser 4`b
+#define .PurplePanserDamage:Seed 4`
+
+#new:Actor $PurplePanser
+{
+% stats
+[Index]         27b
+[Level]         5`b
+[MaxHP]         .HP:PurplePanser
+[Coins]         1`b
+[Flags]         00000000
+[StatusTable]   $StatusTable_PurplePanser
+% ai
+[PartsCount]    2`s
+[PartsTable]    $PartsTable_PurplePanser
+[Script]        $Script_Init_PurplePanser
+% move effectiveness
+[Escape]       95`b
+[Item]         100`b
+[AirLift]      100`b
+[Hurricane]    100`b % Bow's "Spook" as well
+[UpAndAway]    100`b
+[PowerBounce] 100`b
+[SpinSmash]     0`b % weight (0-4)
+% ui positions
+[Size]         28`b  24`b % width height
+[HealthBar]     0`b   0`b % dx dy
+[StatusTurn]  -10`b  20`b % dx dy
+[StatusIcon]   10`b  20`b % dx dy
+}
+
+#new:DefenseTable $DefenseTable_PurplePanser
+{
+.Element:Normal      0`
+.Element:Fire       -1`
+.Element:Water      -1`
+.Element:Ice        99`
+.Element:End
+}
+
+#new:StatusTable $StatusTable_PurplePanser
+{
+.Status:Normal      0`
+.Status:Default     0`
+.Status:Sleep      100`
+.Status:Poison     100`
+.Status:Frozen      0`
+.Status:Dizzy      100`
+.Status:Fear       100`
+.Status:Static     100`
+.Status:Paralyze   100`
+.Status:Shrink     100`
+.Status:Stop       100`
+.Status:DefaultTurnMod    0`
+.Status:SleepTurnMod      0`
+.Status:PoisonTurnMod     0`
+.Status:FrozenTurnMod     0`
+.Status:DizzyTurnMod      0`
+.Status:FearTurnMod       0`
+.Status:StaticTurnMod     0`
+.Status:ParalyzeTurnMod   0`
+.Status:ShrinkTurnMod     0`
+.Status:StopTurnMod       0`
+.Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_PurplePanser
+{
+    .Status:Normal    .Anim:Panser_Purple_Idle
+    .Status:Stone     .Anim:Panser_Purple_Still
+    .Status:Sleep     .Anim:Panser_Purple_Idle
+    .Status:Poison    .Anim:Panser_Purple_Idle
+    .Status:Stop      .Anim:Panser_Purple_Still
+    .Status:Static    .Anim:Panser_Purple_Idle
+    .Status:Paralyze  .Anim:Panser_Purple_Still
+    .Status:Dizzy     .Anim:Panser_Purple_Idle
+    .Status:Fear      .Anim:Panser_Purple_Idle
+    .Status:End
+}
+
+#new:IdleAnimations $IdleAnimations_Seed
+{
+    .Status:Normal    .Anim:Panser_Seed
+    .Status:End
+}
+
+#new:PartsTable $PartsTable_PurplePanser { %ActorPartBlueprint struct in decomp
+    /% s32 flags %/                     00800000
+    /% s8 index %/                      ~Byte:.PurplePanserPart:Main
+    /% Vec3b posOffset %/               0`b 0`b 0`b
+    /% Vec2b targetOffset %/            0`b 24`b %for cursor when selecting to attack in battle
+    /% s16 opacity %/                   00FFs
+    /% s32* IdleAnimations %/           $IdleAnimations_PurplePanser
+    /% s32* defenseTable %/             $DefenseTable_PurplePanser
+    /% s32 eventFlags %/                00000000
+    /% s32 elementImmunityFlags %/      00000000
+    /% Vec2b projectileTargetOffset %/	-1`b -10`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+
+    /% Seed %/
+    /% s32 flags %/                     00120001
+    /% s8 index %/                      ~Byte:.PurplePanserPart:Seed
+    /% Vec3b posOffset %/               0`b 0`b 0`b
+    /% Vec2b targetOffset %/            0`b 0`b %for cursor when selecting to attack in battle
+    /% s16 opacity %/                   00FFs
+    /% s32* IdleAnimations %/           $IdleAnimations_Seed
+    /% s32* defenseTable %/             $DefenseTable_PurplePanser
+    /% s32 eventFlags %/                00000000
+    /% s32 elementImmunityFlags %/      00000000
+    /% Vec2b projectileTargetOffset %/	0`b	0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+}
+
+#new:Script $Script_Init_PurplePanser
+{
+    Call  BindTakeTurn      ( .Actor:Self $Script_TakeTurn_PurplePanser )
+    Call  BindIdle  ( .Actor:Self $Script_Idle_PurplePanser )
+    Call  BindHandleEvent   ( .Actor:Self $Script_HandleEvent_PurplePanser )
+    Return
+    End
+}
+
+#new:Script $Script_Idle_PurplePanser
+{
+    Return
+    End
+}
+
+#new:Script $Script_ReturnHome_PurplePanser
+{
+    Call  ResetAllActorSounds   ( .Actor:Self )
+    SetConst  *Var0  .PurplePanserPart:Main
+    SetConst  *Var1  .Anim:Panser_Purple_Idle
+    ExecWait  DoReturnHome
+    Call  SetAnimation  ( .Actor:Self .PurplePanserPart:Main .Anim:Panser_Purple_Idle )
+    Return
+    End
+}
+
+#new:Script $Script_HandleEvent_PurplePanser
+{
+    Call EnableIdleScript ( .Actor:Self .False )
+    Call UseIdleAnimation ( .Actor:Self .False )
+    Call  GetLastEvent      ( .Actor:Self *Var0 )
+    Switch  *Var0
+        CaseOR  ==  .Event:HitCombo % 9
+        CaseOR  ==  .Event:Hit % A
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoNormalHit
+        EndCaseGroup
+        Case  ==  .Event:BurnHit % E
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            SetConst  *Var2  .Anim:Panser_Purple_Hurt
+            ExecWait  DoBurnHit
+        Case  ==  .Event:BurnDeath % 24
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            SetConst  *Var2  .Anim:Panser_Purple_Hurt
+            ExecWait  DoBurnHit
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoDeath
+            Return
+        Case  ==  .Event:SpinSmashHit % B
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoSpinSmashHit
+        Case  ==  .Event:SpinSmashDeath % 21
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoSpinSmashHit
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt %Death
+            ExecWait  DoDeath
+            Return
+        Case  ==  .Event:ShockHit % 2F
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoShockHit
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoJumpBack
+            Call  SetActorSpeed ( .Actor:Self *Fixed[2.0] )
+            ExecWait  $Script_ReturnHome_Panser
+        Case  ==  .Event:ShockDeath % 26
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoShockHit
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt %Dead
+            ExecWait  DoDeath
+            Return
+        CaseOR  ==  00000017 % 17
+        CaseOR  ==  .Event:Immune % 19
+        CaseOR  ==  .Event:AirLiftFailed % 1F
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Idle
+            ExecWait  DoImmune
+        EndCaseGroup
+        Case  ==  .Event:Death % 20
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoNormalHit
+            Wait  10`
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt %Dead
+            ExecWait  DoDeath
+            Return
+        Case  ==  .Event:RecoverStatus % 31
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Idle
+            ExecWait  DoRecover
+        Case  ==  .Event:ScareAway % 39
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Idle %Run
+            SetConst  *Var2  .Anim:Panser_Purple_Idle %Scared
+            ExecWait  DoScareAway
+            Return
+        Case  ==  .Event:BeginAirLift % 3A
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoAirLift
+        Case  ==  .Event:BlowAway % 16
+            SetConst  *Var0  .PurplePanserPart:Main
+            SetConst  *Var1  .Anim:Panser_Purple_Hurt
+            ExecWait  DoBlowAway
+            Return
+        Default
+    EndSwitch
+    Call EnableIdleScript ( .Actor:Self .True )
+    Call UseIdleAnimation ( .Actor:Self .True )
+    Return
+    End
+}
+
+#new:Script $Script_TakeTurn_PurplePanser
+{
+    Call EnableIdleScript ( .Actor:Self .False )
+    Call UseIdleAnimation ( .Actor:Self .False )
+    ExecWait  $Script_Attack_Seed_PurplePanser
+    Call EnableIdleScript ( .Actor:Self .True )
+    Call UseIdleAnimation ( .Actor:Self .True )
+    Return
+    End
+}
+
+
+#new:Script $Script_Attack_Seed_PurplePanser
+{
+    Call EnableIdleScript ( .Actor:Self .False )
+    Call UseIdleAnimation ( .Actor:Self .False )
+    Call SetTargetActor    ( .Actor:Self .Actor:Player )
+    Call SetAnimation ( .Actor:Self .PurplePanserPart:Main .Anim:Panser_Purple_Shot )
+    Thread
+        Wait 10`
+        Call PlaySoundAtActor ( .Actor:Self 0000010F )
+        Wait 14`
+        Call PlaySoundAtActor ( .Actor:Self 0000010F )
+    EndThread
+    Wait 40`
+    Call PlaySoundAtActor  ( .Actor:Self 000002E9 )
+    Wait 18`
+    Call SetAnimation ( .Actor:Self .PurplePanserPart:Seed .Anim:Panser_Seed )
+    Wait 15`
+    Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+    Add *Var1 10`
+    Call SetPartPos        ( .Actor:Self .PurplePanserPart:Seed  *Var0  *Var1  *Var2 )
+    Call SetPartScale  ( .Actor:Self .PurplePanserPart:Seed *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+    Call SetPartJumpGravity    ( .Actor:Self .PurplePanserPart:Seed *Fixed[3.0] )
+    Call SetPartFlagBits   ( .Actor:Self .PurplePanserPart:Seed 00000001 .False )
+    Call SetGoalToTarget   ( .Actor:Self )
+    Call GetGoalPos        ( .Actor:Self *Var0 *Var1 *Var2 )
+    Call EnemyTestTarget   ( .Actor:Self *Var3 ~Flags:DamageType:0 00000000 1` 00000010 )
+    Switch  *Var3
+        CaseOR  ==  .HitResult:Miss % 6
+        CaseOR  ==  .HitResult:Lucky % 5
+            Add *Var1 -32` %target mario's feet
+            Call PlaySoundAtActor 	( .Actor:Self 000003E8 )
+            Call JumpPartTo        ( .Actor:Self .PurplePanserPart:Seed *Var0 *Var1 *Var2  15` .True )
+            Call SetPartFlagBits   ( .Actor:Self .PurplePanserPart:Seed 00000001 .True )
+            Wait  2`
+        EndCaseGroup
+        Default
+            Call PlaySoundAtActor 	( .Actor:Self 000003E8 )
+            Call JumpPartTo        ( .Actor:Self .PurplePanserPart:Seed *Var0 *Var1 *Var2  15` .True )
+            Call SetPartFlagBits   ( .Actor:Self .PurplePanserPart:Seed 00000001 .True )
+            Wait  2`
+            Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:NoContact 00000000 00000000 .PurplePanserDamage:Seed 00000020 )
+    EndSwitch
+    Call EnableIdleScript ( .Actor:Self .True )
+    Call UseIdleAnimation ( .Actor:Self .True )
+    Return
+    End
+}

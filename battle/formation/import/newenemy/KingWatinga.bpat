@@ -1,7 +1,10 @@
 % King Watinga Parts
 #define .KingWatingaPart:Main 1
-#define .KingWatingaPart:FlyChildren 2
-#define .KingWatingaPart:EnergyShot 3
+#define .KingWatingaPart:FlyChild1 2
+#define .KingWatingaPart:FlyChild2 3
+#define .KingWatingaPart:FlyChild3 4
+#define .KingWatingaPart:FlyChild4 5
+#define .KingWatingaPart:EnergyShot 6
 
 % Summoned Actor Part
 #define .Part:Summoned 1
@@ -41,7 +44,7 @@
 [Flags]			00000200
 [StatusTable]	$StatusTable_KingWatinga
 % ai
-[PartsCount]	3`s
+[PartsCount]	6`s
 [PartsTable]	$PartsTable_KingWatinga
 [Script]		$Script_Init_KingWatinga
 % move effectiveness
@@ -109,9 +112,9 @@
 .Status:End
 }
 
-#new:IdleAnimations $IdleAnimations_KingWatinga_FlyChildren
+#new:IdleAnimations $IdleAnimations_KingWatinga_FlyChild
 {
-.Status:Normal 		.Anim:SmallFly_IdleGroup
+.Status:Normal 		.Anim:SmallFly_Idle
 .Status:End
 }
 
@@ -143,13 +146,58 @@
 	/% s8 unk_1F %/						00b
 	/% s32 overrideNameMsg %/ 			00000000
 
-	/% Fly Children %/
+	/% Fly Child 1 %/
 	/% s32 flags %/						00120001
-	/% s8 index %/						~Byte:.KingWatingaPart:FlyChildren
+	/% s8 index %/						~Byte:.KingWatingaPart:FlyChild1
 	/% Vec3b posOffset %/				0`b 0`b 0`b
 	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
 	/% s16 opacity %/					00FFs
-	/% s32* IdleAnimations %/			$IdleAnimations_KingWatinga_FlyChildren
+	/% s32* IdleAnimations %/			$IdleAnimations_KingWatinga_FlyChild
+	/% s32* defenseTable %/				$DefenseTable_KingWatinga
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+
+	/% Fly Child 2 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.KingWatingaPart:FlyChild2
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_KingWatinga_FlyChild
+	/% s32* defenseTable %/				$DefenseTable_KingWatinga
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+
+	/% Fly Child 3 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.KingWatingaPart:FlyChild3
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_KingWatinga_FlyChild
+	/% s32* defenseTable %/				$DefenseTable_KingWatinga
+	/% s32 eventFlags %/				00000000
+	/% s32 elementImmunityFlags %/		00000000
+	/% Vec2b projectileTargetOffset %/	0`b 0`b
+	/% s8 unk_1E %/						00b
+	/% s8 unk_1F %/						00b
+	/% s32 overrideNameMsg %/			00000000
+
+	/% Fly Child 4 %/
+	/% s32 flags %/						00120001
+	/% s8 index %/						~Byte:.KingWatingaPart:FlyChild4
+	/% Vec3b posOffset %/				0`b 0`b 0`b
+	/% Vec2b targetOffset %/			0`b 0`b % For cursor when selecting to attack in battle
+	/% s16 opacity %/					00FFs
+	/% s32* IdleAnimations %/			$IdleAnimations_KingWatinga_FlyChild
 	/% s32* defenseTable %/				$DefenseTable_KingWatinga
 	/% s32 eventFlags %/				00000000
 	/% s32 elementImmunityFlags %/		00000000
@@ -371,7 +419,7 @@
 	If *Var0 > 5`
 		Set *Var0  1`
 	EndIf
-	Set *Var0 4` %! Testing purposes. !%
+	Set *Var0 1` %! Testing purposes. !%
 	Call SetActorVar ( .Actor:Self .KingWatingaActorVar:TurnCount *Var0 )
 
 	% update fly list
@@ -571,6 +619,7 @@
 		SetConst *Var8 .Anim:KingWatinga_Red_FlyShotEnd
 		SetConst *Var9 .Anim:KingWatinga_Red_Idle
     EndSwitch
+	Set *Var4 .KingWatingaActorValue:SummonSuperFly %! Testing purposes. !%
 
     % summon fly variant
 	ExecWait $Subscript_SummonFlyVariant_KingWatinga
@@ -638,8 +687,12 @@ $BombFly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
     % init fly position
   	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
 	Sub *Var1 20`
+  	Add *Var2 4`
+	Call PlayEffect ( ~FX:BigSmokePuff *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var1 20`
   	Add *Var2 2`
-    Call SetActorPos ( *VarB *Var0 *Var1 *Var2 )
+	Call SetActorPos ( *VarB *Var0 *Var1 *Var2 )
     % update fly anim
     Call UseIdleAnimation ( *VarB .False )
     Call EnableIdleScript ( *VarB .False )
@@ -722,7 +775,7 @@ $BombFly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
 		Default % 25 Chance
 			Set *Var4 1` % Energy Shot
 		EndSwitch
-		Set *Var4 1` %! Testing purposes. !%
+		Set *Var4 0` %! Testing purposes. !%
 		%? Which Attack? ?%
 		Switch *Var4
 		Case == 0`
@@ -769,6 +822,86 @@ $BombFly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
 
 %%%%% & WIP Scripts & %%%%%
 
+#new:Script $Subscript_Summon_FlyChild1 {
+	Call SetAnimation ( .Actor:Self *VarD .Anim:SmallFly_Idle )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var0 10`
+	Sub *Var1 20`
+  	Add *Var2 4`
+	Call PlayEffect ( ~FX:BigSmokePuff *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var0 10`
+	Sub *Var1 20`
+  	Add *Var2 2`
+	Call SetPartPos ( .Actor:Self *VarD *Var0 *Var1 *Var2 )
+	Call SetPartScale ( .Actor:Self *VarD *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Return
+	End
+}
+
+#new:Script $Subscript_Summon_FlyChild2 {
+	Call SetAnimation ( .Actor:Self *VarD .Anim:SmallFly_Idle )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var1 25`
+  	Add *Var2 4`
+	Call PlayEffect ( ~FX:BigSmokePuff *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var1 25`
+  	Add *Var2 2`
+	Call SetPartPos ( .Actor:Self *VarD *Var0 *Var1 *Var2 )
+	Call SetPartScale ( .Actor:Self *VarD *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Return
+	End
+}
+
+#new:Script $Subscript_Summon_FlyChild3 {
+	Call SetAnimation ( .Actor:Self *VarD .Anim:SmallFly_Idle )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Add *Var0 10`
+	Sub *Var1 30`
+  	Add *Var2 4`
+	Call PlayEffect ( ~FX:BigSmokePuff *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var0 10`
+	Sub *Var1 30`
+  	Add *Var2 2`
+  	Call SetPartPos ( .Actor:Self *VarD *Var0 *Var1 *Var2 )
+	Call SetPartScale ( .Actor:Self *VarD *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Return
+	End
+}
+
+#new:Script $Subscript_Summon_FlyChild4 {
+	Call SetAnimation ( .Actor:Self *VarD .Anim:SmallFly_Idle )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var1 35`
+  	Add *Var2 4`
+	Call PlayEffect ( ~FX:BigSmokePuff *Var0 *Var1 *Var2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 )
+  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Sub *Var1 35`
+  	Add *Var2 2`
+  	Call SetPartPos ( .Actor:Self *VarD *Var0 *Var1 *Var2 )
+	Call SetPartScale ( .Actor:Self *VarD *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Return
+	End
+}
+
+#new:Script $Subscript_FlyChildPart_Movement {
+	Call SetPartFlagBits ( .Actor:Self *VarD 00000001 .False )
+	Call GetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarC ) % Idle
+	Call UseBattleCamPreset ( 0000003F )
+	Call BattleCamTargetActor ( .Actor:Self )
+	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
+	Call MoveBattleCamOver ( 30` )
+	Wait 30`
+	Call FlyPartTo ( .Actor:Self *VarD *Var0 *Var1 *Var2 30` 0` .Easing:CosIn )
+	Call SetPartFlagBits ( .Actor:Self *VarD 00000001 .True )
+	Return
+	End
+}
+
 #new:Script $Script_Attack_FlyChildrenShot_KingWatinga {
 	Call UseIdleAnimation ( .Actor:Self .False )
 	Call EnableIdleScript ( .Actor:Self .False )
@@ -784,50 +917,83 @@ $BombFly $Vector3D_Default 100` 00000000 00000000 00000000 00000000
 	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarA ) % Fly Shot Start
 	Wait 20`
 	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarB ) % Fly Shot End
-	Call SetAnimation ( .Actor:Self .KingWatingaPart:FlyChildren .Anim:SmallFly_IdleGroup )
-  	Call GetActorPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Sub *Var1 20`
-  	Add *Var2 2`
-  	Call SetPartPos ( .Actor:Self .KingWatingaPart:FlyChildren *Var0 *Var1 *Var2 )
-	Call SetPartScale ( .Actor:Self .KingWatingaPart:FlyChildren *Fixed[1.0] *Fixed[1.0] *Fixed[1.0] )
+	Set *VarD .KingWatingaPart:FlyChild1
+	Exec $Subscript_Summon_FlyChild1 *VarE
+	Wait 20`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarA ) % Fly Shot Start
+	Wait 20`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarB ) % Fly Shot End
+	Set *VarD .KingWatingaPart:FlyChild2
+	Exec $Subscript_Summon_FlyChild2
+	Wait 20`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarA ) % Fly Shot Start
+	Wait 20`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarB ) % Fly Shot End
+	Set *VarD .KingWatingaPart:FlyChild3
+	Exec $Subscript_Summon_FlyChild3
+	Wait 20`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarA ) % Fly Shot Start
+	Wait 20`
+	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarB ) % Fly Shot End
+	Set *VarD .KingWatingaPart:FlyChild4
+	Exec $Subscript_Summon_FlyChild4
+	Wait 20`
+	Label 0
+	DoesScriptExist *VarE *Var0
+	Wait 1`
+	If *Var0  ==  1`
+		Goto 0
+	EndIf
 	Call EnemyTestTarget ( .Actor:Self *Var0 0 0 0 0 )
 	Switch *Var0
 	CaseOR == .HitResult:Miss
 	CaseOR == .HitResult:Lucky
-		Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:FlyChildren 00000001 .False )
-		Call GetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-		Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-		Wait 20`
-		Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarC ) % Idle
-		Call UseBattleCamPreset ( 0000003F )
-		Call BattleCamTargetActor ( .Actor:Self )
-		Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
-		Call MoveBattleCamOver ( 30` )
-		Wait 30`
-		Call FlyPartTo ( .Actor:Self .KingWatingaPart:FlyChildren *Var0 *Var1 *Var2 30` 0` .Easing:CosIn )
-		Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:FlyChildren 00000001 .True )
+		Set *VarD .KingWatingaPart:FlyChild1
+		Exec $Subscript_FlyChildPart_Movement *VarE
+		Wait 1`
+		Set *VarD .KingWatingaPart:FlyChild2
+		Exec $Subscript_FlyChildPart_Movement
+		Wait 1`
+		Set *VarD .KingWatingaPart:FlyChild3
+		Exec $Subscript_FlyChildPart_Movement
+		Wait 1`
+		Set *VarD .KingWatingaPart:FlyChild4
+		Exec $Subscript_FlyChildPart_Movement
+		Wait 1`
+		Label 0
+		DoesScriptExist *VarE *Var0
+		Wait 1`
+		If *Var0 == 1`
+			Goto 0
+		EndIf
 		Call SetGoalToTarget ( .Actor:Self )
 		If *Var0 == .HitResult:Lucky
 			Call EnemyTestTarget ( .Actor:Self *Var0 ~Flags:DamageType:TriggerLucky 00000000 00000000 00000000 )
 		EndIf
 		Goto ReturnHome
 	EndSwitch
-	Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:FlyChildren 00000001 .False )
-	Call GetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Add *Var1 -10`
-	Call SetGoalPos ( .Actor:Self *Var0 *Var1 *Var2 )
-	Wait 20`
-	Call SetAnimation ( .Actor:Self .KingWatingaPart:Main *VarC ) % Idle
-	Call UseBattleCamPreset ( 0000003F )
-	Call BattleCamTargetActor ( .Actor:Self )
-	Call 8024ECF8 ( FFFFFFFF 00000001 00000000 ) % SetBattleCamTargetingModes
-    Call MoveBattleCamOver ( 30` )
-	Wait 30`
-  	Call FlyPartTo ( .Actor:Self .KingWatingaPart:FlyChildren *Var0 *Var1 *Var2 30` 0` .Easing:CosIn )
+	Set *VarD .KingWatingaPart:FlyChild1
+	Exec $Subscript_FlyChildPart_Movement *VarE
+	Wait 1`
+	Set *VarD .KingWatingaPart:FlyChild2
+	Exec $Subscript_FlyChildPart_Movement
+	Wait 1`
+	Set *VarD .KingWatingaPart:FlyChild3
+	Exec $Subscript_FlyChildPart_Movement
+	Wait 1`
+	Set *VarD .KingWatingaPart:FlyChild4
+	Exec $Subscript_FlyChildPart_Movement
+	Wait 1`
+	Label 0
+	DoesScriptExist *VarE *Var0
+	Wait 1`
+	If *Var0 == 1`
+		Goto 0
+	EndIf
 	Call SetGoalToTarget ( .Actor:Self )
 	Wait 2`
 	Call EnemyDamageTarget ( .Actor:Self *Var0 ~Flags:DamageType:0 0000FFFF 00000000 .KingWatingaDamage:FlyChildrenSbot 00000020 )
-	Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:FlyChildren 00000001 .True )
+	Call SetPartFlagBits ( .Actor:Self .KingWatingaPart:FlyChild1 00000001 .True )
 	Label ReturnHome
 	Call YieldTurn ()
 	Call UseBattleCamPreset ( 00000002 ) % BTL_CAM_DEFAULT
